@@ -16,13 +16,18 @@ declare namespace Ajax {
     request: any
   }
 
+  export enum Code {
+    SUCCESS = 0,
+    FAIL = 1
+  }
+  
   // 后端接口数据格式
   export interface AjaxResponse {
     /**
      * 状态码
      * @type { number }
      */
-    code?: number;
+    code?: Code;
 
     /**
      * 数据

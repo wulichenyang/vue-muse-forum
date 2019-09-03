@@ -8,22 +8,16 @@ import Toast from 'muse-ui-toast'
 import cookie from '../utils/cookie';
 import { access_token } from "../config";
 import router from '@/router'
-
-// import cookie from "@/assets/js/cookie.ts";
-// import router from "@/router"
-
-// import router from '../router';
-// import store from '../store/index';
+import store from '../store/index';
 
 /**
- * 跳转登录页
- * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
+ * 跳转主页面
  */
-// const toLogin = () => {
-//   router.replace({
-//     path: '/login',
-//   });
-// }
+const toHome = () => {
+  router.replace({
+    path: '/',
+  });
+}
 
 /**
  * 请求失败后的错误统一处理
@@ -48,24 +42,26 @@ const errorHandle = (status: number, msg: string) => {
       Toast.error(msg)
       break;
     case 401:
-      // toLogin();
+      store.dispatch('clearUser')
+      cookie.removeCookie(access_token)
       // Toast('401 未登录')
-      // router.push({
-      //   name: 'login'
-      // })
       Toast.error(msg)
+      toHome();
       console.log("401")
+      // 清除vuex里用户登录信息
       // 返回登录界面
       break;
     // 403 token过期
     // 清除token并跳转登录页
     case 403:
       // Toast('403 登录过期，请重新登录')
+      store.dispatch('clearUser')
+      cookie.removeCookie(access_token)
+      toHome();
       Toast.error(msg)
       console.log("403 登录过期，请重新登录");
       // 服务器验证token过期
       // 清除cookie
-      cookie.removeCookie(access_token);
       break;
     // 404请求不存在
     case 404:
@@ -134,7 +130,7 @@ instance.interceptors.response.use(
  * @param {String} url [请求的url地址]
  * @param {Object} config [请求时携带的参数]
  */
-export async function get(url: string, config: object) {
+export async function get(url: string, config?: object) {
   // try {
   // 有错误处理拦截器
   return await instance.get(ApiConfig.apiPrefix + url,
@@ -155,7 +151,7 @@ export async function get(url: string, config: object) {
  * @param {String} url [请求的url地址]
  * @param {Object} config [请求时携带的参数]
  */
-export async function del(url: string, config: object) {
+export async function del(url: string, config?: object) {
   // try {
   // 有错误处理拦截器
   return await instance.delete(ApiConfig.apiPrefix + url,
@@ -166,7 +162,7 @@ export async function del(url: string, config: object) {
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
 */
-export async function post(url: string, data: object, config: object) {
+export async function post(url: string, data: object, config?: object) {
   // 有错误处理拦截器
   return await instance.post(ApiConfig.apiPrefix + url, data, config)
 }
@@ -175,7 +171,7 @@ export async function post(url: string, data: object, config: object) {
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
 */
-export async function put(url: string, data: object, config: object) {
+export async function put(url: string, data: object, config?: object) {
   return await instance.put(ApiConfig.apiPrefix + url, data, config)
 }
 
