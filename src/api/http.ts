@@ -129,11 +129,12 @@ instance.interceptors.response.use(
  * get方法，对应get请求
  * @param {String} url [请求的url地址]
  * @param {Object} config [请求时携带的参数]
+ * @return {Promise<T>} AxioResponse [返回数据]
  */
 export async function get(url: string, config?: object) {
   // try {
   // 有错误处理拦截器
-  return await instance.get(ApiConfig.apiPrefix + url,
+  return instance.get(ApiConfig.apiPrefix + url,
     config)
   // } catch (error) {
   //   console.error("Api request error: " + error)
@@ -150,29 +151,32 @@ export async function get(url: string, config?: object) {
  * delete方法，对应delete请求
  * @param {String} url [请求的url地址]
  * @param {Object} config [请求时携带的参数]
+ * @return {Promise<T>} AxioResponse [返回数据]
  */
-export async function del(url: string, config?: object) {
+export function del(url: string, config?: object) {
   // try {
   // 有错误处理拦截器
-  return await instance.delete(ApiConfig.apiPrefix + url,
+  return instance.delete(ApiConfig.apiPrefix + url,
     config)
 }
 /**
 * post方法，对应post请求
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
+@return {Promise<T>} AxioResponse [返回数据]
 */
-export async function post(url: string, data: object, config?: object) {
+export function post(url: string, data: object, config?: object) {
   // 有错误处理拦截器
-  return await instance.post(ApiConfig.apiPrefix + url, data, config)
+  return instance.post(ApiConfig.apiPrefix + url, data, config)
 }
 /**
 * put方法，对应put请求
 * @param {String} url [请求的url地址]
 * @param {Object} config [请求时携带的参数]
+@return {Promise<T>} AxioResponse [返回数据]
 */
-export async function put(url: string, data: object, config?: object) {
-  return await instance.put(ApiConfig.apiPrefix + url, data, config)
+export function put(url: string, data: object, config?: object) {
+  return instance.put(ApiConfig.apiPrefix + url, data, config)
 }
 
 // export default instance;

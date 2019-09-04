@@ -4,25 +4,25 @@ import {
   put
 } from "./http"
 
-export const fetchUser = async () : Promise<any> => {
+export const fetchUser = () : Promise<any> => {
   return get('/user')
 }
-// export const loginByPhone = async (phone: string, password: string): Promise<any> => {
+// export const loginByPhone = (phone: string, password: string): Promise<any> => {
 //   return get(`/login/cellphone?phone=${phone}&password=${password}`)
 // }
 
-// export const loginByEmail = async (email: string, password: string): Promise<any> => {
+// export const loginByEmail = (email: string, password: string): Promise<any> => {
 //   return get(`/login?email=${email}&password=${password}`)
 // }
 
-// export const refreshLoginStatus = async (): Promise<any> => {
+// export const refreshLoginStatus = (): Promise<any> => {
 //   return get('/login/refresh')
 // }
 
-// export const getLoginStatus = async (): Promise<any> => {
+// export const getLoginStatus = (): Promise<any> => {
 //   return get('/login/status')
 // }
 
-// export const logout = async (): Promise<any> => {
+// export const logout = (): Promise<any> => {
 //   return get('/logout')
 // }
