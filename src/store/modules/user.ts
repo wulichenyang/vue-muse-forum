@@ -1,4 +1,4 @@
-import { Commit } from "vuex"
+import { Commit, Dispatch } from "vuex"
 // import shop from '../../api'
 import * as types from "../mutation-types"
 // import { CartProduct, CheckoutStatus, AddToCartPayload } from "../index"
@@ -19,12 +19,12 @@ export interface EmailAccountPayload {
 
 export interface State {
   userDetail: UserDetail | null;
-  isLogin: boolean;
+  isLogin: boolean | null;
 }
 
 const initState: State = {
   userDetail: null,
-  isLogin: false,
+  isLogin: null,
 }
 
 // getters
@@ -35,26 +35,29 @@ const getters = {
 
 // actions
 const actions = {
-  async getUser(context: { commit: Commit; state: State }, payload: UserDetail) {
+  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {
     try {
-      context.commit(types.SET_USER_LOGIN)
       let res: Ajax.AjaxResponse = await fetchUser()
       if (res.code === 0) {
         // 登录成功 保存用户信息和登录信息
-        context.commit(types.SET_USER_DETAIL, (res.data as UserDetail))
+        context.dispatch('setUser', res.data as UserDetail)
         return true
       } else if (res.code === 1) {
         // 登录失败 清除用户信息和登录信息
-        context.commit(types.CLEAR_USER_LOGIN)
-        context.commit(types.CLEAR_USER_DETAIL)
+        context.dispatch('clearUser')
         return false
       }
     } catch (error) {
-      context.commit(types.CLEAR_USER_LOGIN)
-      context.commit(types.CLEAR_USER_DETAIL)
+      // 登录失败 清除用户信息和登录信息
+      context.dispatch('clearUser')
       return false
     }
   },
+  setUser(context: { commit: Commit; state: State }, payload: UserDetail) {
+    context.commit(types.SET_USER_LOGIN)
+    context.commit(types.SET_USER_DETAIL, (payload as UserDetail))
+  },
+  // 清除用户信息和登录信息
   clearUser(context: { commit: Commit; state: State }) {
     context.commit(types.CLEAR_USER_LOGIN)
     context.commit(types.CLEAR_USER_DETAIL)

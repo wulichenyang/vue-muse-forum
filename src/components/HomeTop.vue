@@ -26,5 +26,6 @@ export default class HomeTop extends Vue {
 
 <style lang="scss">
 .home-top {
+  margin-top: 200px;
 }
 </style>
