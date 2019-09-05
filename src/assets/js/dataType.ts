@@ -13,6 +13,10 @@ export enum Gender {
 export interface UserDetail {
   // 用户id 唯一
   userId: string,
+  // 用户手机账户
+  phone?: string,
+  // 用户邮箱账户
+  email?: string,
   // 用户昵称 唯一
   nickname: string,
   // 用户真实姓名

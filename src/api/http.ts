@@ -44,7 +44,7 @@ const errorHandle = (status: number, msg: string) => {
     case 401:
       store.dispatch('clearUser')
       cookie.removeCookie(access_token)
-      // Toast('401 未登录')
+      // Toast('401 未登录/登录超时')
       Toast.error(msg)
       toHome();
       console.log("401")
@@ -54,14 +54,9 @@ const errorHandle = (status: number, msg: string) => {
     // 403 token过期
     // 清除token并跳转登录页
     case 403:
-      // Toast('403 登录过期，请重新登录')
-      store.dispatch('clearUser')
-      cookie.removeCookie(access_token)
-      toHome();
+      // Toast('403 无访问权限')
       Toast.error(msg)
-      console.log("403 登录过期，请重新登录");
-      // 服务器验证token过期
-      // 清除cookie
+      console.log("403 无访问权限");
       break;
     // 404请求不存在
     case 404:
