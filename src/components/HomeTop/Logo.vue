@@ -1,6 +1,6 @@
 <template>
   <div class="logo-wrapper">
-    <router-link to="/">Muse Forum</router-link>
+    <a to="/">Muse Forum</a>
   </div>
 </template>
 
@@ -31,7 +31,7 @@ export default class Logo extends Vue {
   a {
     color: $logoFontColor !important;
     font-weight: 700;
-    letter-spacing: 5px;
+    letter-spacing: 4px;
     text-transform: uppercase;
   }
 }

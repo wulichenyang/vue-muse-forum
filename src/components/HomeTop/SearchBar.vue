@@ -7,9 +7,13 @@
       @keydown="onSearchKeyDown($event)"
       :placeholder="placeholder"
     />
-    <mu-icon value="search"
-    @click="onClickSearch"
-    ></mu-icon>
+    <mu-button
+      color="gray"
+      icon
+      @click="onClickSearch"
+    >
+      <mu-icon value="search"></mu-icon>
+    </mu-button>
   </div>
 </template>
 
@@ -37,23 +41,23 @@ export default class SearchBar extends Vue {
   mounted() {}
 
   // Methods
-  onSearchFocus(): void { // TODO:
+  onSearchFocus(): void {
+    // TODO:
     // 过渡动画class
   }
 
   onSearchKeyDown(e: any): void {
     // Enter键按下
     if (e.keyCode === 13 && this.searchValue) {
-      this.emitOnSearch(this.searchValue)
+      this.emitOnSearch(this.searchValue);
     }
   }
 
   onClickSearch(): void {
-    if(this.searchValue) {
-      this.emitOnSearch(this.searchValue.trim())
+    if (this.searchValue) {
+      this.emitOnSearch(this.searchValue.trim());
     }
   }
-
 
   @Emit("emitOnSearch")
   public emitOnSearch(key: string) {}

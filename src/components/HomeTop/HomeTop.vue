@@ -9,8 +9,12 @@
         placeholder="搜索"
         @emitOnSearch="onSearchPost"
       />
-      <SignPortal />
-      <UserOption />
+      <SignPortal
+        :ifShow="ifShowSignPortal"
+        @emitAlertSignIn="onAlertSignIn"
+        @emitAlertSignUp="onAlertSignUp"
+      />
+      <UserOption :ifShow="ifShowUserOption" />
     </section>
 
     <!-- {{userDetail}}
@@ -39,12 +43,34 @@ export default class HomeTop extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("isLogin") isLogin!: boolean;
 
+  // Computed
+  get ifShowSignPortal(): boolean {
+    if (this.isLogin) {
+      return false;
+    }
+    return true;
+  }
+
+  get ifShowUserOption(): boolean {
+    if (this.isLogin) {
+      return true;
+    }
+    return false;
+  }
   // Lifecycle
   mounted() {}
 
   // Methods // TODO
   onSearchPost(key: string) {
     console.log(key);
+  }
+
+  onAlertSignUp() {
+    console.log("signup");
+  }
+
+  onAlertSignIn() {
+    console.log("signin");
   }
 }
 </script>

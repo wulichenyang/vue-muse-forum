@@ -35,17 +35,21 @@ export default class App extends Vue {
 
 
 body, html {
-  min-height: 100%;
-  background: $mainBodyBgColor;
+  height: 100%;
+  background: $mainBodyBgColor !important;
 }
 #app {
   // 知乎字体
   font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $mainBodyBgColor;
   a {
     color: $linkFontColor;
+    cursor: pointer;
+  }
+  .mu-icon-button {
+    width: $iconSize;
+    height: $iconSize;
   }
 }
 </style>

@@ -1,34 +1,39 @@
 <template>
-  <div class="user-option">
+  <div
+    v-show="ifShow"
+    class="user-option"
+  >
     user-option
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { } from "@/assets/js/dataType";
+import {} from "@/assets/js/dataType";
 
 @Component({
-  components: { 
-    
-  }
+  components: {}
 })
 export default class UserOption extends Vue {
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-  // @Action("getUser") getUser: any;
+  // Props
+  @Prop({
+    type: [Boolean],
+    default: false,
+    required: true
+  })
+  ifShow!: boolean;
 
   // Lifecycle
-  mounted() {
-
-  }
+  mounted() {}
 }
 </script>
 
 <style lang="scss">
 @import "../../assets/css/var.scss";
- .user-option {
-   display: flex;
-   align-items: center;
+.user-option {
+  margin-right: 36px;
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -3,6 +3,7 @@ import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
 // import { CartProduct, CheckoutStatus, AddToCartPayload } from "../index"
 import { fetchUser } from '@/api/user';
+import To from '@/utils/to'
 import {
   UserDetail
 } from '@/assets/js/dataType'
@@ -35,19 +36,19 @@ const getters = {
 
 // actions
 const actions = {
-  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {
-    try {
-      let res: Ajax.AjaxResponse = await fetchUser()
-      if (res.code === 0) {
-        // 登录成功 保存用户信息和登录信息
-        context.dispatch('setUser', res.data as UserDetail)
-        return true
-      } else if (res.code === 1) {
-        // 登录失败 清除用户信息和登录信息
-        context.dispatch('clearUser')
-        return false
-      }
-    } catch (error) {
+  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {    
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(fetchUser())
+    if(err) {
+      // 登录失败 清除用户信息和登录信息
+      context.dispatch('clearUser')
+      return false
+    }
+    if (res.code === 0) {
+      // 登录成功 保存用户信息和登录信息
+      context.dispatch('setUser', res.data as UserDetail)
+      return true
+    } else if (res.code === 1) {
       // 登录失败 清除用户信息和登录信息
       context.dispatch('clearUser')
       return false

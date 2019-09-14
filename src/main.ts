@@ -10,7 +10,7 @@ import '@/assets/css/material-icons.css'
 
 Vue.use(MuseUI);
 Vue.use(Toast, {
-  position: 'top',                  // 显示位置
+  position: 'top', // 显示位置
 });
 
 Vue.config.productionTip = false;

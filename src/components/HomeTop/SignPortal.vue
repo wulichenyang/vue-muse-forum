@@ -1,18 +1,21 @@
 <template>
-  <div class="sign-portal">
-    sign up signin
+  <div
+    v-show="ifShow"
+    class="sign-portal"
+  >
+    <a
+      @click="onShowSignIn"
+      class="sign-in"
+    >登录</a>
+    <a
+      @click="onShowSignUp"
+      class="sign-up"
+    >注册</a>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Vue,
-  Prop,
-  Emit,
-  Model,
-  Watch
-} from "vue-property-decorator";
+import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
 
@@ -21,49 +24,44 @@ import {} from "@/assets/js/dataType";
 })
 export default class SignPortal extends Vue {
   // Props
-  // @Prop({
-  //   type: String,
-  //   default: [],
-  //   required: true,
-  // })
-  // list!: string;
-
-  // Data
-  // searchValue: string = "";
-  // ifFocusSearch: boolean = false;
-
-  // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  @Prop({
+    type: [Boolean],
+    default: false,
+    required: true
+  })
+  ifShow!: boolean;
 
   // Lifecycle
   mounted() {}
 
   // Methods
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  onShowSignIn(): void {
+    this.emitAlertSignIn();
+  }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
+  onShowSignUp(): void {
+    this.emitAlertSignUp();
+  }
 
-  // @Action("getUser") getUser: any;
+  @Emit("emitAlertSignIn")
+  emitAlertSignIn() {}
 
-  // @Emit("select")
-  // select(listItem: Song, index: number) {}
-
-  // @Model("onChange", {
-  //   key: String
-  // })
-  // searchKey!: string;
-
-  // @Watch("child", { immediate: true, deep: true })
-  // onChildChanged(val: string, oldVal: string) {}
+  @Emit("emitAlertSignUp")
+  emitAlertSignUp() {}
 }
 </script>
 
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .sign-portal {
+  display: flex;
+  align-items: center;
+  margin-left: 36px;
+  margin-right: 24px;
+  .sign-in {
+    margin-right: 18px;
+  }
+  .sign-up {
+  }
 }
 </style>

@@ -5,7 +5,7 @@ import {
 } from "./http"
 
 export const fetchUser = () : Promise<any> => {
-  return get('/user')
+  return get('/userself')
 }
 // export const loginByPhone = (phone: string, password: string): Promise<any> => {
 //   return get(`/login/cellphone?phone=${phone}&password=${password}`)
