@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import HomeTop from "@/components/HomeTop.vue";
+import HomeTop from "@/components/HomeTop/HomeTop.vue";
 import { Component, Vue } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { UserDetail } from "@/assets/js/dataType";
@@ -29,11 +29,23 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+@import "./assets/css/normalize.css";
+@import "./assets/css/var.scss";
+// 解决移动端无法正常显示icon问题
+
+
+body, html {
+  min-height: 100%;
+  background: $mainBodyBgColor;
+}
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  // 知乎字体
+  font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  background-color: $mainBodyBgColor;
+  a {
+    color: $linkFontColor;
+  }
 }
 </style>

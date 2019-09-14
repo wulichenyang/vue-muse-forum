@@ -5,6 +5,8 @@ import store from './store/index';
 import Toast from 'muse-ui-toast';
 import MuseUI from 'muse-ui';
 import 'muse-ui/dist/muse-ui.css';
+// 解决muse-ui的icon在移动端不能显示问题
+import '@/assets/css/material-icons.css'
 
 Vue.use(MuseUI);
 Vue.use(Toast, {
