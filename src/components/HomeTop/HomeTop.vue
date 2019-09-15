@@ -45,6 +45,21 @@ import SignPortal from "@/components/HomeTop/SignPortal.vue";
 import SignModal from "@/components/HomeTop/SignModal.vue";
 import UserOption from "@/components/HomeTop/UserOption.vue";
 import { UserDetail } from "@/assets/js/dataType";
+import {
+  signUp,
+  signIn,
+  fetchPublicKey,
+  SignUpUser,
+  SignInUser
+} from "@/api/user";
+import { encryptPwd } from "@/utils/rsa";
+import To from "@/utils/to";
+import { SignType } from "@/assets/js/dataType";
+import Toast from "muse-ui-toast";
+import { ByType } from "@/api/user";
+import cookie from "@/utils/cookie";
+import { access_token } from "@/config";
+
 @Component({
   components: {
     Logo,
@@ -80,13 +95,26 @@ export default class HomeTop extends Vue {
   // Lifecycle
   mounted() {}
 
-  // Methods // TODO
+  // Methods
+  setCookie(token: string) {
+    // TODO: 修改为：多账号同时登录token保存
+    // 移除之前的账号token信息
+    if (cookie.getCookie(access_token) !== "") {
+      cookie.removeCookie(access_token);
+    }
+    cookie.setCookie(access_token, token, 24 * 30); // 30 天
+  }
+
   onSearchPost(key: string) {
     console.log(key);
   }
 
   openAlertDialog() {
     this.openAlert = true;
+  }
+
+  closeAlertDialog() {
+    this.openAlert = false;
   }
 
   onAlertSignUp() {
@@ -102,11 +130,85 @@ export default class HomeTop extends Vue {
   }
 
   // 提交注册、登录表单
-  onSign(isSignUp: boolean) {
-    if (isSignUp) {
-      console.log("注册中");
-    } else {
-      console.log("登录中");
+  async onSign(
+    signType: SignType,
+    by: ByType,
+    formData: SignUpUser | SignInUser
+  ) {
+    let err, pubKeyRes;
+    // 获取公钥
+    [err, pubKeyRes] = await To(fetchPublicKey());
+    // 获取失败
+    if (err) {
+      Toast.error(err);
+      return;
+    }
+    if (pubKeyRes.code === 1) {
+      Toast.error(pubKeyRes.message);
+      return;
+    }
+    // 获取pubKey成功，开始注册、登录
+    if (pubKeyRes.code === 0) {
+      // 用公钥加密密码
+      let encryptedPwd = encryptPwd(
+        formData.password,
+        pubKeyRes.data.publicKey
+      );
+      formData.password = encryptedPwd;
+
+      if (signType === SignType.SIGNUP) {
+        console.log("注册中" + by);
+        // 注册
+        let signUpRes;
+        [err, signUpRes] = await To(
+          signUp(by, {
+            [by]: formData[by],
+            nickname: (formData as SignUpUser).nickname,
+            password: formData.password
+          })
+        );
+        // 注册错误
+        if (err) {
+          Toast.error(err);
+          return;
+        }
+        if (signUpRes.code === 1) {
+          Toast.error(signUpRes.message);
+          return;
+        }
+        // 注册成功，显示成功信息
+        if (signUpRes.code === 0) {
+          this.closeAlertDialog();
+          Toast.message("注册成功，请登录");
+          return;
+        }
+      } else if (signType === SignType.SIGNIN) {
+        console.log("登录中" + by);
+        // 登录
+        let signInRes;
+        [err, signInRes] = await To(
+          signIn(by, {
+            [by]: formData[by],
+            password: formData.password
+          })
+        );
+        // 登录错误
+        if (err) {
+          Toast.error(err);
+          return;
+        }
+        if (signInRes.code === 1) {
+          Toast.error(signInRes.message);
+          return;
+        }
+        // 登录成功，设置cookie保存token，请求用户信息？TODO:
+        if (signInRes.code === 0) {
+          // TODO: clearForm, forbid re-submit
+           this.setCookie(signInRes.data.token);
+          this.closeAlertDialog();
+          console.log(signInRes);
+        }
+      }
     }
   }
 }

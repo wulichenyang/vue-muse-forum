@@ -101,7 +101,8 @@ import {
   Model
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
+import { SignType } from "@/assets/js/dataType";
+import { ByType, SignInUser, SignUpUser } from "@/api/user";
 
 @Component({
   components: {}
@@ -165,7 +166,7 @@ export default class SignModal extends Vue {
     }
   ];
 
-  validateForm: object = {
+  validateForm: any = {
     nickname: "",
     phone: "",
     email: "",
@@ -215,13 +216,23 @@ export default class SignModal extends Vue {
     let isCheckOk = await (this.$refs.form as any).validate();
     console.log("form valid: ", isCheckOk);
     // 通过字段格式检验
+    let by: ByType = this.signInBy === 0 ? ByType.PHONE : ByType.EMAIL;
     if (isCheckOk) {
       if (this.isSignUp) {
         // 注册
-        this.emitSign(true);
+        this.emitSign(SignType.SIGNUP, by, {
+          phone: this.validateForm.phone,
+          email: this.validateForm.email,
+          nickname: this.validateForm.nickname,
+          password: this.validateForm.password
+        });
       } else {
         // 登录
-        this.emitSign(false);
+        this.emitSign(SignType.SIGNIN, by, {
+          phone: this.validateForm.phone,
+          email: this.validateForm.email,
+          password: this.validateForm.password
+        });
       }
     }
   }
@@ -231,7 +242,11 @@ export default class SignModal extends Vue {
   // @Action("getUser") getUser: any;
 
   @Emit("emitSign")
-  emitSign(isSignUp: boolean) {}
+  emitSign(
+    signType: SignType,
+    signBy: ByType,
+    formData: SignUpUser | SignInUser
+  ) {}
 
   // 子组件
   @Watch("openFlag", { immediate: true })

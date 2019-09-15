@@ -66,3 +66,8 @@ export interface UserDetail {
   // // 创建日期
   // createAt: Date,
 }
+
+export enum SignType {
+  SIGNUP = 'signup',
+  SIGNIN = 'signin',
+}
