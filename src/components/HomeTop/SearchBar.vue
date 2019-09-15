@@ -67,6 +67,7 @@ export default class SearchBar extends Vue {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .search-bar {
+  height: 32px;
   display: flex;
   margin-right: 20px;
   align-items: center;
@@ -85,6 +86,12 @@ export default class SearchBar extends Vue {
   i {
     color: $mainContentFontColor;
     cursor: pointer;
+  }
+  .mu-icon-button {
+    margin-right: -3px;
+    padding: 3px;
+    width: initial !important ;
+    height: initial !important ;
   }
 }
 </style>

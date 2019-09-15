@@ -12,6 +12,7 @@ import { Getter, Action } from "vuex-class";
 import { UserDetail } from "@/assets/js/dataType";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
+import { museThemeConfig } from "@/config/index";
 
 @Component({
   components: { HomeTop }
@@ -29,27 +30,15 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-@import "./assets/css/normalize.css";
-@import "./assets/css/var.scss";
-// 解决移动端无法正常显示icon问题
+@import "./assets/css/common.scss";
 
-
-body, html {
-  height: 100%;
-  background: $mainBodyBgColor !important;
-}
 #app {
   // 知乎字体
-  font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
+    Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  a {
-    color: $linkFontColor;
-    cursor: pointer;
-  }
-  .mu-icon-button {
-    width: $iconSize;
-    height: $iconSize;
-  }
 }
+
 </style>

@@ -28,6 +28,11 @@ export default class XXXXXX extends Vue {
   // })
   // list!: string;
 
+  // @Model("onChange", {
+  //   type: String
+  // })
+  // searchKey!: string;
+
   // Data
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
@@ -51,11 +56,6 @@ export default class XXXXXX extends Vue {
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}
-
-  // @Model("onChange", {
-  //   key: String
-  // })
-  // searchKey!: string;
 
   // @Watch("child", { immediate: true, deep: true })
   // onChildChanged(val: string, oldVal: string) {}

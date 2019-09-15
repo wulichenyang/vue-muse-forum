@@ -5,3 +5,26 @@ export const ApiConfig = {
 };
 
 export const access_token: string = 'vue_blog_access_token';
+
+export const museThemeConfig: object = {
+  primary: '#e91e63', 
+  secondary: '#424242',
+  success: '#4caf50',
+  warning: '#fdd835',
+  info: '#2196f3',
+  error: '#e91e63',
+  track: '#bdbdbd',
+  text: {
+    primary: 'rgba(0, 0, 0, 0.87)',
+    secondary: 'gba(0, 0, 0, 0.54)',
+    alternate: '#fff',
+    disabled: 'rgba(0, 0, 0, 0.38)',
+    hint: 'rgba(0, 0, 0, 0.38)' // 提示文字颜色
+  },
+  divider: 'rgba(0, 0, 0, 0.12)',
+  background: {
+    paper: '#fff',
+    chip: '#e0e0e0',
+    default: '#fafafa'
+  }
+}

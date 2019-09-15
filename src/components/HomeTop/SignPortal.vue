@@ -3,14 +3,20 @@
     v-show="ifShow"
     class="sign-portal"
   >
-    <a
+    <mu-button
       @click="onShowSignIn"
       class="sign-in"
-    >登录</a>
-    <a
+      flat
+    >
+      登录
+    </mu-button>
+    <mu-button
       @click="onShowSignUp"
       class="sign-up"
-    >注册</a>
+      flat
+    >
+      注册
+    </mu-button>
   </div>
 </template>
 
@@ -58,10 +64,19 @@ export default class SignPortal extends Vue {
   align-items: center;
   margin-left: 36px;
   margin-right: 24px;
-  .sign-in {
-    margin-right: 18px;
+  .mu-flat-button {
+    min-width: 45px;
   }
+  .mu-button-wrapper {
+    padding: 0 15px;
+  }
+  .mu-button {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .sign-in,
   .sign-up {
+    color: $linkFontColor;
   }
 }
 </style>

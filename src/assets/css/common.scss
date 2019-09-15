@@ -1,0 +1,55 @@
+
+@import "./assets/css/normalize.css";
+@import "./assets/css/var.scss";
+
+body,
+html {
+  height: 100%;
+  background: $mainBodyBgColor !important;
+}
+
+a {
+  color: $linkFontColor;
+  cursor: pointer;
+}
+
+.mu-icon-button {
+  width: $iconSize;
+  height: $iconSize;
+}
+
+// 修复muse-ui hover时背景颜色有变化
+.mu-button.hover:before {
+  opacity: 0 !important;
+  background-color: transparent !important;
+}
+
+// 默认按钮为圆角
+.mu-button {
+  // border-radius: 20px;
+  overflow: hidden;
+}
+
+// 提交表单按钮靠右
+.submit-button-wrapper {
+  .mu-form-item-content {
+    justify-content: flex-end !important;
+  }
+}
+
+.primary-color {
+  color: $primary !important;
+}
+
+// 修复表单全局颜色
+.mu-form-item__error,
+.mu-form-item__focus {
+  color: $primary !important;
+  .mu-input__focus,
+  .mu-input__error,
+  .mu-form-item-label,
+  .mu-form-item-icon,
+  .mu-form-item-help {
+    color: $primary !important;
+  }
+}
