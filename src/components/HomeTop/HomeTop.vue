@@ -136,17 +136,15 @@ export default class HomeTop extends Vue {
     formData: SignUpUser | SignInUser
   ) {
     let err, pubKeyRes;
+
     // 获取公钥
     [err, pubKeyRes] = await To(fetchPublicKey());
+
     // 获取失败
     if (err) {
-      Toast.error(err);
       return;
     }
-    if (pubKeyRes.code === 1) {
-      Toast.error(pubKeyRes.message);
-      return;
-    }
+
     // 获取pubKey成功，开始注册、登录
     if (pubKeyRes.code === 0) {
       // 用公钥加密密码
@@ -158,6 +156,7 @@ export default class HomeTop extends Vue {
 
       if (signType === SignType.SIGNUP) {
         console.log("注册中" + by);
+
         // 注册
         let signUpRes;
         [err, signUpRes] = await To(
@@ -167,15 +166,12 @@ export default class HomeTop extends Vue {
             password: formData.password
           })
         );
+
         // 注册错误
         if (err) {
-          Toast.error(err);
           return;
         }
-        if (signUpRes.code === 1) {
-          Toast.error(signUpRes.message);
-          return;
-        }
+
         // 注册成功，显示成功信息
         if (signUpRes.code === 0) {
           this.closeAlertDialog();
@@ -184,6 +180,7 @@ export default class HomeTop extends Vue {
         }
       } else if (signType === SignType.SIGNIN) {
         console.log("登录中" + by);
+
         // 登录
         let signInRes;
         [err, signInRes] = await To(
@@ -192,19 +189,16 @@ export default class HomeTop extends Vue {
             password: formData.password
           })
         );
+
         // 登录错误
         if (err) {
-          Toast.error(err);
           return;
         }
-        if (signInRes.code === 1) {
-          Toast.error(signInRes.message);
-          return;
-        }
+
         // 登录成功，设置cookie保存token，请求用户信息？TODO:
         if (signInRes.code === 0) {
           // TODO: clearForm, forbid re-submit
-           this.setCookie(signInRes.data.token);
+          this.setCookie(signInRes.data.token);
           this.closeAlertDialog();
           console.log(signInRes);
         }

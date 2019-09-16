@@ -75,7 +75,10 @@
           ></mu-text-field>
         </mu-form-item>
         <!-- 提交按钮 -->
-        <mu-form-item class="submit-button-wrapper">
+        <mu-form-item
+          @keydown="onSubmitKeyDown($event)"
+          class="submit-button-wrapper"
+        >
           <mu-button
             color="secondary"
             @click="closeAlertDialog"
@@ -199,6 +202,13 @@ export default class SignModal extends Vue {
 
   onIsSignInChange() {
     this.$emit("onIsSignInChange", false);
+  }
+
+  onSubmitKeyDown(e: any): void {
+    // Enter键按下
+    if (e.keyCode === 13) {
+      this.submitSignForm()
+    }
   }
 
   clearForm() {

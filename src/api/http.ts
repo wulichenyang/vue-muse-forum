@@ -26,14 +26,19 @@ const toHome = () => {
 const errorHandle = (status: number, msg: string) => {
   // 状态码判断
   switch (status) {
+    // 500: Internal Server Error 服务器内部错误
+    case 500:
+      // Toast('500 服务器内部错误')
+      Toast.error(msg)
+      break;
     // 501: Not Implemented
     case 501:
       // Toast('501 请求错误')
       Toast.error(msg)
       break;
-    // 502: 内部服务器错误
+    // 502: 错误网关 Bad Gatewa
     case 502:
-      // Toast('502 请求错误')
+      // Toast('502 错误网关')
       Toast.error(msg)
       break;
     // 400: bad request
@@ -71,7 +76,7 @@ const errorHandle = (status: number, msg: string) => {
       break;
     default:
       Toast.error(msg)
-      console.log(msg);
+      console.log('http: default error: ' + msg);
   }
 }
 

@@ -36,10 +36,10 @@ const getters = {
 
 // actions
 const actions = {
-  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {    
+  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(fetchUser())
-    if(err) {
+    if (err) {
       // 登录失败 清除用户信息和登录信息
       context.dispatch('clearUser')
       return false
@@ -48,10 +48,6 @@ const actions = {
       // 登录成功 保存用户信息和登录信息
       context.dispatch('setUser', res.data as UserDetail)
       return true
-    } else if (res.code === 1) {
-      // 登录失败 清除用户信息和登录信息
-      context.dispatch('clearUser')
-      return false
     }
   },
   setUser(context: { commit: Commit; state: State }, payload: UserDetail) {
@@ -70,12 +66,9 @@ const actions = {
   //       // 登录成功 保存token
   //       context.commit(types.ADD_USER_TOKEN, (res.data as UserDetail))
   //       return res.data
-  //     } else if (res.code !== 0) {
-  //       // 登录失败 清除token
-  //       context.commit(types.CLEAR_USER_DETAIL)
-  //       return false
   //     }
   //   } catch (error) {
+  //       // 登录失败 清除token
   //     context.commit(types.CLEAR_USER_DETAIL)
   //     return false
   //   }
