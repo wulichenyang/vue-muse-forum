@@ -36,17 +36,17 @@ const getters = {
 
 // actions
 const actions = {
-  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: UserDetail) {
+  async getUser(context: { dispatch: Dispatch, commit: Commit; state: State }) {
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchUser())
+    [err, res] = await To(fetchUser());
     if (err) {
       // 登录失败 清除用户信息和登录信息
       context.dispatch('clearUser')
       return false
     }
-    if (res.code === 0) {
+    if (res && res.code === 0) {
       // 登录成功 保存用户信息和登录信息
-      context.dispatch('setUser', res.data as UserDetail)
+      context.dispatch('setUser', res.data.userinfo as UserDetail)
       return true
     }
   },
@@ -78,7 +78,11 @@ const actions = {
 // mutations
 const mutations = {
   [types.SET_USER_DETAIL](state: State, payload: UserDetail) {
-    state.userDetail = payload
+    console.log(state)
+    // 对象直接赋值不行，需要解构赋值？// TODO: fix
+    state.userDetail = {
+      ...payload
+    }
   },
   [types.SET_USER_LOGIN](state: State) {
     state.isLogin = true

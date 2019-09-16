@@ -31,7 +31,7 @@ import {} from "@/assets/js/dataType";
 export default class SignPortal extends Vue {
   // Props
   @Prop({
-    type: [Boolean],
+    type: Boolean,
     default: false,
     required: true
   })

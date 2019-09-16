@@ -22,6 +22,7 @@
         ref="form"
         :model="validateForm"
         class="mu-demo-form"
+        @keydown.enter="onSubmitKeyDown"
       >
         <!-- 昵称 -->
         <mu-form-item
@@ -75,15 +76,13 @@
           ></mu-text-field>
         </mu-form-item>
         <!-- 提交按钮 -->
-        <mu-form-item
-          @keydown="onSubmitKeyDown($event)"
-          class="submit-button-wrapper"
-        >
+        <mu-form-item class="submit-button-wrapper">
           <mu-button
             color="secondary"
             @click="closeAlertDialog"
           >取消</mu-button>
           <mu-button
+            v-loading="submitting"
             color="primary"
             @click="submitSignForm"
           >{{isSignUp? '注册' : '登录'}}</mu-button>
@@ -119,6 +118,14 @@ export default class SignModal extends Vue {
   })
   openAlert!: boolean;
 
+  // 提交中标志
+  @Prop({
+    type: Boolean,
+    default: false,
+    required: true
+  })
+  submitting!: boolean;
+
   @Model("onIsSignUpChange", {
     type: Boolean
   })
@@ -132,6 +139,8 @@ export default class SignModal extends Vue {
   // Data
   openFlag: boolean = false;
   signInBy: number = 0; // 0: phone，1: email
+
+  // 验证表单正则
   nicknameRules: any = [
     { validate: (val: string) => !!val, message: "必须填写昵称" },
     {
@@ -169,6 +178,7 @@ export default class SignModal extends Vue {
     }
   ];
 
+  // 表单数据
   validateForm: any = {
     nickname: "",
     phone: "",
@@ -176,6 +186,7 @@ export default class SignModal extends Vue {
     password: "",
     isAgree: false
   };
+
   // Computed
   // get computedData() {
   //   return ' cc' + this.searchValue;
@@ -206,9 +217,7 @@ export default class SignModal extends Vue {
 
   onSubmitKeyDown(e: any): void {
     // Enter键按下
-    if (e.keyCode === 13) {
-      this.submitSignForm()
-    }
+    this.submitSignForm();
   }
 
   clearForm() {
@@ -223,6 +232,10 @@ export default class SignModal extends Vue {
   }
   // 确认模态框
   async submitSignForm() {
+    // 已经提交了请求就不继续发送
+    if (this.submitting) {
+      return;
+    }
     let isCheckOk = await (this.$refs.form as any).validate();
     console.log("form valid: ", isCheckOk);
     // 通过字段格式检验

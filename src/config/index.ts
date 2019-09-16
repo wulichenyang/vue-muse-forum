@@ -6,7 +6,7 @@ export const ApiConfig = {
 
 export const access_token: string = 'muse_forum_access_token';
 
-export const museThemeConfig: object = {
+export const museThemeConfig: any = {
   primary: '#e91e63', 
   secondary: '#424242',
   success: '#4caf50',
@@ -27,4 +27,10 @@ export const museThemeConfig: object = {
     chip: '#e0e0e0',
     default: '#fafafa'
   }
+}
+export const museLoadingConfig: any = {
+  overlayColor: 'hsla(0,0%,100%,.7)',        // 背景色
+  size: 24,                                  // loading大小
+  color: museThemeConfig.primary,            // color
+  className: ''                              // loading class name
 }

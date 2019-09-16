@@ -12,7 +12,7 @@ export enum Gender {
 
 export interface UserDetail {
   // 用户id 唯一
-  userId: string,
+  _id: string,
   // 用户手机账户
   phone?: string,
   // 用户邮箱账户
@@ -39,32 +39,32 @@ export interface UserDetail {
   likeCount: number,
 
   // 关注的人
-  // followPeople: string[],
+  followPeople?: string[],
   followPeopleCount: number,
 
   // 关注的文章类别ids
-  // followCategory: string[],
+  followCategory?: string[],
   followCategoryCount: number,
 
   // 关注的文章ids
-  // followPost: string[],
+  followPost?: string[],
   followPostCount: number,
 
   // 收藏的文章ids
-  // collectPost: string[],
+  collectPost?: string[],
   collectPostCount: number,
 
-  // // 最近一次查询Notice消息的日期
-  // lastFindNoticeAt: Date,
-  // // 记录最早一条未读私信的日期
-  // unReadMessageAt: Date,
-  // // 最近一次查询自己关注的feed的日期，用于有新的feed，与它比较是否有新的feed，显示小红点
-  // lastFindFeedAt: Date,
-  // // 最近一次查询自己关注文章的日期
-  // lastFindFollowAt: Date,
+  // 最近一次查询Notice消息的日期
+  lastFindNoticeAt?: Date,
+  // 记录最早一条未读私信的日期
+  unReadMessageAt?: Date,
+  // 最近一次查询自己关注的feed的日期，用于有新的feed，与它比较是否有新的feed，显示小红点
+  lastFindFeedAt?: Date,
+  // 最近一次查询自己关注文章的日期
+  lastFindFollowAt?: Date,
 
-  // // 创建日期
-  // createAt: Date,
+  // 创建日期
+  createAt?: Date,
 }
 
 export enum SignType {

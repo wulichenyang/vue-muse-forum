@@ -18,20 +18,23 @@
         @emitAlertSignUp="onAlertSignUp"
       />
       <!-- 用户选项 -->
-      <UserOption :ifShow="ifShowUserOption" />
+      <UserOption
+        :nickname="(userDetail)? userDetail.nickname: ''"
+        :ifShow="ifShowUserOption"
+      />
     </section>
     <!-- 登录注册模态框 -->
     <SignModal
+      ref="signModalRef"
       :openAlert="openAlert"
       :isSignIn="isSignIn"
       :isSignUp="isSignUp"
+      :submitting="submitting"
       @onOpenAlertChange="(val)=>{this.openAlert = val}"
       @onIsSignUpChange="(val)=>{this.isSignUp = val}"
       @onIsSignInChange="(val)=>{this.isSignIn = val}"
       @emitSign="onSign"
     />
-    <!-- {{userDetail}}
-    {{isLogin}}-->
   </header>
 </template>
 
@@ -74,9 +77,14 @@ export default class HomeTop extends Vue {
   @Getter("isLogin") isLogin!: boolean;
 
   // Data
+  // 模态框
   openAlert: boolean = false;
+  // 注册标志
   isSignUp: boolean = false;
+  // 登录标志
   isSignIn: boolean = false;
+  // 提交状态标志
+  submitting: boolean = false;
 
   // Computed
   get ifShowSignPortal(): boolean {
@@ -129,24 +137,32 @@ export default class HomeTop extends Vue {
     this.isSignIn = true;
   }
 
+  clearForm() {
+    (this.$refs.signModalRef as any).clearForm();
+  }
+
   // 提交注册、登录表单
   async onSign(
     signType: SignType,
     by: ByType,
     formData: SignUpUser | SignInUser
   ) {
-    let err, pubKeyRes;
+    // 开启提交标志
+    this.submitting = true;
 
+    let err, pubKeyRes;
     // 获取公钥
     [err, pubKeyRes] = await To(fetchPublicKey());
 
     // 获取失败
     if (err) {
+      // 关闭提交标志
+      this.submitting = false;
       return;
     }
 
     // 获取pubKey成功，开始注册、登录
-    if (pubKeyRes.code === 0) {
+    if (pubKeyRes && pubKeyRes.code === 0) {
       // 用公钥加密密码
       let encryptedPwd = encryptPwd(
         formData.password,
@@ -169,11 +185,17 @@ export default class HomeTop extends Vue {
 
         // 注册错误
         if (err) {
+          // 关闭提交标志
+          this.submitting = false;
           return;
         }
 
         // 注册成功，显示成功信息
-        if (signUpRes.code === 0) {
+        if (signUpRes && signUpRes.code === 0) {
+          // 关闭提交标志
+          this.submitting = false;
+          // 清除表单
+          this.clearForm();
           this.closeAlertDialog();
           Toast.message("注册成功，请登录");
           return;
@@ -192,12 +214,18 @@ export default class HomeTop extends Vue {
 
         // 登录错误
         if (err) {
+          // 关闭提交标志
+          this.submitting = false;
           return;
         }
 
         // 登录成功，设置cookie保存token，请求用户信息？TODO:
-        if (signInRes.code === 0) {
-          // TODO: clearForm, forbid re-submit
+        if (signInRes && signInRes.code === 0) {
+          // 关闭提交标志
+          this.submitting = false;
+          // 清除表单
+          this.clearForm();
+          // 设置token到cookie中
           this.setCookie(signInRes.data.token);
           this.closeAlertDialog();
           console.log(signInRes);

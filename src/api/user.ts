@@ -39,6 +39,10 @@ export const signUp = (by: ByType, data: SignUpUser) : Promise<any> => {
 export const signIn = (by: ByType, data: SignInUser) : Promise<any> => {
   return post(`/signin?by=${by}`, data)
 }
+
+export const signOut = () : Promise<any> => {
+  return get('/signout')
+}
 // export const loginByPhone = (phone: string, password: string): Promise<any> => {
 //   return get(`/login/cellphone?phone=${phone}&password=${password}`)
 // }
