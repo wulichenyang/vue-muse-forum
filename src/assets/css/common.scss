@@ -1,10 +1,12 @@
-
 @import "./assets/css/normalize.css";
 @import "./assets/css/var.scss";
 
-body,
 html {
   height: 100%;
+}
+
+body,
+html {
   background: $mainBodyBgColor !important;
 }
 
@@ -45,6 +47,7 @@ a {
 .mu-form-item__error,
 .mu-form-item__focus {
   color: $primary !important;
+
   .mu-input__focus,
   .mu-input__error,
   .mu-form-item-label,

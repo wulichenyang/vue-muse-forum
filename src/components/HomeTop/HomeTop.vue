@@ -19,6 +19,7 @@
       />
       <!-- 用户选项 -->
       <UserOption
+        :role="userDetail && userDetail.role || 'user'"
         :nickname="(userDetail)? userDetail.nickname: ''"
         :ifShow="ifShowUserOption"
       />
@@ -75,7 +76,7 @@ import { access_token } from "@/config";
 export default class HomeTop extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("isLogin") isLogin!: boolean;
-
+  @Action("getUser") getUser: any;
   // Data
   // 模态框
   openAlert: boolean = false;
@@ -90,6 +91,8 @@ export default class HomeTop extends Vue {
   get ifShowSignPortal(): boolean {
     if (this.isLogin) {
       return false;
+    } else if (this.isLogin === null) {
+      return false;
     }
     return true;
   }
@@ -97,6 +100,8 @@ export default class HomeTop extends Vue {
   get ifShowUserOption(): boolean {
     if (this.isLogin) {
       return true;
+    } else if (this.isLogin === null) {
+      return false;
     }
     return false;
   }
@@ -225,6 +230,8 @@ export default class HomeTop extends Vue {
           this.submitting = false;
           // 清除表单
           this.clearForm();
+          // 设置登录状态
+          this.getUser();
           // 设置token到cookie中
           this.setCookie(signInRes.data.token);
           this.closeAlertDialog();
@@ -240,11 +247,15 @@ export default class HomeTop extends Vue {
 @import "../../assets/css/var.scss";
 
 .home-top {
+  top: 0;
+  position: fixed;
+  width: 100%;
   height: $homeTopHeight;
   background-color: $mainContainerBgColor;
   display: flex;
   justify-content: space-between;
   box-shadow: $topHeaderShadowColor;
+  z-index: 999;
   .top-left {
     display: flex;
     align-items: center;

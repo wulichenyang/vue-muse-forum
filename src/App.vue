@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <HomeTop />
-    <router-view />
+    <main class="main-wrapper">
+      <router-view />
+    </main>
   </div>
 </template>
 
@@ -39,6 +41,11 @@ export default class App extends Vue {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  .main-wrapper {
+    box-sizing: border-box;
+    padding: $mainPadding;
+    margin-top: $homeTopHeight;
+    min-height: calc(100vh - #{$homeTopHeight});
+  }
 }
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <section class="home">
     <h1>home page</h1>
     <mu-button
       class="demo-color-btn"
@@ -10,7 +10,7 @@
       color="secondary"
     > second </mu-button>
  
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

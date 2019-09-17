@@ -13,7 +13,7 @@
         text-color="#fff"
         color="pink400"
         size="30"
-      >{{nickname}}
+      >{{firstLetter}}
       </mu-avatar>
     </mu-button>
 
@@ -24,6 +24,19 @@
       @click="openMenu = !openMenu"
     >
       <mu-list>
+        <!-- 管理员操作 -->
+        <router-link
+          to="/admin/category"
+          v-if="role==='admin'"
+        >
+          <mu-list-item button>
+            <mu-list-item-action>
+              <mu-icon value="add_box"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>后台管理</mu-list-item-title>
+          </mu-list-item>
+        </router-link>
+        <!-- 用户操作 -->
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="mode_edit"></mu-icon>
@@ -104,6 +117,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { signOut } from "@/api/user";
 import To from "@/utils/to";
+import getPy from "@/utils/nameToPinyin";
 import {} from "@/assets/js/dataType";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
@@ -125,6 +139,12 @@ export default class UserOption extends Vue {
     required: true
   })
   nickname!: string;
+  @Prop({
+    type: String,
+    default: "user",
+    required: true
+  })
+  role!: string;
 
   // Data
   openMenu: boolean = false;
@@ -134,6 +154,11 @@ export default class UserOption extends Vue {
   // Lifecycle
   mounted() {
     this.triggerMenu = (this.$refs.menuBtn as any).$el;
+  }
+
+  // Computed
+  get firstLetter(): string {
+    return getPy(this.nickname.substring(0, 1))[0];
   }
 
   // Methods
@@ -148,6 +173,7 @@ export default class UserOption extends Vue {
   ensureSignout() {
     this.closeAlertDialog();
     this.signout();
+    this.$router.push({ path: "/" });
   }
 
   async signout() {
