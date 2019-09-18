@@ -26,7 +26,7 @@
       <mu-list>
         <!-- 管理员操作 -->
         <router-link
-          to="/admin/category"
+          to="/admin/categories"
           v-if="role==='admin'"
         >
           <mu-list-item button>

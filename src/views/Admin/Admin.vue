@@ -5,76 +5,71 @@
       <mu-appbar title=""></mu-appbar>
       <mu-drawer :open="ifshowSidebar">
         <mu-list>
+
           <mu-list-item
+            to="/admin/categories"
             button
-            :ripple="false"
           >
             <mu-list-item-action>
               <mu-icon value="inbox"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>分类管理</mu-list-item-title>
           </mu-list-item>
+
           <mu-list-item
+            to="/admin/posts"
             button
-            :ripple="false"
           >
             <mu-list-item-action>
               <mu-icon value="grade"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>文章管理</mu-list-item-title>
           </mu-list-item>
+
           <mu-list-item
+            to="/admin/comments"
             button
-            :ripple="false"
           >
             <mu-list-item-action>
               <mu-icon value="send"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>评论管理</mu-list-item-title>
           </mu-list-item>
+
           <mu-list-item
+            to="/admin/users"
             button
-            :ripple="false"
           >
             <mu-list-item-action>
               <mu-icon value="drafts"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>用户管理</mu-list-item-title>
           </mu-list-item>
+
         </mu-list>
+
         <mu-divider></mu-divider>
+
         <mu-list>
-          <mu-list-item
-            button
-            :ripple="false"
-          >
+          <mu-list-item button>
             <mu-list-item-title>All mail</mu-list-item-title>
             <mu-list-item-action>
               <mu-icon value="info"></mu-icon>
             </mu-list-item-action>
           </mu-list-item>
-          <mu-list-item
-            button
-            :ripple="false"
-          >
+          <mu-list-item button>
             <mu-list-item-title>Trash</mu-list-item-title>
             <mu-list-item-action>
               <mu-icon value="info"></mu-icon>
             </mu-list-item-action>
           </mu-list-item>
-          <mu-list-item
-            button
-            :ripple="false"
-          >
+          <mu-list-item button>
             <mu-list-item-title>Spam</mu-list-item-title>
             <mu-list-item-action>
               <mu-icon value="info"></mu-icon>
             </mu-list-item-action>
           </mu-list-item>
-          <mu-list-item
-            button
-            :ripple="false"
-          >
+          <mu-list-item button>
             <mu-list-item-title>Follow up</mu-list-item-title>
             <mu-list-item-action>
               <mu-icon value="info"></mu-icon>
@@ -160,6 +155,11 @@ export default class Admin extends Vue {
       height: $homeTopHeight;
       background-color: transparent;
       color: #fff;
+    }
+    .router-link-exact-active {
+      .mu-item {
+        background: rgba(0, 0, 0, 0.1);
+      }
     }
     .mu-drawer {
       width: $asideMenuWidth;

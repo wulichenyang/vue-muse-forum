@@ -35,12 +35,56 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Admin/Admin.vue'),
       children: [
         {
-          path: 'category',
-          name: 'category',
+          path: 'categories',
+          name: 'adminCategory',
           // route level code-splitting
           // this generates a separate chunk (category.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "category" */ './views/Admin/Category.vue'),
+          component: () => import(/* webpackChunkName: "category" */ './views/Admin/AdminCategory/AdminCategory.vue'),
+          children: [
+            {
+              path: 'add',
+              name: 'adminCategoryAdd',
+              // route level code-splitting
+              // this generates a separate chunk (categoryAdd.[hash].js) for this route
+              // which is lazy-loaded when the route is visited.
+              component: () => import(/* webpackChunkName: "categoryAdd" */ './views/Admin/AdminCategory/AdminCategoryAdd.vue'),
+
+            },
+            {
+              path: 'update',
+              name: 'adminCategoryAdd',
+              // route level code-splitting
+              // this generates a separate chunk (categoryUpdate.[hash].js) for this route
+              // which is lazy-loaded when the route is visited.
+              component: () => import(/* webpackChunkName: "categoryUpdate" */ './views/Admin/AdminCategory/AdminCategoryUpdate.vue'),
+
+            },
+          ]
+        },
+        {
+          path: 'posts',
+          name: 'adminPost',
+          // route level code-splitting
+          // this generates a separate chunk (category.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "post" */ './views/Admin/AdminPost.vue'),
+        },
+        {
+          path: 'comments',
+          name: 'adminComment',
+          // route level code-splitting
+          // this generates a separate chunk (comment.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "comment" */ './views/Admin/AdminComment.vue'),
+        },
+        {
+          path: 'users',
+          name: 'adminUser',
+          // route level code-splitting
+          // this generates a separate chunk (user.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "user" */ './views/Admin/AdminUser.vue'),
         },
       ]
     },

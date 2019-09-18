@@ -1,6 +1,6 @@
 <template>
-  <section class="category">
-    Category
+  <section class="admin-post">
+    admin Post
   </section>
 </template>
 
@@ -19,7 +19,7 @@ import {} from "@/assets/js/dataType";
 @Component({
   components: {}
 })
-export default class Category extends Vue {
+export default class AdminPost extends Vue {
   // Props
   // @Prop({
   //   type: String,
@@ -64,6 +64,6 @@ export default class Category extends Vue {
 
 <style lang="scss">
 @import "../../assets/css/var.scss";
-.category {
+.admin-post {
 }
 </style>
