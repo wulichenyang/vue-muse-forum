@@ -33,6 +33,11 @@ export default class App extends Vue {
 
 <style lang="scss">
 @import "./assets/css/common.scss";
+/*icon字体路径变量*/
+$--font-path: "~element-ui/lib/theme-chalk/fonts";
+/*按需引入用到的element-ui组件的scss文件和基础scss文件*/
+@import "~element-ui/packages/theme-chalk/src/base.scss";
+@import "~element-ui/packages/theme-chalk/src/upload.scss";
 
 #app {
   // 知乎字体

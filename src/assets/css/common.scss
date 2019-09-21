@@ -56,3 +56,10 @@ a {
     color: $primary !important;
   }
 }
+
+// 修复面包屑导航颜色
+.mu-breadcrumbs-item:not(.is-disabled) {
+  .router-link-active {
+    color: $primary;
+  }
+}

@@ -8,21 +8,27 @@
           slot="divider"
         ></mu-icon>
         <mu-breadcrumbs-item
-          color="primary"
           v-for="(item, index) in breadcrumbs"
           :to="item.link"
           :key="item.text"
           :disabled="index === breadcrumbs.length - 1"
-        >{{item.text}}</mu-breadcrumbs-item>
+        >
+          {{item.text}}
+        </mu-breadcrumbs-item>
       </mu-breadcrumbs>
-      <!-- 添加分类按钮 -->
-      <mu-button
-        @click="toAdd"
-        fab
-        color="primary"
+      <div
+        class="btn-wrapper"
+        v-if="(this.$route) && !this.$route.fullPath.includes('add')"
       >
-        <mu-icon value="add"></mu-icon>
-      </mu-button>
+        <!-- 添加分类按钮 -->
+        <mu-button
+          @click="toAdd"
+          fab
+          color="primary"
+        >
+          <mu-icon value="add"></mu-icon>
+        </mu-button>
+      </div>
     </section>
 
     <!-- 文章分类具体内容 -->
@@ -130,6 +136,15 @@ export default class AdminCategory extends Vue {
     });
     console.log(this.breadcrumbs);
   }
+
+  toUpdate() {
+    this.$router.push("/admin/categories/update");
+    // 更新面包屑导航
+    this.breadcrumbs.splice(2, 1, {
+      text: "修改分类"
+    });
+    console.log(this.breadcrumbs);
+  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -156,5 +171,9 @@ export default class AdminCategory extends Vue {
 <style lang="scss">
 @import "../../../assets/css/var.scss";
 .admin-category {
+  .btn-wrapper {
+    text-align: right;
+    margin-right: 50px;
+  }
 }
 </style>

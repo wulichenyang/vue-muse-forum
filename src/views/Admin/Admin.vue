@@ -9,6 +9,7 @@
           <mu-list-item
             to="/admin/categories"
             button
+            append
           >
             <mu-list-item-action>
               <mu-icon value="inbox"></mu-icon>
@@ -156,7 +157,7 @@ export default class Admin extends Vue {
       background-color: transparent;
       color: #fff;
     }
-    .router-link-exact-active {
+    .router-link-active {
       .mu-item {
         background: rgba(0, 0, 0, 0.1);
       }

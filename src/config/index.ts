@@ -34,3 +34,8 @@ export const museLoadingConfig: any = {
   color: museThemeConfig.primary,            // color
   className: ''                              // loading class name
 }
+
+export const qiniuConfig: any ={
+  domain: "s3-cn-south-1.qiniucs.com",
+  qiniuAddr: "pxyg1giq3.bkt.clouddn.com",
+}

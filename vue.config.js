@@ -27,13 +27,32 @@ module.exports = {
         target: 'http://localhost:3000',
         ws: true,
         changeOrigin: true //是否跨域
+      },
+      // 七牛云代理
+      // 上传图片
+      '/qiniu/uploadToQiniu': {
+        target: "http://upload-z2.qiniup.com",
+        ws: true,
+        changeOrigin: true, //是否跨域
+        pathRewrite: {
+          '^/qiniu/uploadToQiniu': '/'
+        }
+      },
+      //删除图片
+      '/qiniu/removeFromQiniu': {
+        target: "http://rs.qiniu.com",
+        ws: true,
+        changeOrigin: true, //是否跨域
+        pathRewrite: {
+          '^/qiniu/removeFromQiniu': '/'
+        }
       }
     }
   },
 
   // 发布环境压缩、去掉 console.log()
-  configureWebpack: (config)=>{
-    if(process.env.NODE_ENV === 'production'){
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === 'production') {
       config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
     }
   }

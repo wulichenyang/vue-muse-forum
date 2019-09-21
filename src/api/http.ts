@@ -28,25 +28,30 @@ const errorHandle = (status: number, msg: string) => {
   switch (status) {
     // 500: Internal Server Error 服务器内部错误
     case 500:
+      msg = msg === "" ? '500 服务器内部错误' : msg
       // Toast('500 服务器内部错误')
       Toast.error(msg)
       break;
     // 501: Not Implemented
     case 501:
+      msg = msg === "" ? '501 不被服务器支持' : msg
       // Toast('501 请求错误')
       Toast.error(msg)
       break;
-    // 502: 错误网关 Bad Gatewa
+    // 502: 错误网关 Bad Gateway
     case 502:
+      msg = msg === "" ? '502 错误网关' : msg
       // Toast('502 错误网关')
       Toast.error(msg)
       break;
     // 400: bad request
     case 400:
+      msg = msg === "" ? '400 错误请求' : msg
       // Toast('400 错误的请求')
       Toast.error(msg)
       break;
     case 401:
+      msg = msg === "" ? '401 未登录授权' : msg
       store.dispatch('clearUser')
       cookie.removeCookie(access_token)
       // Toast('401 未登录/登录超时')
@@ -59,22 +64,26 @@ const errorHandle = (status: number, msg: string) => {
     // 403 token过期
     // 清除token并跳转登录页
     case 403:
+      msg = msg === "" ? '403 无访问权限' : msg
       // Toast('403 无访问权限')
       Toast.error(msg)
       console.log("403 无访问权限");
       break;
     // 404请求不存在
     case 404:
+      msg = msg === "" ? '404 请求资源不存在' : msg
       // Toast('404 请求的资源不存在')
       Toast.error(msg)
       console.log("请求的资源不存在");
       break;
     case 301:
+      msg = msg === "" ? '301 资源永久移动' : msg
       // 301 Moved Permanently
       Toast.error(msg)
       console.log("301 Moved Permanently")
       break;
     default:
+      msg = msg === "" ? 'API 请求错误' : msg
       Toast.error(msg)
       console.log('http: default error: ' + msg);
   }
@@ -115,7 +124,7 @@ instance.interceptors.response.use(
     // response.data是服务器返回的对象
     if (response) {
       // 请求已发出，但是不在2xx的范围
-      errorHandle(response.status, response.data.message || 'Api request error');
+      errorHandle(response.status, response.data.message || '');
       return Promise.reject(response);
     } else {
       // 处理断网的情况
@@ -165,8 +174,11 @@ export function del(url: string, config?: object) {
 * @param {Object} config [请求时携带的参数]
 @return {Promise<T>} AxioResponse [返回数据]
 */
-export function post(url: string, data: object, config?: object) {
-  // 有错误处理拦截器
+// 有错误处理拦截器
+export function post(url: string, data: object, config?: object, clearApiPrefix?: boolean) {
+  if (clearApiPrefix) {
+    return instance.post(url, data, config)
+  }
   return instance.post(ApiConfig.apiPrefix + url, data, config)
 }
 /**
