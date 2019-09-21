@@ -71,3 +71,17 @@ export enum SignType {
   SIGNUP = 'signup',
   SIGNIN = 'signin',
 }
+
+export interface CategoryDetail {
+  _id: string,
+  name: string,
+  avatar: string,
+  background: string,
+  brief: string,
+  description: string,
+  followCount: number,
+  postCount: number,
+  sort: number,
+  createdAt: Date,
+  updatedAt: Date,
+}

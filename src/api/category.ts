@@ -14,6 +14,6 @@ export const addCategory = ({ avatar, brief, name, sort }: CategoryPayload): Pro
   return post('/admin/categories', { avatar, brief, name, sort })
 }
 
-export const categoryList = (): Promise<any> => {
+export const fetchCategoryList = (): Promise<any> => {
   return get('/categories')
 }

@@ -41,7 +41,17 @@ const router = new Router({
           // this generates a separate chunk (category.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
           component: () => import(/* webpackChunkName: "category" */ './views/Admin/AdminCategory/AdminCategory.vue'),
+          redirect: 'categories/list',
           children: [
+            {
+              path: 'list',
+              name: 'adminCategoryList',
+              // route level code-splitting
+              // this generates a separate chunk (categoryAdd.[hash].js) for this route
+              // which is lazy-loaded when the route is visited.
+              component: () => import(/* webpackChunkName: "categoryAdd" */ './views/Admin/AdminCategory/AdminCategoryList.vue'),
+
+            },
             {
               path: 'add',
               name: 'adminCategoryAdd',
@@ -52,12 +62,12 @@ const router = new Router({
 
             },
             {
-              path: 'update',
-              name: 'adminCategoryAdd',
+              path: 'edit',
+              name: 'adminCategoryEdit',
               // route level code-splitting
-              // this generates a separate chunk (categoryUpdate.[hash].js) for this route
+              // this generates a separate chunk (categoryEdit.[hash].js) for this route
               // which is lazy-loaded when the route is visited.
-              component: () => import(/* webpackChunkName: "categoryUpdate" */ './views/Admin/AdminCategory/AdminCategoryUpdate.vue'),
+              component: () => import(/* webpackChunkName: "categoryEdit" */ './views/Admin/AdminCategory/AdminCategoryEdit.vue'),
 
             },
           ]

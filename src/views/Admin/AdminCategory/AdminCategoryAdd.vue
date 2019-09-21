@@ -1,6 +1,6 @@
 <template>
   <section class="admin-category-add">
-    <FormWrapper>
+    <FormWrapper title="添加分类">
       <mu-form
         ref="form"
         :model="form"
@@ -102,6 +102,7 @@ import { CategoryPayload } from "@/api/category";
     FormWrapper
   }
 })
+// TODO: copper
 export default class AdminCategoryAdd extends Vue {
   // Props
   // @Prop({

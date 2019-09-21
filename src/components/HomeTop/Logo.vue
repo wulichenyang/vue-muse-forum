@@ -1,6 +1,6 @@
 <template>
   <div class="logo-wrapper">
-    <a to="/">Muse Forum</a>
+    <a href="/">Muse Forum</a>
   </div>
 </template>
 

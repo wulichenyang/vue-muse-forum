@@ -16,24 +16,15 @@
           {{item.text}}
         </mu-breadcrumbs-item>
       </mu-breadcrumbs>
-      <div
-        class="btn-wrapper"
-        v-if="(this.$route) && !this.$route.fullPath.includes('add')"
-      >
-        <!-- 添加分类按钮 -->
-        <mu-button
-          @click="toAdd"
-          fab
-          color="primary"
-        >
-          <mu-icon value="add"></mu-icon>
-        </mu-button>
-      </div>
+
     </section>
 
     <!-- 文章分类具体内容 -->
     <section>
-      <router-view></router-view>
+      <router-view
+        v-on:toAdd="toAdd"
+        v-on:toEdit="toEdit"
+      ></router-view>
     </section>
   </section>
 </template>
@@ -49,7 +40,8 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
-
+import { categoryList } from "@/api/category";
+import To from "@/utils/to";
 @Component({
   components: {}
 })
@@ -106,15 +98,7 @@ export default class AdminCategory extends Vue {
   // Lifecycle
   mounted() {
     console.log("mounded");
-    if (this.$route.fullPath.includes("add")) {
-      this.breadcrumbs.splice(2, 1, {
-        text: "添加分类"
-      });
-    } else if (this.$route.fullPath.includes("update")) {
-      this.breadcrumbs.splice(2, 1, {
-        text: "修改分类"
-      });
-    }
+    this.initBreadcrumbs();
     // this.breadcrumbs = [
     //   {
     //     text: "分类管理",
@@ -128,23 +112,30 @@ export default class AdminCategory extends Vue {
   }
 
   // Methods
+  initBreadcrumbs() {
+    if (this.$route.fullPath.includes("add")) {
+      this.breadcrumbs.splice(2, 1, {
+        text: "添加分类"
+      });
+    } else if (this.$route.fullPath.includes("edit")) {
+      this.breadcrumbs.splice(2, 1, {
+        text: "编辑分类"
+      });
+    }
+  }
+
+  toEdit() {
+    this.breadcrumbs.splice(2, 1, {
+      text: "编辑分类"
+    });
+  }
+
   toAdd() {
-    this.$router.push("/admin/categories/add");
-    // 更新面包屑导航
     this.breadcrumbs.splice(2, 1, {
       text: "添加分类"
     });
-    console.log(this.breadcrumbs);
   }
 
-  toUpdate() {
-    this.$router.push("/admin/categories/update");
-    // 更新面包屑导航
-    this.breadcrumbs.splice(2, 1, {
-      text: "修改分类"
-    });
-    console.log(this.breadcrumbs);
-  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -160,7 +151,7 @@ export default class AdminCategory extends Vue {
   onRouterChanged(to: any, from: any) {
     if (from) {
       let fromPath = from.fullPath;
-      if (fromPath.includes("/add") || fromPath.includes("update")) {
+      if (fromPath.includes("/add") || fromPath.includes("edit")) {
         this.breadcrumbs.splice(this.breadcrumbs.length - 1, 1);
       }
     }
@@ -171,9 +162,5 @@ export default class AdminCategory extends Vue {
 <style lang="scss">
 @import "../../../assets/css/var.scss";
 .admin-category {
-  .btn-wrapper {
-    text-align: right;
-    margin-right: 50px;
-  }
 }
 </style>
