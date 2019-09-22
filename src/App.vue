@@ -47,10 +47,24 @@ $--font-path: "~element-ui/lib/theme-chalk/fonts";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   .main-wrapper {
+    background: linear-gradient(transparent, $mainWrapperBlurPink);
     box-sizing: border-box;
-    padding: $mainPadding;
+    // Phone
+    padding: 0 5px;
     margin-top: $homeTopHeight;
     min-height: calc(100vh - #{$homeTopHeight});
+  }
+
+  @media screen and (min-width: 576px) {
+    .main-wrapper {
+      padding: 18px 10px;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .main-wrapper {
+      padding: $mainPadding;
+    }
   }
 }
 </style>

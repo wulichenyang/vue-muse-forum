@@ -7,7 +7,7 @@ export const ApiConfig = {
 export const access_token: string = 'muse_forum_access_token';
 
 export const museThemeConfig: any = {
-  primary: '#e91e63', 
+  primary: '#e91e63',
   secondary: '#424242',
   success: '#4caf50',
   warning: '#fdd835',
@@ -35,7 +35,16 @@ export const museLoadingConfig: any = {
   className: ''                              // loading class name
 }
 
-export const qiniuConfig: any ={
+export const qiniuConfig: any = {
   domain: "http://upload-z2.qiniup.com",
   qiniuAddr: "pxyg1giq3.bkt.clouddn.com",
 }
+
+export const colorArray: string[] = [
+  "primary",
+  "secondary",
+  "success",
+  "warning",
+  "info",
+  "error"
+];

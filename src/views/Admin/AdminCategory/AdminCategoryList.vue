@@ -15,7 +15,7 @@
         class="chip"
         v-for="(chip, index) in categoryIds"
         :key="categoryDetail(chip)._id"
-        :color="colorArray[index % 7]"
+        :color="colorArray[index % (colorArray.length + 1)]"
         @click="toEdit(categoryDetail(chip)._id)"
         @delete="removeCategory(categoryDetail(chip)._id)"
         delete
@@ -38,6 +38,7 @@ import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
+import { colorArray } from "@/config/index";
 import { CategoryMap } from "@/store/modules/category";
 import { addCategory } from "@/api/category";
 import AdminCategoryUpdate from "./AdminCategoryUpdate.vue";
@@ -62,14 +63,7 @@ export default class AdminCategoryList extends Vue {
 
   // Data
   // categoryList: Array<>
-  colorArray: string[] = [
-    "primary",
-    "secondary",
-    "success",
-    "warning",
-    "info",
-    "error"
-  ];
+  colorArray: string[] = colorArray;
   // Computed
   // get computedData() {
   //   return ' cc' + this.searchValue;

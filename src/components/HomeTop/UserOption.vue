@@ -36,46 +36,60 @@
             <mu-list-item-title>后台管理</mu-list-item-title>
           </mu-list-item>
         </router-link>
+        
         <!-- 用户操作 -->
-        <mu-list-item button>
-          <mu-list-item-action>
-            <mu-icon value="mode_edit"></mu-icon>
-          </mu-list-item-action>
-          <mu-list-item-title>写文章</mu-list-item-title>
-        </mu-list-item>
+        <router-link
+          to="/newPost"
+        >
+          <mu-list-item button>
+            <mu-list-item-action>
+              <mu-icon value="mode_edit"></mu-icon>
+            </mu-list-item-action>
+            <mu-list-item-title>写文章</mu-list-item-title>
+          </mu-list-item>
+        </router-link>
+
         <mu-divider></mu-divider>
+        
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="person"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的主页</mu-list-item-title>
         </mu-list-item>
+
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="favorite"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的关注</mu-list-item-title>
         </mu-list-item>
+
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="star"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的收藏</mu-list-item-title>
         </mu-list-item>
+
         <mu-divider></mu-divider>
+
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="settings"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>设置</mu-list-item-title>
         </mu-list-item>
+
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="info"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>关于</mu-list-item-title>
         </mu-list-item>
+
         <mu-divider></mu-divider>
+
         <mu-list-item
           @click="openAlertDialog"
           button
@@ -85,6 +99,7 @@
           </mu-list-item-action>
           <mu-list-item-title>退出</mu-list-item-title>
         </mu-list-item>
+
       </mu-list>
     </mu-popover>
 
@@ -197,7 +212,8 @@ export default class UserOption extends Vue {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .user-option {
-  margin-right: 36px;
+  // Phone
+  margin-right: 10px;
   display: flex;
   align-items: center;
   .mu-button {
@@ -209,6 +225,13 @@ export default class UserOption extends Vue {
     cursor: pointer;
     box-shadow: $avatarShadowSearchColor;
     overflow: hidden;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  // Not Phone
+  .user-option {
+    margin-right: 36px;
   }
 }
 </style>

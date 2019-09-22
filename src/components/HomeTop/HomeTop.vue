@@ -1,6 +1,6 @@
 
 <template>
-  <header class="home-top">
+  <header :class="blur ? 'home-top blur' : 'home-top'">
     <section class="logo-left">
       <!-- logo图标 -->
       <Logo />
@@ -49,6 +49,7 @@ import SignPortal from "@/components/HomeTop/SignPortal.vue";
 import SignModal from "@/components/HomeTop/SignModal.vue";
 import UserOption from "@/components/HomeTop/UserOption.vue";
 import { UserDetail } from "@/assets/js/dataType";
+import { getScrollTop } from "@/utils/scroll";
 import {
   signUp,
   signIn,
@@ -86,6 +87,8 @@ export default class HomeTop extends Vue {
   isSignIn: boolean = false;
   // 提交状态标志
   submitting: boolean = false;
+  // header是否透明
+  blur: boolean = false;
 
   // Computed
   get ifShowSignPortal(): boolean {
@@ -106,9 +109,24 @@ export default class HomeTop extends Vue {
     return false;
   }
   // Lifecycle
-  mounted() {}
+  mounted() {
+    window.addEventListener("scroll", this.scrollFn);
+  }
+
+  destroyed() {
+    window.removeEventListener("scroll", this.scrollFn);
+  }
 
   // Methods
+  // 监听滚动，设置header透明
+  scrollFn() {
+    if (getScrollTop() > 150) {
+      this.blur = true;
+    } else {
+      this.blur = false;
+    }
+  }
+
   setCookie(token: string) {
     // TODO: 修改为：多账号同时登录token保存
     // 移除之前的账号token信息
@@ -256,6 +274,14 @@ export default class HomeTop extends Vue {
   justify-content: space-between;
   box-shadow: $topHeaderShadowColor;
   z-index: 999;
+  transition: ease 0.4s background-color;
+  &.blur {
+    transition: ease 0.4s background-color;
+    background: transparent;
+    .search-bar {
+      background: transparent;
+    }
+  }
   .top-left {
     display: flex;
     align-items: center;
