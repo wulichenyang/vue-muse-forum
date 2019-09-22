@@ -159,7 +159,7 @@ export async function get(url: string, config?: object) {
 /**
  * delete方法，对应delete请求
  * @param {String} url [请求的url地址]
- * @param {Object} config [请求时携带的参数]
+ * @param {Object} config [请求时携带的配置信息]
  * @return {Promise<T>} AxioResponse [返回数据]
  */
 export function del(url: string, config?: object) {
@@ -171,7 +171,8 @@ export function del(url: string, config?: object) {
 /**
 * post方法，对应post请求
 * @param {String} url [请求的url地址]
-* @param {Object} config [请求时携带的参数]
+* @param {Object} data [请求时的报文体数据信息]
+* @param {Object} config [请求时携带的配置信息]
 @return {Promise<T>} AxioResponse [返回数据]
 */
 // 有错误处理拦截器
@@ -184,7 +185,8 @@ export function post(url: string, data: object, config?: object, clearApiPrefix?
 /**
 * put方法，对应put请求
 * @param {String} url [请求的url地址]
-* @param {Object} config [请求时携带的参数]
+* @param {Object} data [请求时的报文体数据信息]
+* @param {Object} config [请求时携带的配置信息]
 @return {Promise<T>} AxioResponse [返回数据]
 */
 export function put(url: string, data: object, config?: object) {

@@ -36,6 +36,6 @@ export const museLoadingConfig: any = {
 }
 
 export const qiniuConfig: any ={
-  domain: "s3-cn-south-1.qiniucs.com",
+  domain: "http://upload-z2.qiniup.com",
   qiniuAddr: "pxyg1giq3.bkt.clouddn.com",
 }

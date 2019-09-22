@@ -40,7 +40,6 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
-import { categoryList } from "@/api/category";
 import To from "@/utils/to";
 @Component({
   components: {}

@@ -19,8 +19,8 @@
             :before-upload="beforeUpload"
           >
             <img
-              v-if="avatar"
-              :src="avatar"
+              v-if="form.avatar"
+              :src="form.avatar"
               class="avatar"
             >
             <i
@@ -34,7 +34,7 @@
         <mu-form-item
           prop="categoryName"
           label="分类名"
-          :rules="nameRules"
+          :rules="categoryNameRules"
         >
           <mu-text-field
             prop="categoryName"
@@ -47,7 +47,7 @@
         <mu-form-item
           prop="brief"
           label="分类简介"
-          :rules="briefRules"
+          :rules="categoryBriefRules"
         >
           <mu-text-field
             prop="brief"
@@ -97,6 +97,8 @@ import { qiniuConfig } from "@/config/index";
 import { fetchQiniuToken, uploadPhoto, deletePrePhoto } from "@/api/upload";
 import { addCategory } from "@/api/category";
 import { CategoryPayload } from "@/api/category";
+import { categoryNameRules, categoryBriefRules } from "@/utils/validate";
+
 @Component({
   components: {
     FormWrapper
@@ -117,48 +119,32 @@ export default class AdminCategoryAdd extends Vue {
   // searchKey!: string;
 
   // Data
+
   labelPosition: string = "top";
   form: any = {
     categoryName: "",
     sort: 1,
-    brief: ""
+    brief: "",
+    // 图片路径
+    avatar: ""
   };
   // 提交表单时，图片是否已上传成功
   isUploadAvatarOk: boolean = false;
-  // 图片路径
-  avatar: string = "";
   // 图片纯key值，用于删除图片
   photoKey: string = "";
   token: any = {};
   // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
-  domain: string = "http://upload-z2.qiniup.com";
+  domain: string = qiniuConfig.domain;
   // 这是七牛云空间的外链默认域名
-  qiniuaddr: string = "pxyg1giq3.bkt.clouddn.com";
+  qiniuaddr: string = qiniuConfig.qiniuAddr;
   // 是否已提交过表单
   ifSubmit: boolean = false;
   // 提交状态标志
   submitting: boolean = false;
 
-  // 验证表单正则
-  nameRules: any = [
-    { validate: (val: string) => !!val, message: "请填写分类名" },
-    {
-      validate: (val: string) => {
-        return val.trim().length < 6;
-      },
-      message: "分类名长度不超过5个字符"
-    }
-  ];
-
-  briefRules: any = [
-    { validate: (val: string) => !!val, message: "请填写分类简介" },
-    {
-      validate: (val: string) => {
-        return val.trim().length < 101;
-      },
-      message: "分类简介长度不超过100个字符"
-    }
-  ];
+  // 正则验证
+  categoryNameRules: any = categoryNameRules;
+  categoryBriefRules: any = categoryBriefRules;
 
   // Computed
   // get computedData() {
@@ -243,9 +229,9 @@ export default class AdminCategoryAdd extends Vue {
           deletePrePhoto(this.photoKey);
         }
         this.photoKey = uploadRes.key;
-        this.avatar = "http://" + this.qiniuaddr + "/" + uploadRes.key;
+        this.form.avatar = "http://" + this.qiniuaddr + "/" + uploadRes.key;
         this.isUploadAvatarOk = true;
-        console.log("avatar:    ", this.avatar);
+        console.log("avatar:    ", this.form.avatar);
       }
     }
   }
@@ -273,9 +259,9 @@ export default class AdminCategoryAdd extends Vue {
     this.form = {
       categoryName: "",
       sort: 1,
-      brief: ""
+      brief: "",
+      avatar: ""
     };
-    this.avatar = ""
   }
 
   async saveCategory() {
@@ -292,7 +278,7 @@ export default class AdminCategoryAdd extends Vue {
 
       let categoryPayload: CategoryPayload;
       categoryPayload = {
-        avatar: this.avatar,
+        avatar: this.form.avatar,
         name: this.form.categoryName,
         brief: this.form.brief,
         sort: this.form.sort
@@ -316,6 +302,8 @@ export default class AdminCategoryAdd extends Vue {
         this.ifSubmit = true;
         Toast.message("添加成功");
 
+        // 更新category列表
+        this.getCategoryList();
         // 清除表单
         this.clearForm();
       }
@@ -323,6 +311,7 @@ export default class AdminCategoryAdd extends Vue {
   }
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
+  @Action("getCategoryList") getCategoryList: any;
 
   // @Action("getUser") getUser: any;
 

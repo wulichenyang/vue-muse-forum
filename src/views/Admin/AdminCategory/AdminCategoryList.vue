@@ -16,7 +16,7 @@
         v-for="(chip, index) in categoryIds"
         :key="categoryDetail(chip)._id"
         :color="colorArray[index % 7]"
-        @click="toEdit"
+        @click="toEdit(categoryDetail(chip)._id)"
         @delete="removeCategory(categoryDetail(chip)._id)"
         delete
       >{{categoryDetail(chip).name}}</mu-chip>
@@ -77,7 +77,8 @@ export default class AdminCategoryList extends Vue {
 
   // Lifecycle
   mounted() {
-    if(this.categoryIds.length === 0) {
+    // Vuex为空，重新请求数据
+    if (this.categoryIds.length === 0) {
       this.getCategories();
     }
   }
@@ -96,8 +97,14 @@ export default class AdminCategoryList extends Vue {
     // });
   }
 
-  toEdit() {
-    this.$router.push("/admin/categories/edit");
+  toEdit(id: string) {
+    this.$router.push({
+      name: "adminCategoryEdit",
+      path: "/admin/categories/edit",
+      params: {
+        id
+      }
+    });
     // 更新面包屑导航
     this.$emit("toEdit");
     // this.breadcrumbs.splice(2, 1, {

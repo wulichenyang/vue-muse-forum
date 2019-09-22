@@ -62,7 +62,7 @@ const router = new Router({
 
             },
             {
-              path: 'edit',
+              path: 'edit/:id',
               name: 'adminCategoryEdit',
               // route level code-splitting
               // this generates a separate chunk (categoryEdit.[hash].js) for this route
