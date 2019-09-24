@@ -57,6 +57,8 @@ $--font-path: "~element-ui/lib/theme-chalk/fonts";
 
   @media screen and (min-width: 576px) {
     .main-wrapper {
+    background: $mainBodyBgColor;
+
       padding: 18px 10px;
     }
   }

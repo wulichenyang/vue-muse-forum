@@ -27,7 +27,7 @@ export default class ContainerInner extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .container-inner {
-  min-height: calc(100vh - #{$homeTopHeight} - 5px);
+  // min-height: calc(100vh - #{$homeTopHeight} - 5px);
   // Phone
   padding: 12px;
   background: $mainContainerBgColor;
@@ -35,7 +35,7 @@ export default class ContainerInner extends Vue {
 
 @media screen and (min-width: 576px) {
   .container-inner {
-    min-height: calc(100vh - #{$homeTopHeight} - 40px);
+    // min-height: calc(100vh - #{$homeTopHeight} - 40px);
     padding: 15px 20px;
   }
 }

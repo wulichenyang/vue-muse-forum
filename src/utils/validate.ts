@@ -58,3 +58,14 @@ export const categoryBriefRules: any = [
     message: "分类简介长度不超过100个字符"
   }
 ];
+
+// 文章
+export const postTitleRules: any = [
+  { validate: (val: string) => !!val, message: "请填写标题" },
+  {
+    validate: (val: string) => {
+      return val.trim().length < 31;
+    },
+    message: "标题长度不超过30个字符"
+  }
+];
