@@ -51,21 +51,30 @@ const actions = {
       return true
     }
   },
+  addCategoryPostCount(context: { dispatch: Dispatch, commit: Commit; state: State }) {
+    context.commit(types.ADD_CATEGORY_POST_COUNT)
+  },
 }
 
 // mutations
 const mutations = {
-  [types.SET_CATEGORY_MAP](state: State, payload: CategoryMap) {
+  [types.SET_CATEGORY_MAP](state: State, categoryMap: CategoryMap) {
     console.log(state)
     state.categoryMap = {
-      ...payload
+      ...categoryMap
     }
   },
-  [types.SET_CATEGORY_IDS](state: State, payload: string[]) {
+  [types.SET_CATEGORY_IDS](state: State, ids: string[]) {
     console.log(state)
     state.categoryIds = [
-      ...payload
+      ...ids
     ]
+  },
+  [types.ADD_CATEGORY_POST_COUNT](state: State, categoryId: string) {
+    (state.categoryMap as CategoryMap)[categoryId] = {
+      ...(state.categoryMap as CategoryMap)[categoryId],
+      postCount: (state.categoryMap as CategoryMap)[categoryId].postCount + 1
+    }
   },
 }
 

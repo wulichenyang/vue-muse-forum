@@ -85,3 +85,24 @@ export interface CategoryDetail {
   createdAt: Date,
   updatedAt: Date,
 }
+
+export type PostState = 'published' | 'draft'
+
+export interface PostDetail {
+  _id: string,
+  // authorId
+  author: string,
+  // categoryId
+  category: string,
+  title: string,
+  content: string,
+  viewCount: number,
+  followCount: number,
+  likeCount: number,
+  commentCount: number,
+  // commentIds
+  comment: string[],
+  state: PostState,
+  createdAt: Date,
+  updatedAt: Date,
+}

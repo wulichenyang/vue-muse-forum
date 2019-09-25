@@ -23,7 +23,6 @@
           <mu-form-item
             prop="category"
             label="选择文章分类"
-            :rules="categoryNameRules"
           >
             <mu-text-field
               disabled
@@ -54,6 +53,11 @@
           </quill-editor>
 
         </section>
+        <mu-button
+          v-loading="submitting"
+          @click="savePost"
+          color="primary"
+        >发表</mu-button>
       </mu-form>
 
     </ContainerInner>
@@ -77,7 +81,9 @@ import { CategoryMap } from "@/store/modules/category";
 import ContainerInner from "@/components/ContainerInner.vue";
 import { quillEditor } from "vue-quill-editor";
 import { postTitleRules, categoryNameRules } from "@/utils/validate";
-
+import { PostState, PostPayload, addPost } from "@/api/post";
+import Toast from "muse-ui-toast";
+import To from "@/utils/to";
 @Component({
   components: {
     ContainerInner,
@@ -107,6 +113,8 @@ export default class NewPost extends Vue {
     // 文章HTML内容
     htmlContent: ""
   };
+  // 表单提交中
+  submitting: boolean = false;
   colorArray: string[] = colorArray;
   // categoryNow: CategoryDetail | {} = {};
   // 正则验证
@@ -142,6 +150,75 @@ export default class NewPost extends Vue {
     };
   }
 
+  clearForm() {
+    this.form = {
+      // 文章分类
+      categoryNow: {},
+      // 文章标题
+      postTitle: "",
+      // 文章HTML内容
+      htmlContent: ""
+    };
+  }
+
+  // 跳转刚发表的文章页面
+  goToPost(postId: string) {
+    this.$router.push({ path: `/posts/${postId}` });
+  }
+
+  async savePost() {
+    // 已经提交了请求就不继续发送
+    if (this.submitting) {
+      return;
+    }
+
+    let isCheckOk = await (this.$refs.form as any).validate();
+    if((this.form.categoryNow._id) === undefined) {
+      Toast.error('请选择文章分类')
+      return
+    }
+    if (isCheckOk && this.form.htmlContent.length > 20) {
+      // 开启提交中标志，设置暂时已提交状态
+      this.submitting = true;
+
+      let postPayload: PostPayload;
+      postPayload = {
+        categoryId: this.form.categoryNow._id,
+        title: this.form.title,
+        content: this.form.htmlContent,
+        state: "published"
+      };
+
+      // 发表文章
+      let err, res;
+      [err, res] = await To(addPost(postPayload));
+
+      // 发表失败
+      if (err) {
+        // 关闭提交中标志，设置未提交标志
+        this.submitting = false;
+        return;
+      }
+
+      // 发表成功，设置已提交显示成功信息，关闭提交中标志
+      if (res && res.code === 0) {
+        this.submitting = false;
+        Toast.message("发表成功");
+
+        // 更新 post
+        this.setPost()(res.data)
+        // 更新 category
+        this.addCategoryPostCount(res.data.category);
+        // 更新 user
+        this.addUserPostCount()
+        this.goToPost(res.data._id);
+        // 清除表单
+        this.clearForm();
+      }
+    } else if (this.form.htmlContent.length <= 10) {
+      Toast.error("文章内容太少");
+    }
+  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -150,6 +227,9 @@ export default class NewPost extends Vue {
   @Getter("categoryDetail") categoryDetail: any;
 
   @Action("getCategoryList") getCategoryList: any;
+  @Action("setPost") setPost: any;
+  @Action("addCategoryPostCount") addCategoryPostCount: any;
+  @Action("addUserPostCount") addUserPostCount: any;
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 

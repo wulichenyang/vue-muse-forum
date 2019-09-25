@@ -23,6 +23,14 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "newPost" */ './views/NewPost.vue'),
     },
+    {
+      path: '/posts/:id',
+      name: 'post',
+      // route level code-splitting
+      // this generates a separate chunk (posts.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "post" */ './views/Post.vue'),
+    },
 
 
     // 管理员可访问页面

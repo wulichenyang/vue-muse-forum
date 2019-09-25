@@ -59,6 +59,9 @@ const actions = {
     context.commit(types.CLEAR_USER_LOGIN)
     context.commit(types.CLEAR_USER_DETAIL)
   },
+  addUserPostCount(context: { commit: Commit; state: State }) {
+    context.commit(types.ADD_USER_POST_COUNT)
+  },
   // async loginByPhone(context: { commit: Commit; state: State }, payload: PhoneAccountPayload) {
   //   try {
   //     let res: Ajax.AjaxResponse = await loginByPhone(payload.phone, payload.password)
@@ -92,6 +95,12 @@ const mutations = {
   },
   [types.CLEAR_USER_LOGIN](state: State) {
     state.isLogin = false
+  },
+  [types.ADD_USER_POST_COUNT](state: State) {
+    state.userDetail = {
+      ...(state.userDetail as UserDetail),
+      postCount: (state.userDetail as UserDetail).postCount + 1
+    }
   },
 }
 
