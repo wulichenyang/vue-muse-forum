@@ -14,7 +14,7 @@
             :key="categoryDetail(chip)._id"
             :color="colorArray[index % (colorArray.length + 1)]"
             @click="selectCategory(categoryDetail(chip))"
-          >{{categoryDetail(chip).name}}</mu-chip>
+          >{{categoryDetail(chip).name}} {{categoryDetail(chip).postCount}}</mu-chip>
         </section>
 
         <section class="editor-wrapper">
@@ -173,9 +173,9 @@ export default class NewPost extends Vue {
     }
 
     let isCheckOk = await (this.$refs.form as any).validate();
-    if((this.form.categoryNow._id) === undefined) {
-      Toast.error('请选择文章分类')
-      return
+    if (this.form.categoryNow._id === undefined) {
+      Toast.error("请选择文章分类");
+      return;
     }
     if (isCheckOk && this.form.htmlContent.length > 20) {
       // 开启提交中标志，设置暂时已提交状态
@@ -184,7 +184,7 @@ export default class NewPost extends Vue {
       let postPayload: PostPayload;
       postPayload = {
         categoryId: this.form.categoryNow._id,
-        title: this.form.title,
+        title: this.form.postTitle,
         content: this.form.htmlContent,
         state: "published"
       };
@@ -206,16 +206,16 @@ export default class NewPost extends Vue {
         Toast.message("发表成功");
 
         // 更新 post
-        this.setPost()(res.data)
-        // 更新 category
+        this.setPost(res.data);
+        // 更新 category postCount
         this.addCategoryPostCount(res.data.category);
-        // 更新 user
-        this.addUserPostCount()
+        // 更新 user postCount
+        this.addUserPostCount();
         this.goToPost(res.data._id);
         // 清除表单
         this.clearForm();
       }
-    } else if (this.form.htmlContent.length <= 10) {
+    } else if (this.form.htmlContent.length <= 20) {
       Toast.error("文章内容太少");
     }
   }

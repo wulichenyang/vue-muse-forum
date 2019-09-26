@@ -51,8 +51,8 @@ const actions = {
       return true
     }
   },
-  addCategoryPostCount(context: { dispatch: Dispatch, commit: Commit; state: State }) {
-    context.commit(types.ADD_CATEGORY_POST_COUNT)
+  addCategoryPostCount(context: { dispatch: Dispatch, commit: Commit; state: State }, categoryId: string) {
+    context.commit(types.ADD_CATEGORY_POST_COUNT, categoryId)
   },
 }
 
@@ -71,6 +71,7 @@ const mutations = {
     ]
   },
   [types.ADD_CATEGORY_POST_COUNT](state: State, categoryId: string) {
+    console.log((state.categoryMap as CategoryMap)[categoryId]);
     (state.categoryMap as CategoryMap)[categoryId] = {
       ...(state.categoryMap as CategoryMap)[categoryId],
       postCount: (state.categoryMap as CategoryMap)[categoryId].postCount + 1

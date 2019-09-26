@@ -31,11 +31,9 @@ const getters = {
 
 // actions
 const actions = {
-  setPost(context: { dispatch: Dispatch, commit: Commit; state: State }) {
-    return (post: PostDetail) => {
-      context.commit(types.ADD_POST_TO_MAP, post)
-      context.commit(types.ADD_POST_TO_IDS, post._id)
-    }
+  setPost(context: { dispatch: Dispatch, commit: Commit; state: State }, post: PostDetail) {
+    context.commit(types.ADD_POST_TO_MAP, post)
+    context.commit(types.ADD_POST_TO_IDS, post._id)
   },
 }
 
