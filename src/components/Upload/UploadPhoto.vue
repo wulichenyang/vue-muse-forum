@@ -44,6 +44,13 @@ export default class UploadPhoto extends Vue {
     required: true,
   })
   ifSubmit!: boolean;
+  // Props
+  @Prop({
+    type: String,
+    default: "photo",
+    required: false,
+  })
+  prefix!: string;
 
   @Prop()
   @Model('onAvatarChange') 
@@ -120,7 +127,7 @@ export default class UploadPhoto extends Vue {
     }
     // 重命名要上传的文件
     const keyname =
-      "category" +
+      this.prefix +
       "-" +
       new Date().getTime() +
       "-" +

@@ -13,6 +13,7 @@
           <UploadPhoto
             v-model="form.avatar"
             :ifSubmit="ifSubmit"
+            prefix="category"
           />
         </mu-form-item>
 
