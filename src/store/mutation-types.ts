@@ -13,10 +13,10 @@ export const ADD_CATEGORY_POST_COUNT = 'ADD_CATEGORY_POST_COUNT';
 
 
 // 文章
-export const SET_POST_MAP = 'SET_POST_MAP';
 export const SET_POST_IDS = 'SET_POST_IDS';
-export const ADD_POST_TO_MAP = 'ADD_POST_TO_MAP';
-export const ADD_POST_TO_IDS = 'ADD_POST_TO_IDS';
+export const ADD_POST_TO_BRIEF_MAP = 'ADD_POST_TO_BRIEF_MAP';
+export const ADD_POST_TO_DETAIL_MAP = 'ADD_POST_TO_DETAIL_MAP';
+
 // export const CLEAR_USER_LOGIN = 'CLEAR_USER_LOGIN';
 // // 评论
 // export const CLEAR_USER_LOGIN = 'CLEAR_USER_LOGIN';

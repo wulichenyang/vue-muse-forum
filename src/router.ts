@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
+import PostListView from './views/PostListView.vue';
 import cookie from './utils/cookie'
 import { access_token } from './config'
 import Toast from 'muse-ui-toast'
@@ -14,6 +15,13 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
+      children: [
+        {
+          path: 'categories/:id',
+          name: 'PostListView',
+          component: PostListView,
+        }
+      ]
     },
     {
       path: '/newPost',

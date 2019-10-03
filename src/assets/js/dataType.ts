@@ -10,15 +10,25 @@ export enum Gender {
   SECRET = 2,
 }
 
-export interface UserDetail {
+export interface DateType {
+  createdAt?: Date,
+  updatedAt?: Date,
+}
+
+export interface UserBrief {
   // 用户id 唯一
   _id: string,
+  // 用户昵称 唯一
+  nickname: string,
+  // 用户头像路径
+  avatar: string,
+}
+
+export interface UserDetail extends UserBrief {
   // 用户手机账户
   phone?: string,
   // 用户邮箱账户
   email?: string,
-  // 用户昵称 唯一
-  nickname: string,
   // 用户真实姓名
   realname: string,
   // 用户角色
@@ -27,8 +37,6 @@ export interface UserDetail {
   gender: Gender,
   // 用户出生日期
   birth: Date,
-  // 用户头像路径
-  avatar: string,
   // 用户简介
   brief: string,
   // 用户发帖数
@@ -72,9 +80,14 @@ export enum SignType {
   SIGNIN = 'signin',
 }
 
-export interface CategoryDetail {
+export interface CategoryBrief {
+  // 文章分类id 唯一
   _id: string,
+  // 文章分类名
   name: string,
+}
+
+export interface CategoryDetail extends CategoryBrief, DateType {
   avatar: string,
   background: string,
   brief: string,
@@ -82,27 +95,45 @@ export interface CategoryDetail {
   followCount: number,
   postCount: number,
   sort: number,
-  createdAt: Date,
-  updatedAt: Date,
 }
 
 export type PostState = 'published' | 'draft'
+export type CommentState = PostState
+export type ReplyState = PostState
 
-export interface PostDetail {
+export interface PostBrief extends DateType {
   _id: string,
-  // authorId
-  author: string,
-  // categoryId
-  category: string,
+  author: UserBrief, // populate 生成
+  category: CategoryBrief, // populate 生成
   title: string,
-  content: string,
   viewCount: number,
-  followCount: number,
   likeCount: number,
   commentCount: number,
+}
+
+export interface PostDetail extends PostBrief {
+  content: string,
+  followCount: number,
   // commentIds
-  comment: string[],
+  comment: string[], // 用于在Vuex中索引
   state: PostState,
-  createdAt: Date,
-  updatedAt: Date,
+}
+
+export interface CommentDetail extends DateType {
+  postId: string,
+  author: UserBrief,
+  content: string,
+  likeCount: number,
+  // replyIds
+  reply: string[],
+  state: CommentState,
+}
+
+export interface ReplyDetail extends DateType {
+  commentId: string,
+  from: UserBrief,
+  to: UserBrief,
+  content: string,
+  likeCount: number,
+  state: ReplyState,
 }

@@ -1,6 +1,6 @@
 <template>
   <mu-container>
-    <ContainerInner class="new-post">
+    <ContainerInner class="main-content">
       <mu-form
         ref="form"
         :model="form"
@@ -210,11 +210,7 @@ export default class NewPost extends Vue {
 
 <style lang="scss">
 @import "../assets/css/var.scss";
-.new-post {
-  .chip {
-    margin: 8px;
-    vertical-align: middle;
-  }
+.main-content {
   .editor-wrapper {
     margin-top: 10px;
     margin-bottom: 20px;

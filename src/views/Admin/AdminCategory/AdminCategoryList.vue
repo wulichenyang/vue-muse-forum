@@ -71,7 +71,7 @@ export default class AdminCategoryList extends Vue {
 
   // Lifecycle
   mounted() {
-    // Vuex为空，重新请求数据
+    // Vuex里categoryList为空，重新请求数据
     if (this.categoryIds.length === 0) {
       this.getCategories();
     }
@@ -131,11 +131,6 @@ export default class AdminCategoryList extends Vue {
     position: absolute;
     top: 36px;
     right: 36px;
-  }
-
-  .chip {
-    margin: 8px;
-    vertical-align: middle;
   }
 }
 </style>
