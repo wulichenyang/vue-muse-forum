@@ -12,7 +12,7 @@
           @click="onSelectCategory(categoryDetail(chipId))"
         >{{categoryDetail(chipId).name}}</mu-button>
       </section>
-      <ContainerInner class="main-content">
+      <ContainerInner class="post-main-content">
         <router-view></router-view>
       </ContainerInner>
     </mu-container>
@@ -32,7 +32,7 @@ import { CategoryDetail } from "../assets/js/dataType";
     ContainerInner
   }
 })
-export default class Home extends Vue {
+export default class HomeView extends Vue {
   // Props
   // @Prop({
   //   type: String,
@@ -119,6 +119,9 @@ export default class Home extends Vue {
 .home-wrapper {
   .category-tab-wrapper {
     margin-bottom: 20px;
+  }
+  .post-main-content {
+    padding: 0 !important;
   }
 }
 

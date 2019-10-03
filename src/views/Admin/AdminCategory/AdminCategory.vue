@@ -161,5 +161,6 @@ export default class AdminCategory extends Vue {
 <style lang="scss">
 @import "../../../assets/css/var.scss";
 .admin-category {
+  margin: 5px;
 }
 </style>

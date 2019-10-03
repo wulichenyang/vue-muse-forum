@@ -32,5 +32,9 @@ export default class FormWrapper extends Vue {
   min-height: calc(100vh - #{$homeTopHeight} - 130px);
   padding: 5px 36px 36px 36px;
   background: $mainContainerBgColor;
+
+  box-shadow: $boxShadowColor;
+  border-radius: $mainWrapperBorderRadius;
+  overflow: hidden;
 }
 </style>

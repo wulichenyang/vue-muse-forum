@@ -51,7 +51,7 @@ export default class PostListView extends Vue {
 
   // Lifecycle
   mounted() {
-    if (true) {
+    if (!this.postBriefMap(this.categoryIdNow)) {
       // Vuex里没有当前文章列表，请求数据
       this.getPostListData();
     }
@@ -69,21 +69,33 @@ export default class PostListView extends Vue {
   //   this.select(song, index);
   // }
 
-  @Getter("postBriefMap") postBriefMap!: PostBrief;
+  @Getter("postBriefMap") postBriefMap!: any;
   @Getter("postIds") postIds!: any;
 
   @Action("getPostList") getPostList: any;
   // @Emit("select")
   // select(listItem: Song, index: number) {}
 
-  // @Watch("child", { immediate: true, deep: true })
-  // onChildChanged(val: string, oldVal: string) {}
+  // 监听路由变化，请求文章列表
+  @Watch("$route", { immediate: true, deep: true })
+  onRouterChanged(to: any, from: any) {
+    if (to) {
+      let toPath = to.fullPath;
+      if (toPath.includes("/categories")) {
+        if (!this.postBriefMap(this.categoryIdNow)) {
+          // Vuex里没有当前文章列表，请求数据
+          this.getPostListData();
+        }
+      }
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 @import "../assets/css/var.scss";
 .post-view-wrapper {
+
 }
 
 // @media screen and (min-width: 576px) {

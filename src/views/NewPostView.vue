@@ -90,7 +90,7 @@ import To from "@/utils/to";
     RichTextEditor
   }
 })
-export default class NewPost extends Vue {
+export default class NewPostView extends Vue {
   // Data
   form: any = {
     // 文章分类

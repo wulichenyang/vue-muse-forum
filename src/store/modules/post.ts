@@ -1,7 +1,8 @@
 import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
 import {
-  fetchPostListByCategory
+  fetchPostListByCategory,
+  fetchPostDetail
 } from '@/api/post';
 import To from '@/utils/to'
 import {
@@ -12,7 +13,7 @@ import Vue from 'vue'
 
 export interface CategoryToPost {
   postBriefMap: PostBriefMap,
-  postDetailMap: PostDetailMap,
+  // postDetailMap: PostDetailMap,
   postIds: string[],
   // postDetailIds: string[],
 }
@@ -30,11 +31,13 @@ export interface PostDetailMap {
 }
 
 export interface State {
-  categoryToPostMap: CategoryToPostMap
+  categoryToPostMap: CategoryToPostMap,
+  postDetailMap: PostDetailMap
 }
 
 const initState: State = {
   categoryToPostMap: <CategoryToPostMap>{},
+  postDetailMap: <PostDetailMap>{}
 }
 
 // getters
@@ -42,24 +45,19 @@ const getters = {
 
   // 某分类下的文章列表map
   postBriefMap: (state: State) => (categoryId: string) => {
-    // if (!state.categoryToPostMap[categoryId]) {
-
-    //   Vue.set(state.categoryToPostMap, categoryId, {});
-    // }
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    if (!state.categoryToPostMap[categoryId]) {
+      Vue.set(state.categoryToPostMap, categoryId, {});
+    }
     // if(!state.categoryToPostMap[categoryId].postBriefMap){
-
     //   Vue.set(state.categoryToPostMap[categoryId], 'postBriefMap', {});
-
     // }
     return state.categoryToPostMap[categoryId].postBriefMap
   },
 
   // 文章详细信息map
-  postDetailMap: (state: State) => (categoryId: string) => {
-    if (!state.categoryToPostMap[categoryId]) {
-      state.categoryToPostMap[categoryId] = <CategoryToPost>{}
-    }
-    return state.categoryToPostMap[categoryId].postDetailMap
+  postDetailMap: (state: State) => {
+    return state.postDetailMap
   },
 
   // 某分类下的文章ids
@@ -76,9 +74,12 @@ const getters = {
   },
 
   // 获取某篇文章详细内容
-  postDetail: (state: State) => (categoryId: string, postId: string) => {
-    return state.categoryToPostMap[categoryId].postDetailMap[postId]
-  }
+  postDetail: (state: State) => (postId: string) => {
+    if (!state.postDetailMap[postId]) {
+      state.postDetailMap[postId] = <PostDetail>{}
+    }
+    return state.postDetailMap[postId]
+  },
 }
 
 // actions
@@ -106,13 +107,22 @@ const actions = {
     }
   },
 
-  // setPostBrief(context: { dispatch: Dispatch, commit: Commit; state: State }, categoryId: string, post: PostDetail) {
-  //   context.commit(types.ADD_POST_TO_DETAIL_MAP, categoryId, post as any)
-  //   context.commit(types.SET_POST_IDS, categoryId, )
-  // },
-  // setPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, categoryId: string, post: PostDetail) {
-  //   context.commit(types.ADD_POST_TO_DETAIL_MAP, categoryId, post as any)
-  // },
+  async getPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, postId: string) {
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(fetchPostDetail(postId));
+
+    // 获取失败
+    if (err) {
+      return false
+    }
+
+    if (res && res.code === 0) {
+      // 获取成功
+      context.commit(types.ADD_POST_TO_DETAIL_MAP, res.data as PostDetail)
+      return true
+    }
+  },
+
 }
 
 // mutations
@@ -130,16 +140,17 @@ const mutations = {
     }
   },
   // 添加单条文章详细信息
-  [types.ADD_POST_TO_DETAIL_MAP](state: State, payload: { categoryId: string, post: PostDetail }) {
+  [types.ADD_POST_TO_DETAIL_MAP](state: State, post: PostDetail) {
     console.log(state);
 
     // 初始化对象
-    if (!state.categoryToPostMap[payload.categoryId]) {
-      state.categoryToPostMap[payload.categoryId] = <CategoryToPost>{}
+    if (!state.postDetailMap[post._id]) {
+      state.postDetailMap[post._id] = <PostDetail>{}
     }
-    state.categoryToPostMap[payload.categoryId].postDetailMap = {
-      ...state.categoryToPostMap[payload.categoryId].postDetailMap,
-      [payload.post._id]: payload.post
+
+    state.postDetailMap = {
+      ...state.postDetailMap,
+      [post._id]: post
     }
   },
 

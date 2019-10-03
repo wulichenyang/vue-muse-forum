@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import HomeView from './views/HomeView.vue';
 import PostListView from './views/PostListView.vue';
 import cookie from './utils/cookie'
 import { access_token } from './config'
@@ -11,33 +11,59 @@ const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+
+    // 主页
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: HomeView,
       children: [
         {
-          path: 'categories/:id',
+          path: 'categories/:id/posts',
           name: 'PostListView',
           component: PostListView,
         }
       ]
     },
+
+    // 发表文章页面
     {
       path: '/newPost',
       name: 'newPost',
       // route level code-splitting
       // this generates a separate chunk (newPost.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "newPost" */ './views/NewPost.vue'),
+      component: () => import(/* webpackChunkName: "newPost" */ './views/NewPostView.vue'),
     },
+
+    // 文章详细信息
     {
       path: '/posts/:id',
       name: 'post',
       // route level code-splitting
       // this generates a separate chunk (posts.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "post" */ './views/Post.vue'),
+      component: () => import(/* webpackChunkName: "postDetail" */ './views/PostDetailView.vue'),
+    },
+
+    // 用户详细信息
+    {
+      path: '/users/:id',
+      name: 'user',
+      // route level code-splitting
+      // this generates a separate chunk (users.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "userView" */ './views/UserView.vue'),
+    },
+
+    // 文章分类详细页面
+    {
+      path: '/categories/:id',
+      name: 'category',
+      // route level code-splitting
+      // this generates a separate chunk (categories.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "ostDetail" */ './views/CategoryView.vue'),
     },
 
 

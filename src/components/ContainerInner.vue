@@ -31,6 +31,8 @@ export default class ContainerInner extends Vue {
   // Phone
   padding: 12px;
   background: $mainContainerBgColor;
+  border-radius: $mainWrapperBorderRadius;
+  box-shadow: $boxShadowColor;
 }
 
 @media screen and (min-width: 576px) {

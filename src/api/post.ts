@@ -28,6 +28,10 @@ export const fetchPostListByCategory = (categoryId: string): Promise<any> => {
   return get(`/categories/${categoryId}/posts`)
 }
 
+export const fetchPostDetail = (postId: string): Promise<any> => {
+  return get(`/posts/${postId}`)
+}
+
 export const fetchAllPostList = (): Promise<any> => {
   return get('/posts')
 }

@@ -36,11 +36,9 @@
             <mu-list-item-title>后台管理</mu-list-item-title>
           </mu-list-item>
         </router-link>
-        
+
         <!-- 用户操作 -->
-        <router-link
-          to="/newPost"
-        >
+        <router-link to="/newPost">
           <mu-list-item button>
             <mu-list-item-action>
               <mu-icon value="mode_edit"></mu-icon>
@@ -50,7 +48,7 @@
         </router-link>
 
         <mu-divider></mu-divider>
-        
+
         <mu-list-item button>
           <mu-list-item-action>
             <mu-icon value="person"></mu-icon>
@@ -220,11 +218,6 @@ export default class UserOption extends Vue {
     width: $topAvatarSize;
     height: $topAvatarSize;
     background: transparent;
-  }
-  .mu-avatar {
-    cursor: pointer;
-    box-shadow: $avatarShadowSearchColor;
-    overflow: hidden;
   }
 }
 

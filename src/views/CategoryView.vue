@@ -1,6 +1,6 @@
 <template>
-  <section class="post-wrapper">
-    post{{id}}
+  <section class="category-view-wrapper">
+    categoryView Detail
   </section>
 </template>
 
@@ -19,7 +19,7 @@ import {} from "@/assets/js/dataType";
 @Component({
   components: {}
 })
-export default class XXXXXX extends Vue {
+export default class CategoryView extends Vue {
   // Props
   // @Prop({
   //   type: String,
@@ -34,7 +34,7 @@ export default class XXXXXX extends Vue {
   // searchKey!: string;
 
   // Data
-  id: string = "";
+  // searchValue: string = "";
   // ifFocusSearch: boolean = false;
 
   // Computed
@@ -43,9 +43,7 @@ export default class XXXXXX extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
-    this.id = this.$route.params.id
-  }
+  mounted() {}
 
   // Methods
   // selectSong(song: Song, index: number): void {
@@ -66,29 +64,29 @@ export default class XXXXXX extends Vue {
 
 <style lang="scss">
 @import "../assets/css/var.scss";
-.post-wrapper {
+.category-view-wrapper {
 }
 
 
 // @media screen and (min-width: 576px) {
-//   .post-wrapper {
+//   .category-view-wrapper {
 //     max-width: 540px;
 //   }
 // }
 // @media screen and (min-width: 768px) {
-//   .post-wrapper {
+//   .category-view-wrapper {
 //     max-width: 720px;
 //   }
 // }
 
 // @media screen and (min-width: 992px) {
-//   .post-wrapper {
+//   .category-view-wrapper {
 //     max-width: 960px;
 //   }
 // }
 
 // @media screen and (min-width: 1200px) {
-//   .post-wrapper {
+//   .category-view-wrapper {
 //     max-width: 1024px;
 //   }
 // }

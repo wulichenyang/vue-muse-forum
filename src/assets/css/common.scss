@@ -35,10 +35,17 @@ a {
   background-color: transparent !important;
 }
 
-// 默认按钮为圆角
-.mu-button {
+// 默认按钮格式
+.mu-button, .mu-chip {
   // border-radius: 20px;
   overflow: hidden;
+  transition: .3s all;
+
+  // 按钮hover变大
+  &:hover {
+    transform: scale(1.12);
+    transition: .2s all;
+  }
 }
 
 // 提交表单按钮靠右
@@ -83,4 +90,11 @@ a {
 .chip {
   margin: 8px !important;
   vertical-align: middle;
+}
+
+// 用户头像
+.mu-avatar {
+  cursor: pointer;
+  box-shadow: $avatarShadowSearchColor;
+  overflow: hidden;
 }
