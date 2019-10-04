@@ -1,5 +1,7 @@
 @import "./assets/css/normalize.css";
 @import "./assets/css/var.scss";
+// 掘金文章样式
+@import "./assets/css/article-content.css";
 
 html {
   height: 100%;
@@ -20,7 +22,7 @@ h6 {
 }
 
 a {
-  color: $linkFontColor;
+  // color: $linkFontColor;
   cursor: pointer;
 }
 

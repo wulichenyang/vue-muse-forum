@@ -4,7 +4,7 @@
       <article class="post-wrapper">
         <h2 class="post-title">{{postData.title}}</h2>
         <main
-          class="post-content"
+          class="article-content"
           v-html="postData.content"
         >
         </main>
@@ -97,13 +97,8 @@ export default class PostDetailView extends Vue {
     margin-top: 0;
     padding-bottom: 10px;
   }
-  main.post-content {
-    // TODO: style for content
-    margin-top: 10px;
-    img {
-      text-align: center;
-      max-width: 80%;
-    }
+  main.article-content {
+    
   }
 }
 

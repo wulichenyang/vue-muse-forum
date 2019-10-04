@@ -1,0 +1,784 @@
+/* 掘金文章内容样式 */
+.article-content {
+  word-break: break-word;
+  line-height: 1.75;
+  font-weight: 400;
+  font-size: 15px;
+  overflow-x: hidden
+}
+
+.article-content h1 {
+  margin: 1.3rem 0;
+  line-height: 1.2
+}
+
+.article-content p {
+  color: #5c5c5c;
+  line-height: 2.27rem
+}
+
+.article-content hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin-top: 2.7rem;
+  margin-bottom: 2.7rem
+}
+
+.article-content img.lazyload {
+  visibility: hidden
+}
+
+.article-content img.inited {
+  background-color: #f8f9fa;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  visibility: visible
+}
+
+.article-content img.loaded {
+  background-image: none;
+  background-color: transparent
+}
+
+.article-content img.equation {
+  margin: 0 .1em;
+  max-width: 100% !important;
+  vertical-align: text-bottom
+}
+
+.article-content img:not(.equation) {
+  cursor: zoom-in
+}
+
+.article-content figure {
+  margin: 2.7rem auto;
+  text-align: center
+}
+
+.article-content figure figcaption {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 2.7rem;
+  color: #909090
+}
+
+.article-content pre {
+  line-height: 1.93rem;
+  overflow: auto
+}
+
+.article-content code,
+.article-content pre {
+  font-family: Menlo, Monaco, Consolas, Courier New, monospace
+}
+
+.article-content code {
+  font-size: 1rem;
+  padding: .26rem .53em;
+  word-break: break-word;
+  color: #804e59;
+  background-color: #f8f8f8;
+  border-radius: 2px;
+  overflow-x: auto
+}
+
+.article-content pre>code {
+  font-size: 1rem;
+  padding: .67rem 1.3rem;
+  margin: 0;
+  word-break: normal;
+  display: block
+}
+
+/* .article-content a {
+  color: #e91e63
+}
+
+.article-content a:active,
+.article-content a:hover {
+  color: #ff5d94
+} */
+
+.article-content table {
+  display: inline-block !important;
+  font-size: 1rem;
+  width: auto;
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid #f6f6f6
+}
+
+.article-content thead {
+  background: #f6f6f6;
+  color: #000;
+  text-align: left
+}
+
+.article-content tr:nth-child(2n) {
+  background-color: #fcfcfc
+}
+
+.article-content td,
+.article-content th {
+  padding: 1rem .6rem;
+  line-height: 2rem
+}
+
+.article-content td {
+  min-width: 10rem
+}
+
+.article-content blockquote {
+  font-size: 16px;
+  line-height: 2rem;
+  margin: 1em 0;
+  border-left: 4px solid #ddd;
+  padding: 0 1.3rem
+}
+
+.article-content blockquote>p {
+  margin: .6rem 0
+}
+
+.article-content ol,
+.article-content ul {
+  padding-left: 2.7rem
+}
+
+.article-content ol li,
+.article-content ul li {
+  margin-bottom: .6rem
+}
+
+.article-content ol ol,
+.article-content ol ul,
+.article-content ul ol,
+.article-content ul ul {
+  margin-top: .27rem
+}
+
+.article-content pre>code {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  color: #333;
+  background: #f8f8f8
+}
+
+.article-content p {
+  line-height: inherit;
+  margin-top: 22px;
+  margin-bottom: 22px
+}
+
+.article-content img {
+  max-height: none;
+  max-width: 100% !important;
+}
+
+.article-content a {
+  border-bottom: 1px solid #d1e9ff
+}
+
+.article-content code {
+  background-color: #fff5f5;
+  color: #e91e63;
+  font-size: .87em;
+  padding: .065em .4em
+}
+
+.article-content p img {
+  display: block;
+  margin: 0 auto;
+}
+
+.article-content figure {
+  margin: 22px auto
+}
+
+.article-content figure figcaption {
+  margin-top: 2px;
+  line-height: 1.6
+}
+
+.article-content blockquote {
+  color: #666;
+  padding: 1px 23px;
+  margin: 22px 0;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8
+}
+
+.article-content blockquote:after {
+  display: block;
+  content: ""
+}
+
+.article-content blockquote>p {
+  margin: 10px 0
+}
+
+.article-content blockquote.warning {
+  position: relative;
+  border-left-color: #f75151;
+  margin-left: 8px
+}
+
+.article-content blockquote.warning:before {
+  position: absolute;
+  top: 14px;
+  left: -12px;
+  background: #f75151;
+  border-radius: 50%;
+  content: "!";
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+.article-content ol,
+.article-content ul {
+  padding-left: 28px
+}
+
+.article-content ol li,
+.article-content ul li {
+  margin-bottom: 0;
+  list-style: inherit
+}
+
+.article-content ol li.task-list-item,
+.article-content ul li.task-list-item {
+  list-style: none
+}
+
+.article-content ol li.task-list-item ol,
+.article-content ol li.task-list-item ul,
+.article-content ul li.task-list-item ol,
+.article-content ul li.task-list-item ul {
+  margin-top: 0
+}
+
+.article-content ol li {
+  padding-left: 6px
+}
+
+.article-content pre {
+  position: relative;
+  line-height: 1.75
+}
+
+.article-content pre>code {
+  padding: 15px 12px
+}
+
+.article-content pre>code.hljs[lang] {
+  padding: 18px 15px 12px
+}
+
+.article-content pre>code.hljs[lang]:before {
+  content: attr(lang);
+  position: absolute;
+  right: 15px;
+  top: 2px;
+  color: hsla(0, 0%, 54.9%, .8)
+}
+
+.article-content pre>code.hljs[lang][lang=bash]:before {
+  content: ""
+}
+
+.article-content pre>code.copyable .copy-code-btn {
+  position: absolute;
+  top: 6px;
+  right: 15px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  color: hsla(0, 0%, 54.9%, .8);
+  transition: color .1s
+}
+
+.article-content pre>code.copyable .copy-code-btn:hover {
+  color: #8c8c8c
+}
+
+.article-content pre>code.copyable.hljs[lang]:before {
+  right: 70px
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
+  line-height: 1.5;
+  margin-top: 35px;
+  margin-bottom: 10px;
+  padding-bottom: 5px
+}
+
+.article-content h1 {
+  font-size: 30px;
+  margin-bottom: 5px
+}
+
+.article-content h2 {
+  padding-bottom: 12px;
+  font-size: 24px;
+  border-bottom: 1px solid #ececec
+}
+
+.article-content h3 {
+  font-size: 18px;
+  padding-bottom: 0
+}
+
+.article-content h4 {
+  font-size: 16px
+}
+
+.article-content h5 {
+  font-size: 15px
+}
+
+.article-content h6 {
+  margin-top: 5px
+}
+
+.article-content h1.heading+h2.heading {
+  margin-top: 20px
+}
+
+.article-content h1.heading+h3.heading {
+  margin-top: 15px
+}
+
+.article-content .heading+.heading {
+  margin-top: 0
+}
+
+.article-content h1+:not(.heading) {
+  margin-top: 25px
+}
+
+@media (max-width: 720px) {
+  .article-content h1 {
+    font-size: 24px
+  }
+
+  .article-content h2 {
+    font-size: 20px
+  }
+
+  .article-content h3 {
+    font-size: 18px
+  }
+
+  .article-content pre>code .copy-code-btn {
+    display: none
+  }
+
+  .article-content pre>code.hljs[lang]:before {
+    top: 2px;
+    right: 15px
+  }
+}
+
+@media (max-width: 720px) {
+  .article-content pre>code.copyable.hljs[lang]:before {
+    right: 1rem
+  }
+}
+
+/* 编辑器样式覆盖 */
+
+.ql-editor h1 {
+  margin: 1.3rem 0 !important;
+  line-height: 1.2 !important;
+}
+
+.ql-editor p {
+  color: #5c5c5c !important;
+  line-height: 2.27rem !important;
+}
+
+.ql-editor hr {
+  border: none !important;
+  border-top: 1px solid #ddd !important;
+  margin-top: 2.7rem !important;
+  margin-bottom: 2.7rem !important;
+}
+
+.ql-editor img.lazyload {
+  visibility: hidden !important;
+}
+
+.ql-editor img.inited {
+  background-color: #f8f9fa !important;
+  background-position: 50% !important;
+  background-repeat: no-repeat !important;
+  visibility: visible !important;
+}
+
+.ql-editor img.loaded {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.ql-editor img.equation {
+  margin: 0 .1em !important;
+  max-width: 100% !important;
+  vertical-align: text-bottom !important;
+}
+
+.ql-editor img:not(.equation) {
+  cursor: zoom-in !important;
+}
+
+.ql-editor figure {
+  margin: 2.7rem auto !important;
+  text-align: center !important;
+}
+
+.ql-editor figure figcaption {
+  text-align: center !important;
+  font-size: 1rem !important;
+  line-height: 2.7rem !important;
+  color: #909090 !important;
+}
+
+.ql-editor pre {
+  line-height: 1.93rem !important;
+  overflow: auto !important;
+}
+
+.ql-editor code,
+.ql-editor pre {
+  font-family: Menlo, Monaco, Consolas, Courier New, monospace !important;
+}
+
+.ql-editor code {
+  font-size: 1rem !important;
+  padding: .26rem .53em !important;
+  word-break: break-word !important;
+  color: #804e59 !important;
+  background-color: #f8f8f8 !important;
+  border-radius: 2px !important;
+  overflow-x: auto !important;
+}
+
+.ql-editor pre>code {
+  font-size: 1rem !important;
+  padding: .67rem 1.3rem !important;
+  margin: 0 !important;
+  word-break: normal !important;
+  display: block !important;
+}
+
+/* .ql-editor a {
+  color: #e91e63 !important;
+}
+
+.ql-editor a:active,
+.ql-editor a:hover {
+  color: #ff5d94 !important;
+} */
+
+.ql-editor table {
+  display: inline-block !important;
+  font-size: 1rem !important;
+  width: auto !important;
+  max-width: 100% !important;
+  overflow: auto !important;
+  border: 1px solid #f6f6f6 !important;
+}
+
+.ql-editor thead {
+  background: #f6f6f6 !important;
+  color: #000 !important;
+  text-align: left !important;
+}
+
+.ql-editor tr:nth-child(2n) {
+  background-color: #fcfcfc !important;
+}
+
+.ql-editor td,
+.ql-editor th {
+  padding: 1rem .6rem !important;
+  line-height: 2rem !important;
+}
+
+.ql-editor td {
+  min-width: 10rem !important;
+}
+
+.ql-editor blockquote {
+  margin: 1em 0 !important;
+  border-left: 4px solid #ddd !important;
+  padding: 0 1.3rem !important;
+}
+
+.ql-editor blockquote>p {
+  margin: .6rem 0 !important;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 2.7rem !important;
+}
+
+.ql-editor ol li,
+.ql-editor ul li {
+  margin-bottom: .6rem !important;
+}
+
+.ql-editor ol ol,
+.ql-editor ol ul,
+.ql-editor ul ol,
+.ql-editor ul ul {
+  margin-top: .27rem !important;
+}
+
+.ql-editor pre>code {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  color: #333 !important;
+  background: #f8f8f8 !important;
+}
+
+.ql-editor p {
+  line-height: inherit !important;
+  margin-top: 22px !important;
+  margin-bottom: 22px !important;
+}
+
+.ql-editor img {
+  max-height: none !important;
+  max-width: 100% !important;
+}
+
+.ql-editor a {
+  border-bottom: 1px solid #d1e9ff !important;
+}
+
+.ql-editor code {
+  background-color: #fff5f5 !important;
+  color: #e91e63 !important;
+  font-size: .87em !important;
+  padding: .065em .4em !important;
+}
+
+.ql-editor p img {
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.ql-editor figure {
+  margin: 22px auto !important;
+}
+
+.ql-editor figure figcaption {
+  margin-top: 2px !important;
+  line-height: 1.6 !important;
+}
+
+.ql-editor blockquote {
+  font-size: 16px;
+  line-height: 2rem;
+  color: #666 !important;
+  padding: 1px 23px !important;
+  margin: 22px 0 !important;
+  border-left: 4px solid #cbcbcb !important;
+  background-color: #f8f8f8 !important;
+}
+
+.ql-editor blockquote:after {
+  display: block !important;
+  content: "" !important;
+}
+
+.ql-editor blockquote>p {
+  margin: 10px 0 !important;
+}
+
+.ql-editor blockquote.warning {
+  position: relative !important;
+  border-left-color: #f75151 !important;
+  margin-left: 8px !important;
+}
+
+.ql-editor blockquote.warning:before {
+  position: absolute !important;
+  top: 14px !important;
+  left: -12px !important;
+  background: #f75151 !important;
+  border-radius: 50% !important;
+  content: "!" !important;
+  width: 20px !important;
+  height: 20px !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 28px !important;
+}
+
+.ql-editor ol li,
+.ql-editor ul li {
+  margin-bottom: 0 !important;
+  list-style: inherit !important;
+}
+
+.ql-editor ol li.task-list-item,
+.ql-editor ul li.task-list-item {
+  list-style: none !important;
+}
+
+.ql-editor ol li.task-list-item ol,
+.ql-editor ol li.task-list-item ul,
+.ql-editor ul li.task-list-item ol,
+.ql-editor ul li.task-list-item ul {
+  margin-top: 0 !important;
+}
+
+.ql-editor ol li {
+  padding-left: 6px !important;
+}
+
+.ql-editor pre {
+  position: relative !important;
+  line-height: 1.75 !important;
+}
+
+.ql-editor pre>code {
+  padding: 15px 12px !important;
+}
+
+.ql-editor pre>code.hljs[lang] {
+  padding: 18px 15px 12px !important;
+}
+
+.ql-editor pre>code.hljs[lang]:before {
+  content: attr(lang) !important;
+  position: absolute !important;
+  right: 15px !important;
+  top: 2px !important;
+  color: hsla(0, 0%, 54.9%, .8) !important;
+}
+
+.ql-editor pre>code.hljs[lang][lang=bash]:before {
+  content: "" !important;
+}
+
+.ql-editor pre>code.copyable .copy-code-btn {
+  position: absolute !important;
+  top: 6px !important;
+  right: 15px !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  color: hsla(0, 0%, 54.9%, .8) !important;
+  transition: color .1s !important;
+}
+
+.ql-editor pre>code.copyable .copy-code-btn:hover {
+  color: #8c8c8c !important;
+}
+
+.ql-editor pre>code.copyable.hljs[lang]:before {
+  right: 70px !important;
+}
+
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  line-height: 1.5 !important;
+  margin-top: 35px !important;
+  margin-bottom: 10px !important;
+  padding-bottom: 5px !important;
+}
+
+.ql-editor h1 {
+  font-size: 30px !important;
+  margin-bottom: 5px !important;
+}
+
+.ql-editor h2 {
+  padding-bottom: 12px !important;
+  font-size: 24px !important;
+  border-bottom: 1px solid #ececec !important;
+}
+
+.ql-editor h3 {
+  font-size: 18px !important;
+  padding-bottom: 0 !important;
+}
+
+.ql-editor h4 {
+  font-size: 16px !important;
+}
+
+.ql-editor h5 {
+  font-size: 15px !important;
+}
+
+.ql-editor h6 {
+  margin-top: 5px !important;
+}
+
+.ql-editor h1.heading+h2.heading {
+  margin-top: 20px !important;
+}
+
+.ql-editor h1.heading+h3.heading {
+  margin-top: 15px !important;
+}
+
+.ql-editor .heading+.heading {
+  margin-top: 0 !important;
+}
+
+.ql-editor h1+:not(.heading) {
+  margin-top: 25px !important;
+}
+
+@media (max-width: 720px) {
+  .ql-editor h1 {
+    font-size: 24px !important;
+  }
+
+  .ql-editor h2 {
+    font-size: 20px !important;
+  }
+
+  .ql-editor h3 {
+    font-size: 18px !important;
+  }
+
+  .ql-editor pre>code .copy-code-btn {
+    display: none !important;
+  }
+
+  .ql-editor pre>code.hljs[lang]:before {
+    top: 2px !important;
+    right: 15px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .ql-editor pre>code.copyable.hljs[lang]:before {
+    right: 1rem !important;
+  }
+}

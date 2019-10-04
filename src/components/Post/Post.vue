@@ -56,7 +56,7 @@
             </router-link>
 
             <!-- 发表时间 -->
-            <span>{{dateDiff((new Date(postBrief.createdAt)).getTime())}}</span>
+            <span class="time">{{dateDiff((new Date(postBrief.createdAt)).getTime())}}</span>
           </div>
 
           <!-- 底部右部分信息 -->
@@ -189,6 +189,9 @@ export default class Post extends Vue {
       .bottom-wrapper {
         display: flex;
         justify-content: space-between;
+      }
+      span.time {
+        color: $linkFontColor;
       }
     }
   }

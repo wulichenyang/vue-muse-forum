@@ -50,7 +50,7 @@ $--font-path: "~element-ui/lib/theme-chalk/fonts";
     background: linear-gradient(transparent, $mainWrapperBlurPink);
     box-sizing: border-box;
     // Phone
-    padding: 0 5px;
+    padding: 10px 0;
     margin-top: $homeTopHeight;
     min-height: calc(100vh - #{$homeTopHeight});
   }
