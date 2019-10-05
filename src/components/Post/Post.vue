@@ -1,5 +1,5 @@
 <template>
-  <!-- 文章详细信息 -->
+  <!-- 文章简单信息 -->
   <router-link
     class="post-link"
     :to="`/posts/${postBrief._id}`"
@@ -51,24 +51,46 @@
           <div class="bottom-left">
             <!-- 文章分类 -->
             <router-link :to="`/categories/${postBrief.category._id}`">
-
-              <span></span>
+              <span class="category-name">{{postBrief.category.name}}</span>
             </router-link>
 
             <!-- 发表时间 -->
             <span class="time">{{dateDiff((new Date(postBrief.createdAt)).getTime())}}</span>
+            <!-- 阅读数 -->
+            <span class="view-count">{{formatNumber(postBrief.viewCount)}}次阅读</span>
           </div>
 
           <!-- 底部右部分信息 -->
           <div class="bottom-right">
-            <!-- 阅读数 -->
-            <span>{{postBrief.viewCount}}次浏览</span>
 
             <!-- 点赞/点赞数 -->
-            <span>{{postBrief.likeCount}}点赞</span>
+            <mu-button
+              flat
+              color="primary"
+              class="like-btn"
+              @click.prevent="onLike()"
+            >
+              <mu-icon
+                right
+                value="thumb_up"
+              ></mu-icon>
+              {{formatNumber(postBrief.likeCount)}}
+            </mu-button>
 
-            <!-- 评论 -->
-            <span>{{postBrief.commentCount}}评论</span>
+            <!-- 评论/评论数 -->
+            <mu-button
+              flat
+              class="comment-btn"
+              @click.prevent="onComment()"
+            >
+              <mu-icon
+                right
+                color="secondary"
+                value="textsms"
+              ></mu-icon>
+              {{formatNumber(postBrief.commentCount)}}
+            </mu-button>
+
           </div>
         </div>
       </section>
@@ -87,6 +109,7 @@ import {
   Watch
 } from "vue-property-decorator";
 import { localDate, dateDiff } from "@/utils/time";
+import { formatNumber } from "@/utils/format";
 import getPy from "@/utils/nameToPinyin";
 import { Getter, Action } from "vuex-class";
 import { PostBrief } from "@/assets/js/dataType";
@@ -110,9 +133,11 @@ export default class Post extends Vue {
 
   // Data
   // 时间转换函数
-  localDate: any = localDate;
+  // localDate: any = localDate;
   // 时间差函数
   dateDiff: any = dateDiff;
+  // 数字格式化单位函数 单位k
+  formatNumber: any = formatNumber;
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
 
@@ -125,9 +150,15 @@ export default class Post extends Vue {
   mounted() {}
 
   // Methods
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  onLike() {
+    console.log("like");
+    return;
+  }
+
+  onComment() {
+    console.log("comment");
+    return;
+  }
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
@@ -151,9 +182,10 @@ export default class Post extends Vue {
 
   .post-wrapper {
     background: $mainContainerBgColor;
-    padding: 27px 36px;
-    border-radius: $mainWrapperBorderRadius;
     transition: 0.3s all;
+    // Phone
+    padding: $postPhonePadding;
+    border-radius: $phoneMainWrapperBorderRadius;
     &:hover {
       transform: scale(1.01);
       box-shadow: $postBoxShadowColor;
@@ -189,19 +221,42 @@ export default class Post extends Vue {
       .bottom-wrapper {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        .mu-button {
+          height: 27px;
+        }
+        .like-btn,
+        .comment-btn {
+          min-width: 64px;
+          min-height: 30px;
+          i {
+            margin-right: 5px;
+          }
+        }
       }
-      span.time {
+      .time,
+      .category-name {
+        color: $linkFontColor;
+        &:after {
+          content: "·";
+          margin: 0 0.4em;
+          color: $linkFontColor;
+        }
+      }
+      .view-count {
         color: $linkFontColor;
       }
     }
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .post-wrapper {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .post-link {
+    .post-wrapper {
+      border-radius: $mainWrapperBorderRadius;
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .post-wrapper {
 //     max-width: 720px;

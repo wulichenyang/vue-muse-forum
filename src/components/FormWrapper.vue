@@ -34,7 +34,13 @@ export default class FormWrapper extends Vue {
   background: $mainContainerBgColor;
 
   box-shadow: $boxShadowColor;
-  border-radius: $mainWrapperBorderRadius;
   overflow: hidden;
+  // Phone
+  border-radius: $phoneMainWrapperBorderRadius;
+}
+@media screen and (min-width: 576px) {
+  .form-wrapper {
+    border-radius: $mainWrapperBorderRadius;
+  }
 }
 </style>

@@ -38,8 +38,9 @@ a {
 }
 
 // 默认按钮格式
-.mu-button, .mu-chip {
-  // border-radius: 20px;
+.mu-button,
+.mu-chip {
+  // border-radius: $mainWrapperBorderRadius !important;
   overflow: hidden;
   transition: .3s all;
 
@@ -99,4 +100,18 @@ a {
   cursor: pointer;
   box-shadow: $avatarShadowSearchColor;
   overflow: hidden;
+}
+
+// 圆角
+.mu-popover, .mu-dialog {
+  // Phone
+  border-radius: $phoneMainWrapperBorderRadius !important;
+}
+
+// 方角设置
+@media screen and (min-width: 576px) {
+  .mu-popover, .mu-dialog {
+    // Not Phone
+    border-radius: $mainWrapperBorderRadius !important;
+  }
 }

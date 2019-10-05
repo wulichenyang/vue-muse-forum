@@ -29,15 +29,16 @@ export default class ContainerInner extends Vue {
 .container-inner {
   // min-height: calc(100vh - #{$homeTopHeight} - 5px);
   // Phone
-  padding: 12px;
+  padding: 16px 20px;
   background: $mainContainerBgColor;
-  border-radius: $mainWrapperBorderRadius;
+  border-radius: $phoneMainWrapperBorderRadius;
   box-shadow: $boxShadowColor;
 }
 
 @media screen and (min-width: 576px) {
   .container-inner {
     // min-height: calc(100vh - #{$homeTopHeight} - 40px);
+    border-radius: $mainWrapperBorderRadius;
     padding: 15px 20px;
   }
 }

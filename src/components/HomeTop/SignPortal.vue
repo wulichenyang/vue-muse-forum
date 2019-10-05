@@ -71,12 +71,19 @@ export default class SignPortal extends Vue {
     padding: 0 15px;
   }
   .mu-button {
-    border-radius: 20px;
+    // Phone
+    border-radius: $phoneMainWrapperBorderRadius;
     overflow: hidden;
   }
   .sign-in,
   .sign-up {
     color: $linkFontColor;
+  }
+  
+  @media screen and (min-width: 576px) {
+    .mu-button {
+      border-radius: $mainWrapperBorderRadius;
+    }
   }
 }
 </style>

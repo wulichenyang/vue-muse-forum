@@ -130,7 +130,7 @@
 
 .article-content blockquote {
   font-size: 16px;
-  line-height: 2rem;
+  line-height: 2.5rem;
   margin: 1em 0;
   border-left: 4px solid #ddd;
   padding: 0 1.3rem
@@ -589,7 +589,7 @@
 
 .ql-editor blockquote {
   font-size: 16px;
-  line-height: 2rem;
+  line-height: 2.5rem;
   color: #666 !important;
   padding: 1px 23px !important;
   margin: 22px 0 !important;
