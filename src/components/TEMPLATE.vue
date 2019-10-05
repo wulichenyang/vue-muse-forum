@@ -23,7 +23,7 @@ export default class XXXXXX extends Vue {
   // Props
   // @Prop({
   //   type: String,
-  //   default: [],
+  //   default: "",
   //   required: true,
   // })
   // list!: string;

@@ -8,6 +8,7 @@
         :label-position="labelPosition"
         label-width="100"
       >
+
         <!-- 头像上传 -->
         <mu-form-item label="上传分类图片">
           <UploadPhoto
@@ -38,11 +39,12 @@
         >
           <mu-text-field
             prop="brief"
-            :max-length="100"
+            :max-length="300"
             multi-line
             v-model="form.brief"
           ></mu-text-field>
         </mu-form-item>
+
         <!-- 分类排序权重 -->
         <mu-form-item
           prop="sort"
@@ -57,6 +59,7 @@
         </mu-form-item>
 
       </mu-form>
+
       <mu-button
         v-loading="submitting"
         @click="saveCategory"

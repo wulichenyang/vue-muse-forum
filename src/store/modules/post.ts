@@ -122,7 +122,6 @@ const actions = {
       return true
     }
   },
-
 }
 
 // mutations

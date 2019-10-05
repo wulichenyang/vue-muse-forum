@@ -53,9 +53,9 @@ export const categoryBriefRules: any = [
   { validate: (val: string) => !!val, message: "请填写分类简介" },
   {
     validate: (val: string) => {
-      return val.trim().length < 101;
+      return val.trim().length < 301;
     },
-    message: "分类简介长度不超过100个字符"
+    message: "分类简介长度不超过300个字符"
   }
 ];
 
@@ -67,5 +67,16 @@ export const postTitleRules: any = [
       return val.trim().length < 31;
     },
     message: "标题长度不超过30个字符"
+  }
+];
+
+// 纯文字编辑框
+export const commentRules: any = (title: string) => [
+  { validate: (val: string) => !!val, message: `请填写${title}` },
+  {
+    validate: (val: string) => {
+      return val.trim().length < 501;
+    },
+    message: `${title}长度不超过500个字符`
   }
 ];

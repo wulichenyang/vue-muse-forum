@@ -182,8 +182,6 @@ export default class NewPostView extends Vue {
         this.submitting = false;
         Toast.message("发表成功");
 
-        // 更新 post
-        this.setPost(res.data);
         // 更新 category postCount
         this.addCategoryPostCount(res.data.category);
         // 更新 user postCount
@@ -202,7 +200,6 @@ export default class NewPostView extends Vue {
   @Getter("categoryDetail") categoryDetail: any;
 
   @Action("getCategoryList") getCategoryList: any;
-  @Action("setPost") setPost: any;
   @Action("addCategoryPostCount") addCategoryPostCount: any;
   @Action("addUserPostCount") addUserPostCount: any;
 }

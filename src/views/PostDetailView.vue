@@ -7,11 +7,11 @@
         <!-- 左侧头像部分 -->
         <router-link
           class="left-avatar-wrapper"
-          :to="`/users/${postData.author._id}`"
+          :to="`/users/${postData && postData.author && postData.author._id}`"
         >
           <!-- 头像 -->
           <mu-button
-            class="user-avatar"
+            class="avatar-btn"
             fab
           >
             <mu-avatar
@@ -35,7 +35,10 @@
         <!-- 中间部分 -->
         <div class="center-wrapper">
           <!-- 作者昵称 -->
-          <span>{{postData.author.nickname}}</span>
+          <router-link :to="`/users/${postData && postData.author && postData.author._id}`">
+            <span>{{postData && postData.author && postData.author.nickname}}</span>
+          </router-link>
+
           <p>
             <!-- 发表时间 -->
             <span>{{dateDiff((new Date(postData.createdAt)).getTime())}}</span>
@@ -45,10 +48,16 @@
         </div>
 
         <!-- 右侧关注按钮 -->
-        <mu-button
-          class="right-btn"
-          :small="true"
-        >关注</mu-button>
+        <div class="right-wrapper">
+          <mu-button
+            :flat="ifFollowUser ? false : true"
+            small
+            class="right-btn empty-btn"
+            color="pink400"
+          >
+            关注
+          </mu-button>
+        </div>
       </section>
 
       <!-- 文章内容 -->
@@ -63,8 +72,27 @@
       </article>
 
       <!-- 相关分类标签 -->
+      <blockquote>相关文章分类标签</blockquote>
+      <router-link :to="postData && postData.category && `/categories/${postData.category._id}` || ''">
+        <mu-button
+          flat
+          small
+          class="right-btn empty-btn"
+          color="pink400"
+        >
+          {{postData&& postData.category && postData.category.name}}
+        </mu-button>
+      </router-link>
 
-      <!-- 评论 -->
+      <!-- 纯文字编辑框（评论） -->
+      <TextEditor
+        title="评论"
+        :submitCallback="onSubmitComment"
+      />
+
+      <!-- 评论列表 -->
+      <!-- <Comment /> -->
+
     </ContainerInner>
   </mu-container>
 </template>
@@ -81,12 +109,20 @@ import {
 import { localDate, dateDiff } from "@/utils/time";
 import { formatNumber } from "@/utils/format";
 import ContainerInner from "@/components/ContainerInner.vue";
+import TextEditor from "@/components/TextEditor.vue";
+import Comment from "@/components/Comment/Comment.vue";
 import { Getter, Action } from "vuex-class";
+import { CommentPayload, addComment, CommentState } from "@/api/comment";
+import Toast from "muse-ui-toast";
+import To from "@/utils/to";
 import {} from "@/assets/js/dataType";
+import getPy from "@/utils/nameToPinyin";
 
 @Component({
   components: {
-    ContainerInner
+    ContainerInner,
+    TextEditor,
+    Comment
   }
 })
 export default class PostDetailView extends Vue {
@@ -104,6 +140,8 @@ export default class PostDetailView extends Vue {
   // searchKey!: string;
 
   // Data
+  // 是否关注该用户
+  ifFollowUser: boolean = false;
   // 时间差函数
   dateDiff: any = dateDiff;
   // 数字格式化单位函数 单位k
@@ -115,6 +153,14 @@ export default class PostDetailView extends Vue {
 
   get postData() {
     return this.postDetail(this.postIdNow);
+  }
+
+  get firstLetter(): string {
+    return this.postData &&
+      this.postData.author &&
+      this.postData.author.nickname
+      ? getPy(this.postData.author.nickname.substring(0, 1))[0]
+      : "";
   }
 
   // Lifecycle
@@ -129,6 +175,34 @@ export default class PostDetailView extends Vue {
     console.log(123);
     this.getPostDetail(this.postIdNow);
   }
+
+  // 提交comment回调
+  async onSubmitComment(content: string): Promise<boolean> {
+    let commentPayload: CommentPayload;
+    commentPayload = {
+      postId: this.postIdNow,
+      content: content,
+      state: "published"
+    };
+
+    // 添加评论
+    let err, res;
+    [err, res] = await To(addComment(commentPayload));
+
+    // 添加失败
+    if (err) {
+      return false;
+    }
+
+    // 添加成功，设置已提交显示成功信息，关闭提交中标志
+    if (res && res.code === 0) {
+      Toast.message("评论成功");
+
+      // TODO：更新comment列表
+      this.addComment();
+    }
+    return true;
+  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -136,6 +210,7 @@ export default class PostDetailView extends Vue {
   @Getter("postDetail") postDetail!: any;
 
   @Action("getPostDetail") getPostDetail: any;
+  @Action("addComment") addComment: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}
@@ -149,7 +224,7 @@ export default class PostDetailView extends Vue {
 @import "../assets/css/var.scss";
 .post-detail-wrapper {
   // 用户信息
-  .mu-button {
+  .avatar-btn {
     width: $postAvatarSize;
     height: $postAvatarSize;
     background: transparent;
@@ -159,13 +234,16 @@ export default class PostDetailView extends Vue {
     // 左侧
     .left-avatar-wrapper {
       width: $postAvatarSize;
+      margin-top: 3px;
     }
 
     // 中间
     .center-wrapper {
+      margin-left: 14px;
       flex: 1;
       p {
         color: $linkFontColor;
+        margin-top: 0;
         span:not(:last-child) {
           &:after {
             content: "·";
@@ -177,8 +255,10 @@ export default class PostDetailView extends Vue {
     }
 
     // 右边
-    .right-btn {
-      width: 100px;
+    .right-wrapper {
+      .mu-button {
+        margin-top: 5px;
+      }
     }
   }
   .post-title {

@@ -51,6 +51,11 @@ a {
   }
 }
 
+// 小按钮格式
+.mu-button.mu-button-small {
+  min-width: 56px;
+}
+
 // 提交表单按钮靠右
 .submit-button-wrapper {
   .mu-form-item-content {
@@ -103,15 +108,34 @@ a {
 }
 
 // 圆角
-.mu-popover, .mu-dialog {
+.mu-popover,
+.mu-dialog {
   // Phone
   border-radius: $phoneMainWrapperBorderRadius !important;
 }
 
 // 方角设置
 @media screen and (min-width: 576px) {
-  .mu-popover, .mu-dialog {
+
+  .mu-popover,
+  .mu-dialog {
     // Not Phone
     border-radius: $mainWrapperBorderRadius !important;
   }
+}
+
+// 块式引用
+blockquote {
+  color: #666;
+  padding: 1px 23px;
+  margin: 22px 0;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  line-height: 2.5rem;
+}
+
+// 空心按钮
+.empty-btn {
+  border: 1px solid $primary !important;
 }
