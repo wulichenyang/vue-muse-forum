@@ -59,13 +59,11 @@ const actions = {
 // mutations
 const mutations = {
   [types.SET_CATEGORY_MAP](state: State, categoryMap: CategoryMap) {
-    console.log(state)
     state.categoryMap = {
       ...categoryMap
     }
   },
   [types.SET_CATEGORY_IDS](state: State, ids: string[]) {
-    console.log(state)
     state.categoryIds = [
       ...ids
     ]

@@ -21,17 +21,20 @@ export interface EmailAccountPayload {
 export interface State {
   userDetail: UserDetail | null;
   isLogin: boolean | null;
+  openLoginDialog: boolean
 }
 
 const initState: State = {
   userDetail: null,
   isLogin: null,
+  openLoginDialog: false
 }
 
 // getters
 const getters = {
   userDetail: (state: State) => state.userDetail,
-  isLogin: (state: State) => state.isLogin
+  isLogin: (state: State) => state.isLogin,
+  openLoginDialog: (state: State) => state.openLoginDialog,
 }
 
 // actions
@@ -62,6 +65,15 @@ const actions = {
   addUserPostCount(context: { commit: Commit; state: State }) {
     context.commit(types.ADD_USER_POST_COUNT)
   },
+  // 开关 login 对话框
+  openLoginDialog(context: { commit: Commit; state: State }) {
+    context.commit(types.OPEN_LOGIN_DIALOG)
+  },
+
+  closeLoginDialog(context: { commit: Commit; state: State }) {
+    context.commit(types.CLOSE_LOGIN_DIALOG)
+  },
+
   // async loginByPhone(context: { commit: Commit; state: State }, payload: PhoneAccountPayload) {
   //   try {
   //     let res: Ajax.AjaxResponse = await loginByPhone(payload.phone, payload.password)
@@ -81,7 +93,6 @@ const actions = {
 // mutations
 const mutations = {
   [types.SET_USER_DETAIL](state: State, payload: UserDetail) {
-    console.log(state)
     // 对象直接赋值不行，需要解构赋值？// TODO: fix
     state.userDetail = {
       ...payload
@@ -101,6 +112,12 @@ const mutations = {
       ...(state.userDetail as UserDetail),
       postCount: (state.userDetail as UserDetail).postCount + 1
     }
+  },
+  [types.OPEN_LOGIN_DIALOG](state: State) {
+    state.openLoginDialog = true;
+  },
+  [types.CLOSE_LOGIN_DIALOG](state: State) {
+    state.openLoginDialog = false;
   },
 }
 

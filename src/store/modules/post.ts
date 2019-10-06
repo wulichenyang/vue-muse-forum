@@ -128,7 +128,6 @@ const actions = {
 const mutations = {
   // 添加文章列表
   [types.ADD_POST_TO_BRIEF_MAP](state: State, payload: { categoryId: string, postBriefMap: PostBriefMap }) {
-    console.log(state);
     // 初始化对象
     if (!state.categoryToPostMap[payload.categoryId]) {
       state.categoryToPostMap[payload.categoryId] = <CategoryToPost>{}
@@ -140,8 +139,6 @@ const mutations = {
   },
   // 添加单条文章详细信息
   [types.ADD_POST_TO_DETAIL_MAP](state: State, post: PostDetail) {
-    console.log(state);
-
     // 初始化对象
     if (!state.postDetailMap[post._id]) {
       state.postDetailMap[post._id] = <PostDetail>{}
@@ -155,7 +152,6 @@ const mutations = {
 
   // 添加文章列表ids
   [types.SET_POST_IDS](state: State, payload: { categoryId: string, postIds: string[] }) {
-    console.log(state)
     // 初始化对象
     if (!state.categoryToPostMap[payload.categoryId]) {
       state.categoryToPostMap[payload.categoryId] = <CategoryToPost>{}

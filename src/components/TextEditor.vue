@@ -1,7 +1,10 @@
 <template>
-  <section class="text-editor">
+  <section
+    class="text-editor"
+    v-if="ifShowThis"
+  >
     <!-- 标题 -->
-    <h3 v-if="title">
+    <h3 v-if="title && showTitle">
       {{title}}
     </h3>
 
@@ -16,57 +19,66 @@
     >
       <section class="textarea-wrapper">
 
-        <!-- 输入框表单 -->
-        <mu-form-item
-          prop="content"
-          :rules="commentRules"
-        >
-          <mu-text-field
-            @focus="onFocusTextEditor"
+        <!-- 头像 -->
+        <UserAvatar
+          v-if="user"
+          :user="user"
+        ></UserAvatar>
+
+        <!-- 表单 -->
+        <div class="right-textarea">
+          <!-- 输入框表单 -->
+          <mu-form-item
             prop="content"
-            multi-line
-            :rows="2"
-            :placeholder="`输入${title}...`"
-            :max-length="500"
-            v-model="form.content"
-          ></mu-text-field>
-        </mu-form-item>
-
-        <!-- emoji 和 提交按钮 -->
-        <div
-          v-show="ifShowTips"
-          class="more-option"
-        >
-
-          <!-- emoji按钮 -->
-          <mu-button
-            small
-            flat
-            color="primary"
-            class="left-emoji"
-            @click="onEmoji()"
+            :rules="commentRules"
           >
-            <mu-icon
-              right
-              value="tag_faces"
-            ></mu-icon>
-            表情
-          </mu-button>
+            <mu-text-field
+              @focus="onFocusTextEditor"
+              prop="content"
+              multi-line
+              :rows="2"
+              :placeholder="`输入${title}...`"
+              :max-length="500"
+              v-model="form.content"
+            ></mu-text-field>
+          </mu-form-item>
 
-          <!-- 提交按钮 -->
-          <div class="right-submit-wrapper">
-            <span>Ctrl or ⌘ + Enter</span>
+          <!-- emoji 和 提交按钮 -->
+          <div
+            v-show="ifShowTips"
+            class="more-option"
+          >
+
+            <!-- emoji按钮 -->
             <mu-button
-              v-loading="submitting"
               small
+              flat
               color="primary"
-              class="right-submit"
-              @click="onSubmit()"
+              class="left-emoji"
+              @click="onEmoji()"
             >
-              {{title}}
+              <mu-icon
+                right
+                value="tag_faces"
+              ></mu-icon>
+              表情
             </mu-button>
-          </div>
 
+            <!-- 提交按钮 -->
+            <div class="right-submit-wrapper">
+              <span>Ctrl or ⌘ + Enter</span>
+              <mu-button
+                v-loading="submitting"
+                small
+                color="primary"
+                class="right-submit"
+                @click="onSubmit()"
+              >
+                {{title}}
+              </mu-button>
+            </div>
+
+          </div>
         </div>
 
       </section>
@@ -85,12 +97,16 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
 import To from "@/utils/to";
 import { commentRules } from "@/utils/validate";
+import { UserBrief } from "@/assets/js/dataType";
+import UserAvatar from "@/components/UserAvatar.vue";
 
 @Component({
-  components: {}
+  components: {
+    UserAvatar
+  }
 })
 export default class TextEditor extends Vue {
   // Props
@@ -107,21 +123,53 @@ export default class TextEditor extends Vue {
     required: true
   })
   submitCallback!: Function;
+  // 发表用户
+  @Prop({
+    required: false
+  })
+  user!: UserBrief;
 
+  // 是否显示标题
+  @Prop({
+    type: Boolean,
+    default: true,
+    required: false
+  })
+  showTitle!: boolean;
+
+  // 是否隐藏本身，当点击外部时
+  @Prop({
+    type: Boolean,
+    default: false,
+    required: false
+  })
+  hiddenWhenOutClick!: boolean;
+
+  @Prop({
+    type: Boolean,
+    default: true,
+    required: false
+  })
+  @Model("onShowThisChange")
+  ifShowThis!: boolean;
   // @Model("onChange", {
   //   type: String
   // })
   // searchKey!: string;
 
   // Data
+
   // 表单
   form: any = {
     content: ""
   };
+
   // 正则验证
   commentRules: any = commentRules(this.title);
-  // 展示输入框更多操作
+
+  // 显示输入框更多操作
   ifShowTips: boolean = false;
+
   // 提交状态标志
   submitting: boolean = false;
 
@@ -135,10 +183,16 @@ export default class TextEditor extends Vue {
 
   // Lifecycle
   mounted() {
+    if (this.hiddenWhenOutClick) {
+      this.hiddenThisHandler();
+    }
     this.hiddenTipHandler();
   }
 
   destroyed() {
+    if (this.hiddenWhenOutClick) {
+      this.removeHiddenThisHandler();
+    }
     this.removeHiddenTipHandler();
   }
 
@@ -151,16 +205,33 @@ export default class TextEditor extends Vue {
 
   onFocusTextEditor() {
     // 显示提交组件
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
     this.ifShowTips = true;
+  }
+
+  removeHiddenThisHandler() {
+    document.body.removeEventListener("click", () => this.hiddenThis());
   }
 
   removeHiddenTipHandler() {
     document.body.removeEventListener("click", this.hiddenTips);
   }
 
+  hiddenThisHandler() {
+    // 点击外部，隐藏自身，内部stop阻止冒泡
+    document.body.addEventListener("click", () => this.hiddenThis(), false);
+  }
+
   hiddenTipHandler() {
     // 点击外部，隐藏操作按钮，内部stop阻止冒泡
     document.body.addEventListener("click", this.hiddenTips, false);
+  }
+
+  hiddenThis() {
+    this.onShowThisChange(false);
   }
 
   hiddenTips() {
@@ -172,6 +243,12 @@ export default class TextEditor extends Vue {
 
   // 提交
   async onSubmit() {
+    // 如果未登录则弹出登录框
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+
     // 已经提交了请求就不继续发送
     if (this.submitting) {
       return;
@@ -202,12 +279,11 @@ export default class TextEditor extends Vue {
   //   this.select(song, index);
   // }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("isLogin") isLogin!: boolean | null;
+  @Action("openLoginDialog") openLoginDialog: any;
 
-  // @Action("getUser") getUser: any;
-
-  // @Emit("select")
-  // select(listItem: Song, index: number) {}
+  @Emit("onShowThisChange")
+  onShowThisChange(ifShowThis: boolean) {}
 
   // @Watch("child", { immediate: true, deep: true })
   // onChildChanged(val: string, oldVal: string) {}
@@ -226,22 +302,25 @@ export default class TextEditor extends Vue {
   .textarea-wrapper {
     padding: 14px 20px;
     background: $mainBodyBgColor;
-  }
-
-  .more-option {
     display: flex;
-    justify-content: space-between;
-    .left-emoji {
-      i {
-        margin-left: 0;
-      }
-    }
-    .right-submit-wrapper {
-      span {
-        color: $linkFontColor;
-        margin-right: 12px;
-      }
-      .right-submit {
+    .right-textarea {
+      flex: 1;
+      .more-option {
+        display: flex;
+        justify-content: space-between;
+        .left-emoji {
+          i {
+            margin-left: 0;
+          }
+        }
+        .right-submit-wrapper {
+          span {
+            color: $linkFontColor;
+            margin-right: 12px;
+          }
+          .right-submit {
+          }
+        }
       }
     }
   }

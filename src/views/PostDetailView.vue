@@ -5,39 +5,13 @@
       <section class="user-info">
 
         <!-- 左侧头像部分 -->
-        <router-link
-          class="left-avatar-wrapper"
-          :to="`/users/${postData && postData.author && postData.author._id}`"
-        >
-          <!-- 头像 -->
-          <mu-button
-            class="avatar-btn"
-            fab
-          >
-            <mu-avatar
-              v-if="postData && postData.author && postData.author.avatar"
-              text-color="#fff"
-              color="pink400"
-              size="36"
-            >
-              <img :src="postData && postData.author && postData.author.avatar">
-            </mu-avatar>
-            <mu-avatar
-              v-else
-              text-color="#fff"
-              color="pink400"
-              size="36"
-            >{{firstLetter}}
-            </mu-avatar>
-          </mu-button>
-        </router-link>
+        <!-- 头像 -->
+        <UserAvatar :user="postData && postData.author" />
 
         <!-- 中间部分 -->
         <div class="center-wrapper">
           <!-- 作者昵称 -->
-          <router-link :to="`/users/${postData && postData.author && postData.author._id}`">
-            <span>{{postData && postData.author && postData.author.nickname}}</span>
-          </router-link>
+          <UserName :user="postData && postData.author" />
 
           <p>
             <!-- 发表时间 -->
@@ -54,6 +28,7 @@
             small
             class="right-btn empty-btn"
             color="pink400"
+            @click="followUser"
           >
             关注
           </mu-button>
@@ -88,10 +63,17 @@
       <TextEditor
         title="评论"
         :submitCallback="onSubmitComment"
+        :user="userDetail"
       />
 
       <!-- 评论列表 -->
-      <!-- <Comment /> -->
+      <section class="comment-list-wrapper">
+        <Comment
+          :key="comment._id"
+          v-for="comment in postData.comment"
+          :commentDetail="comment"
+        ></Comment>
+      </section>
 
     </ContainerInner>
   </mu-container>
@@ -110,19 +92,22 @@ import { localDate, dateDiff } from "@/utils/time";
 import { formatNumber } from "@/utils/format";
 import ContainerInner from "@/components/ContainerInner.vue";
 import TextEditor from "@/components/TextEditor.vue";
+import UserAvatar from "@/components/UserAvatar.vue";
+import UserName from "@/components/UserName.vue";
 import Comment from "@/components/Comment/Comment.vue";
 import { Getter, Action } from "vuex-class";
 import { CommentPayload, addComment, CommentState } from "@/api/comment";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import {} from "@/assets/js/dataType";
-import getPy from "@/utils/nameToPinyin";
 
 @Component({
   components: {
     ContainerInner,
     TextEditor,
-    Comment
+    UserAvatar,
+    Comment,
+    UserName
   }
 })
 export default class PostDetailView extends Vue {
@@ -155,14 +140,6 @@ export default class PostDetailView extends Vue {
     return this.postDetail(this.postIdNow);
   }
 
-  get firstLetter(): string {
-    return this.postData &&
-      this.postData.author &&
-      this.postData.author.nickname
-      ? getPy(this.postData.author.nickname.substring(0, 1))[0]
-      : "";
-  }
-
   // Lifecycle
   mounted() {
     if (!this.postData || !this.postData._id) {
@@ -172,7 +149,6 @@ export default class PostDetailView extends Vue {
 
   // Methods
   initPostDetail() {
-    console.log(123);
     this.getPostDetail(this.postIdNow);
   }
 
@@ -203,12 +179,20 @@ export default class PostDetailView extends Vue {
     }
     return true;
   }
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  // 关注该用户
+  followUser() {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+
+  }
 
   @Getter("postDetail") postDetail!: any;
+  @Getter("userDetail") userDetail!: any;
+  @Getter("isLogin") isLogin!: boolean | null;
 
+  @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
   @Action("addComment") addComment: any;
 
@@ -224,22 +208,11 @@ export default class PostDetailView extends Vue {
 @import "../assets/css/var.scss";
 .post-detail-wrapper {
   // 用户信息
-  .avatar-btn {
-    width: $postAvatarSize;
-    height: $postAvatarSize;
-    background: transparent;
-  }
   .user-info {
     display: flex;
-    // 左侧
-    .left-avatar-wrapper {
-      width: $postAvatarSize;
-      margin-top: 3px;
-    }
 
     // 中间
     .center-wrapper {
-      margin-left: 14px;
       flex: 1;
       p {
         color: $linkFontColor;
@@ -267,6 +240,11 @@ export default class PostDetailView extends Vue {
     padding-bottom: 10px;
   }
   main.article-content {
+  }
+
+  .comment-list-wrapper {
+    margin-left: 20px;
+    margin-top: 20px;
   }
 }
 

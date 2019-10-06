@@ -108,7 +108,7 @@ import {
   Model,
   Watch
 } from "vue-property-decorator";
-import { localDate, dateDiff } from "@/utils/time";
+import { dateDiff } from "@/utils/time";
 import { formatNumber } from "@/utils/format";
 import getPy from "@/utils/nameToPinyin";
 import { Getter, Action } from "vuex-class";
@@ -151,18 +151,27 @@ export default class Post extends Vue {
 
   // Methods
   onLike() {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+
     console.log("like");
     return;
   }
 
   onComment() {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+
     console.log("comment");
     return;
   }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-
-  // @Action("getUser") getUser: any;
+  @Getter("isLogin") isLogin!: boolean | null;
+  @Action("openLoginDialog") openLoginDialog: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

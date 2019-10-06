@@ -80,7 +80,6 @@ export default class RichTextEditor extends Vue {
 
   // 选择图片时自动上传七牛云
   imgHandler(state: any) {
-    console.log(state);
     this.addRange = (this.$refs.myTextEditor as any).quill.getSelection();
     if (state) {
       // 选择并上传一张图片

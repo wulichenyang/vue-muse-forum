@@ -41,7 +41,7 @@
 
 
 <script lang="ts">
-import { Component, Vue, Model } from "vue-property-decorator";
+import { Component, Vue, Model, Watch } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import Logo from "@/components/HomeTop/Logo.vue";
 import SearchBar from "@/components/HomeTop/SearchBar.vue";
@@ -77,7 +77,27 @@ import { access_token } from "@/config";
 export default class HomeTop extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("isLogin") isLogin!: boolean;
+  @Getter("openLoginDialog") openLoginDialog!: boolean;
+
   @Action("getUser") getUser: any;
+  @Action("closeLoginDialog") closeLoginDialog: any;
+
+  // 监听全局Vuex提示登录框
+  @Watch("openLoginDialog", { immediate: true })
+  onLoginDialogOpen(val: boolean, oldVal: boolean) {
+    if (val === true) {
+      this.onAlertSignIn();
+    }
+  }
+
+  // 监听关闭提示登录框，更新到Vuex
+  @Watch("openAlert", { immediate: true })
+  onLoginDialogClose(val: boolean, oldVal: boolean) {
+    if (val === false) {
+      this.closeLoginDialog();
+    }
+  }
+
   // Data
   // 模态框
   openAlert: boolean = false;

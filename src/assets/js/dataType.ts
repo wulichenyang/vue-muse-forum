@@ -114,25 +114,25 @@ export interface PostBrief extends DateType {
 export interface PostDetail extends PostBrief {
   content: string,
   followCount: number,
-  // commentIds
-  comment: string[], // 用于在Vuex中索引
+  // commentDetailArray
+  comment: Array<CommentDetail>,
   state: PostState,
 }
 
 export interface CommentDetail extends DateType {
   postId: string,
-  author: UserBrief,
+  author: UserBrief, // populate 生成
   content: string,
   likeCount: number,
   // replyIds
-  reply: string[],
+  reply: Array<ReplyDetail>, // populate 生成
   state: CommentState,
 }
 
 export interface ReplyDetail extends DateType {
   commentId: string,
-  from: UserBrief,
-  to: UserBrief,
+  from: UserBrief, // populate 生成
+  to: UserBrief, // populate 生成
   content: string,
   likeCount: number,
   state: ReplyState,
