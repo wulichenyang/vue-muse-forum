@@ -187,7 +187,6 @@ export default class Comment extends Vue {
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
   @Getter("replyDetail") replyDetail!: any;
-
 }
 </script>
 
@@ -214,7 +213,8 @@ export default class Comment extends Vue {
         }
         .like-btn,
         .reply-btn {
-          min-width: 64px;
+          // Phone
+          min-width: 48px;
           min-height: 30px;
           i {
             margin-right: 5px;
@@ -223,16 +223,26 @@ export default class Comment extends Vue {
       }
     }
     .reply-list-wrapper {
-
     }
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .comment-wrapper {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .comment-wrapper {
+    .right-comment-content {
+      .bottom-wrapper {
+        .bottom-right {
+          .like-btn,
+          .reply-btn {
+            min-width: 64px;
+          }
+        }
+      }
+      .reply-list-wrapper {
+      }
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .comment-wrapper {
 //     max-width: 720px;

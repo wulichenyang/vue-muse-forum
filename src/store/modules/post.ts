@@ -141,6 +141,7 @@ const actions = {
   // 添加一条comment id
   async addCommentToPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, commentRawDetail: CommentRawDetail) {
     context.commit(types.ADD_COMMENT_ID_TO_POST_DETAIL, commentRawDetail)
+    // post里评论 + 1
     context.commit(types.ADD_COMMENT_COUNT_IN_POST_DETAIL, commentRawDetail.postId)
     // 添加一条评论
     context.dispatch('addCommentToCommentMap', commentRawDetail)
@@ -202,8 +203,13 @@ const mutations = {
 
   // 评论数 + 1
   [types.ADD_COMMENT_COUNT_IN_POST_DETAIL](state: State, postId: string) {
-    console.log(state.postDetailMap)
-    state.postDetailMap[postId].commentCount = state.postDetailMap[postId].commentCount + 1
+    state.postDetailMap = {
+      ...state.postDetailMap,
+      [postId]: {
+        ...state.postDetailMap[postId],
+        commentCount: state.postDetailMap[postId].commentCount + 1
+      }
+    }
   },
 
   // // 添加回复到 postdetailMap

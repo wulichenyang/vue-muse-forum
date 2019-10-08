@@ -60,7 +60,8 @@ export default class UserAvatar extends Vue {
 .left-avatar-wrapper {
   width: $postAvatarSize;
   margin-top: 3px;
-  margin-right: 14px;
+  // Phone
+  margin-right: 6px;
   .avatar-btn {
     width: $postAvatarSize;
     height: $postAvatarSize;
@@ -68,11 +69,11 @@ export default class UserAvatar extends Vue {
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .user-avatar {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .left-avatar-wrapper {
+    margin-right: 14px;
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .user-avatar {
 //     max-width: 720px;

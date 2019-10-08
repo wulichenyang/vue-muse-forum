@@ -179,14 +179,13 @@ export default class PostDetailView extends Vue {
     }
     return true;
   }
-  
+
   // 关注该用户
   followUser() {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
-
   }
 
   @Getter("postDetail") postDetail!: any;
@@ -246,30 +245,34 @@ export default class PostDetailView extends Vue {
   }
 
   .comment-list-wrapper {
-    margin-left: 20px;
+    // Phone
+    margin-left: 5px;
     margin-top: 20px;
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .post-wrapper {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .post-detail-wrapper {
+    .comment-list-wrapper {
+      margin-left: 20px;
+      margin-top: 20px;
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
-//   .post-wrapper {
+//   .post-detail-wrapper {
 //     max-width: 720px;
 //   }
 // }
 
 // @media screen and (min-width: 992px) {
-//   .post-wrapper {
+//   .post-detail-wrapper {
 //     max-width: 960px;
 //   }
 // }
 
 // @media screen and (min-width: 1200px) {
-//   .post-wrapper {
+//   .post-detail-wrapper {
 //     max-width: 1024px;
 //   }
 // }

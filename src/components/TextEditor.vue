@@ -66,7 +66,7 @@
 
             <!-- 提交按钮 -->
             <div class="right-submit-wrapper">
-              <span>Ctrl or ⌘ + Enter</span>
+              <span class="hiddenOnPhone">Ctrl or ⌘ + Enter</span>
               <mu-button
                 v-loading="submitting"
                 small
@@ -126,7 +126,6 @@ export default class TextEditor extends Vue {
   })
   toName!: string;
 
-
   // 提交回调函数
   @Prop({
     type: Function,
@@ -161,7 +160,6 @@ export default class TextEditor extends Vue {
     default: true,
     required: false
   })
-  
   @Model("onShowThisChange")
   ifShowThis!: boolean;
   // @Model("onChange", {
@@ -278,6 +276,8 @@ export default class TextEditor extends Vue {
         this.submitting = false;
         // 清除表单
         this.clearForm();
+        // 隐藏该editor
+        this.hiddenThis();
         return;
       } else {
         // 执行失败
@@ -330,7 +330,12 @@ export default class TextEditor extends Vue {
             color: $linkFontColor;
             margin-right: 12px;
           }
+          // Phone
+          .hiddenOnPhone {
+            display: none;
+          }
           .right-submit {
+            
           }
         }
       }
@@ -338,11 +343,21 @@ export default class TextEditor extends Vue {
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .text-editor {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .text-editor {
+    .textarea-wrapper {
+      .right-textarea {
+        .more-option {
+          .right-submit-wrapper {
+            .hiddenOnPhone {
+              display: initial;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .text-editor {
 //     max-width: 720px;

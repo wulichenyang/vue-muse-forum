@@ -219,9 +219,12 @@ export default class Post extends Vue {
     }
     // 右部分主要信息
     .right-wrapper {
-      padding-left: 50px;
+      // Phone
+      padding-left: 10px;
 
       h2 {
+        // Phone
+        margin: 24px 0 10px 0;
         &:hover {
           text-decoration: underline;
         }
@@ -231,15 +234,22 @@ export default class Post extends Vue {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .mu-button {
-          height: 27px;
+        .bottom-left {
+          // Phone
+          max-width: 210px;
         }
-        .like-btn,
-        .comment-btn {
-          min-width: 64px;
-          min-height: 30px;
-          i {
-            margin-right: 5px;
+        .bottom-right {
+          .mu-button {
+            height: 27px;
+          }
+          .like-btn,
+          .comment-btn {
+            // Phone
+            min-width: 48px;
+            min-height: 30px;
+            i {
+              margin-right: 5px;
+            }
           }
         }
       }
@@ -263,6 +273,24 @@ export default class Post extends Vue {
   .post-link {
     .post-wrapper {
       border-radius: $mainWrapperBorderRadius;
+      // 右部分主要信息
+      .right-wrapper {
+        padding-left: 50px;
+        h2 {
+          margin: 16px 0;
+        }
+        .bottom-wrapper {
+          .bottom-left {
+            max-width: initial;
+          }
+          .bottom-right {
+            .like-btn,
+            .comment-btn {
+              min-width: 64px;
+            }
+          }
+        }
+      }
     }
   }
 }
