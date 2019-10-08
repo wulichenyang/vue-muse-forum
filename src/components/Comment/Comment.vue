@@ -52,15 +52,26 @@
 
         </div>
       </div>
-      <!-- TODO: 未登录权限限制 -->
+
       <!-- 回复框 -->
       <TextEditor
         v-model="ifShowThis"
         title="回复"
+        :toName="commentDetail.author.nickname"
         :submitCallback="onSubmitReply"
         :showTitle="false"
         :hiddenWhenOutClick="true"
       />
+
+      <!-- 回复列表 -->
+      <section class="reply-list-wrapper">
+        <Reply
+          :key="replyId"
+          v-for="replyId in commentDetail.reply"
+          :replyDetail="replyDetail(replyId)"
+        ></Reply>
+      </section>
+
     </div>
 
   </article>
@@ -80,14 +91,19 @@ import { dateDiff } from "@/utils/time";
 import { Getter, Action } from "vuex-class";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TextEditor from "@/components/TextEditor.vue";
-import { CommentDetail } from "@/assets/js/dataType";
+import Reply from "@/components/Comment/Reply/Reply.vue";
+import { CommentDetail, ReplyDetail } from "@/assets/js/dataType";
 import UserName from "@/components/UserName.vue";
+import { ReplyPayload, addReply } from "@/api/reply";
+import To from "@/utils/to";
+import Toast from "muse-ui-toast";
 
 @Component({
   components: {
     UserAvatar,
     UserName,
-    TextEditor
+    TextEditor,
+    Reply
   }
 })
 export default class Comment extends Vue {
@@ -124,12 +140,12 @@ export default class Comment extends Vue {
       this.openLoginDialog();
       return;
     }
-    
   }
 
   showReplyInput() {
-    this.ifShowThis = true;
+    this.ifShowThis = !this.ifShowThis;
   }
+
   onReply() {
     if (!this.isLogin) {
       this.openLoginDialog();
@@ -138,12 +154,41 @@ export default class Comment extends Vue {
 
     this.showReplyInput();
   }
-  onSubmitReply() {}
+
+  async onSubmitReply(content: string): Promise<boolean> {
+    let replyPayload: ReplyPayload;
+    replyPayload = {
+      to: this.commentDetail.author._id,
+      commentId: this.commentDetail._id,
+      content: content,
+      state: "published"
+    };
+
+    // 添加回复
+    let err, res;
+    [err, res] = await To(addReply(replyPayload));
+
+    // 添加失败
+    if (err) {
+      return false;
+    }
+
+    // 添加成功，设置已提交显示成功信息，关闭提交中标志
+    if (res && res.code === 0) {
+      Toast.message("回复成功");
+
+      // 更新一条回复到 Vuex 里 reply 列表
+      this.addReplyToCommentMap(res.data as ReplyDetail);
+    }
+    return true;
+  }
 
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
-}
+  @Action("addReplyToCommentMap") addReplyToCommentMap: any;
+  @Getter("replyDetail") replyDetail!: any;
 
+}
 </script>
 
 <style lang="scss">
@@ -159,7 +204,7 @@ export default class Comment extends Vue {
     .bottom-wrapper {
       display: flex;
       justify-content: space-between;
-
+      margin-bottom: 10px;
       span.time {
         color: $linkFontColor;
       }
@@ -176,6 +221,9 @@ export default class Comment extends Vue {
           }
         }
       }
+    }
+    .reply-list-wrapper {
+
     }
   }
 }

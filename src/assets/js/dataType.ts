@@ -111,25 +111,45 @@ export interface PostBrief extends DateType {
   commentCount: number,
 }
 
-export interface PostDetail extends PostBrief {
+// 服务端返回的postDetail，需要提取commentids处理
+export interface PostDetailCommon extends PostBrief {
   content: string,
   followCount: number,
-  // commentDetailArray
-  comment: Array<CommentDetail>,
   state: PostState,
 }
 
-export interface CommentDetail extends DateType {
+export interface PostRawDetail extends PostDetailCommon {
+  // comment
+  comment: Array<CommentRawDetail>, // populate 生成 在module/comment下索引
+}
+
+export interface PostDetail extends PostDetailCommon {
+  // commentIds
+  comment: string[], // populate 生成 在module/comment下索引
+}
+
+export interface CommentDetailCommon extends DateType {
+  _id: string,
   postId: string,
   author: UserBrief, // populate 生成
   content: string,
   likeCount: number,
-  // replyIds
-  reply: Array<ReplyDetail>, // populate 生成
   state: CommentState,
 }
 
+// 服务端返回的postDetail，需要提取commentids处理
+export interface CommentRawDetail extends CommentDetailCommon {
+  // replyIds
+  reply: Array<ReplyDetail>, // populate 生成 在module/reply下索引
+}
+
+export interface CommentDetail extends CommentDetailCommon {
+  // replyIds
+  reply: string[], // populate 生成 在module/reply下索引
+}
+
 export interface ReplyDetail extends DateType {
+  _id: string,
   commentId: string,
   from: UserBrief, // populate 生成
   to: UserBrief, // populate 生成

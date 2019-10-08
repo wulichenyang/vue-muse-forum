@@ -69,9 +69,9 @@
       <!-- 评论列表 -->
       <section class="comment-list-wrapper">
         <Comment
-          :key="comment._id"
-          v-for="comment in postData.comment"
-          :commentDetail="comment"
+          :key="commentId"
+          v-for="commentId in postData.comment"
+          :commentDetail="commentDetail(commentId)"
         ></Comment>
       </section>
 
@@ -99,7 +99,7 @@ import { Getter, Action } from "vuex-class";
 import { CommentPayload, addComment, CommentState } from "@/api/comment";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
-import {} from "@/assets/js/dataType";
+import { CommentRawDetail } from "@/assets/js/dataType";
 
 @Component({
   components: {
@@ -174,11 +174,12 @@ export default class PostDetailView extends Vue {
     if (res && res.code === 0) {
       Toast.message("评论成功");
 
-      // TODO：更新comment列表
-      this.addComment();
+      // 更新 Vuex 里 comment 列表
+      this.addCommentToPostDetail(res.data as CommentRawDetail);
     }
     return true;
   }
+  
   // 关注该用户
   followUser() {
     if (!this.isLogin) {
@@ -190,11 +191,13 @@ export default class PostDetailView extends Vue {
 
   @Getter("postDetail") postDetail!: any;
   @Getter("userDetail") userDetail!: any;
+  @Getter("commentDetail") commentDetail!: any;
+
   @Getter("isLogin") isLogin!: boolean | null;
 
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
-  @Action("addComment") addComment: any;
+  @Action("addCommentToPostDetail") addCommentToPostDetail: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

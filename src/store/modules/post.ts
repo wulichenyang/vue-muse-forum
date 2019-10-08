@@ -7,7 +7,11 @@ import {
 import To from '@/utils/to'
 import {
   PostBrief,
-  PostDetail
+  PostRawDetail,
+  PostDetail,
+  CommentRawDetail,
+  CommentDetail,
+  ReplyDetail,
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
@@ -19,15 +23,15 @@ export interface CategoryToPost {
 }
 
 export interface CategoryToPostMap {
-  [key: string]: CategoryToPost
+  [categoryId: string]: CategoryToPost
 }
 
 export interface PostBriefMap {
-  [key: string]: PostBrief
+  [postId: string]: PostBrief
 }
 
 export interface PostDetailMap {
-  [key: string]: PostDetail
+  [postId: string]: PostDetail
 }
 
 export interface State {
@@ -35,9 +39,18 @@ export interface State {
   postDetailMap: PostDetailMap
 }
 
+
 const initState: State = {
   categoryToPostMap: <CategoryToPostMap>{},
   postDetailMap: <PostDetailMap>{}
+}
+
+// 转换函数，提取comments中的ids
+const absorbCommentIds = (postRawDetail: PostRawDetail): PostDetail => {
+  return {
+    ...postRawDetail,
+    comment: postRawDetail.comment.map(comment => comment._id)
+  }
 }
 
 // getters
@@ -118,10 +131,26 @@ const actions = {
 
     if (res && res.code === 0) {
       // 获取成功
-      context.commit(types.ADD_POST_TO_DETAIL_MAP, res.data as PostDetail)
+      context.commit(types.ADD_POST_TO_DETAIL_MAP, absorbCommentIds(res.data as PostRawDetail))
+      // 添加所有评论
+      context.dispatch('addCommentsToCommentMap', res.data.comment as Array<CommentRawDetail>)
       return true
     }
   },
+
+  // 添加一条comment id
+  async addCommentToPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, commentRawDetail: CommentRawDetail) {
+    context.commit(types.ADD_COMMENT_ID_TO_POST_DETAIL, commentRawDetail)
+    context.commit(types.ADD_COMMENT_COUNT_IN_POST_DETAIL, commentRawDetail.postId)
+    // 添加一条评论
+    context.dispatch('addCommentToCommentMap', commentRawDetail)
+    return true
+  },
+
+  // async addReplyToPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: {postId: string, replyDetail: ReplyDetail}) {
+  //   context.commit(types.ADD_REPLY_TO_POST_DETAIL, replyDetail)
+  //   return true
+  // },
 }
 
 // mutations
@@ -137,6 +166,7 @@ const mutations = {
       ...payload.postBriefMap
     }
   },
+
   // 添加单条文章详细信息
   [types.ADD_POST_TO_DETAIL_MAP](state: State, post: PostDetail) {
     // 初始化对象
@@ -150,7 +180,7 @@ const mutations = {
     }
   },
 
-  // 添加文章列表ids
+  // 添加文章列表 ids
   [types.SET_POST_IDS](state: State, payload: { categoryId: string, postIds: string[] }) {
     // 初始化对象
     if (!state.categoryToPostMap[payload.categoryId]) {
@@ -161,6 +191,28 @@ const mutations = {
       ...payload.postIds
     ]
   },
+
+  // 添加评论 id 到 postdetailMap
+  [types.ADD_COMMENT_ID_TO_POST_DETAIL](state: State, commentDetail: CommentDetail) {
+    state.postDetailMap[commentDetail.postId].comment = [
+      commentDetail._id,
+      ...state.postDetailMap[commentDetail.postId].comment
+    ]
+  },
+
+  // 评论数 + 1
+  [types.ADD_COMMENT_COUNT_IN_POST_DETAIL](state: State, postId: string) {
+    console.log(state.postDetailMap)
+    state.postDetailMap[postId].commentCount = state.postDetailMap[postId].commentCount + 1
+  },
+
+  // // 添加回复到 postdetailMap
+  // [types.ADD_REPLY_TO_POST_DETAIL](state: State, replyDetail: ReplyDetail) {
+  //   state.postDetailMap[replyDetail.postId].comment = [
+  //     replyDetail,
+  //     ...state.postDetailMap[replyDetail.postId].comment
+  //   ]
+  // },
 }
 
 export default {

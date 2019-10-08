@@ -37,7 +37,7 @@
               prop="content"
               multi-line
               :rows="2"
-              :placeholder="`输入${title}...`"
+              :placeholder="`${title}${toName ? `: ${toName}` : '...'}`"
               :max-length="500"
               v-model="form.content"
             ></mu-text-field>
@@ -110,12 +110,23 @@ import UserAvatar from "@/components/UserAvatar.vue";
 })
 export default class TextEditor extends Vue {
   // Props
+  // 标题
   @Prop({
     type: String,
     default: "",
     required: true
   })
   title!: string;
+
+  // 评论/回复对象名
+  @Prop({
+    type: String,
+    default: "",
+    required: false
+  })
+  toName!: string;
+
+
   // 提交回调函数
   @Prop({
     type: Function,
@@ -150,6 +161,7 @@ export default class TextEditor extends Vue {
     default: true,
     required: false
   })
+  
   @Model("onShowThisChange")
   ifShowThis!: boolean;
   // @Model("onChange", {

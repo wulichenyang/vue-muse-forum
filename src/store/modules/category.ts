@@ -7,7 +7,7 @@ import {
 } from '@/assets/js/dataType'
 
 export interface CategoryMap {
-  [key: string]: CategoryDetail
+  [categoryId: string]: CategoryDetail
 }
 
 export interface State {
