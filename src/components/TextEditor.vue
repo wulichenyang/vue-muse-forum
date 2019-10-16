@@ -55,7 +55,7 @@
               flat
               color="primary"
               class="left-emoji"
-              @click="onEmoji()"
+              @click="onOpenEmoji()"
             >
               <mu-icon
                 right
@@ -63,6 +63,11 @@
               ></mu-icon>
               表情
             </mu-button>
+            <!-- emoji picker-->
+            <EmojiPicker
+              @select="selectEmoji"
+              :data="emojiIndex"
+            />
 
             <!-- 提交按钮 -->
             <div class="right-submit-wrapper">
@@ -96,16 +101,23 @@ import {
   Model,
   Watch
 } from "vue-property-decorator";
+import { quillEditor } from "vue-quill-editor";
 import { Getter, Action } from "vuex-class";
 import { UserDetail } from "@/assets/js/dataType";
 import To from "@/utils/to";
 import { commentRules } from "@/utils/validate";
 import { UserBrief } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
+import { Picker as EmojiPicker, EmojiIndex, Emoji } from "emoji-mart-vue-fast";
+import { emoji2Html } from "@/utils/emoji";
+import data from "emoji-mart-vue-fast/data/messenger.json";
+import "emoji-mart-vue-fast/css/emoji-mart.css";
 
 @Component({
   components: {
-    UserAvatar
+    UserAvatar,
+    EmojiPicker,
+    Emoji
   }
 })
 export default class TextEditor extends Vue {
@@ -182,7 +194,8 @@ export default class TextEditor extends Vue {
 
   // 提交状态标志
   submitting: boolean = false;
-
+  emoji2Html: any = emoji2Html;
+  emojiIndex: any = new EmojiIndex(data);
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
 
@@ -207,6 +220,12 @@ export default class TextEditor extends Vue {
   }
 
   // Methods
+  selectEmoji(emoji: any) {
+    // const emojiHtml = this.emoji2Html(emoji);
+    // console.log(this.emojiIndex.findEmoji(emoji.colons))
+    this.form.content += emoji.colons;
+  }
+
   clearForm() {
     this.form = {
       content: ""
@@ -249,7 +268,7 @@ export default class TextEditor extends Vue {
   }
 
   // 选择表情
-  onEmoji() {}
+  onOpenEmoji() {}
 
   // 提交
   async onSubmit() {
@@ -335,7 +354,6 @@ export default class TextEditor extends Vue {
             display: none;
           }
           .right-submit {
-            
           }
         }
       }

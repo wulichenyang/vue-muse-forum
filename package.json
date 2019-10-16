@@ -11,6 +11,7 @@
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "element-ui": "^2.12.0",
+    "emoji-mart-vue-fast": "^6.1.2",
     "muse-ui": "^3.0.2",
     "muse-ui-loading": "^0.2.0",
     "muse-ui-toast": "^0.3.0",

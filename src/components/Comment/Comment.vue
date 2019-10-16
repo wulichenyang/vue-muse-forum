@@ -11,7 +11,7 @@
       <UserName :user="commentDetail && commentDetail.author" />
 
       <!-- 评论内容 -->
-      <p>{{commentDetail && commentDetail.content}}</p>
+      <p v-html="commentDetail && commentDetail.content && showEmoji(commentDetail.content)"></p>
 
       <div class="bottom-wrapper">
         <!-- 发表时间 -->
@@ -97,6 +97,7 @@ import UserName from "@/components/UserName.vue";
 import { ReplyPayload, addReply } from "@/api/reply";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
+import { showEmoji } from "@/utils/emoji";
 
 @Component({
   components: {
@@ -124,6 +125,9 @@ export default class Comment extends Vue {
 
   // 时间差函数
   dateDiff: any = dateDiff;
+  
+  // emoji转换为html
+  showEmoji: any = showEmoji;
 
   // 数字格式化单位函数 单位k
   formatNumber: any = formatNumber;

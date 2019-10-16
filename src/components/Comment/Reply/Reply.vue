@@ -14,7 +14,7 @@
       <UserName :user="replyDetail && replyDetail.to" />
 
       <!-- 回复内容 -->
-      <p>{{replyDetail && replyDetail.content}}</p>
+      <p v-html="replyDetail && replyDetail.content && showEmoji(replyDetail.content)"></p>
 
       <div class="bottom-wrapper">
         <!-- 发表时间 -->
@@ -88,6 +88,7 @@ import UserName from "@/components/UserName.vue";
 import { ReplyPayload, addReply } from "@/api/reply";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
+import { showEmoji } from "@/utils/emoji";
 
 @Component({
   components: {
@@ -120,6 +121,9 @@ export default class Reply extends Vue {
 
   // 是否展示回复框
   ifShowThis: boolean = false;
+  
+  // emoji转换为html
+  showEmoji: any = showEmoji;
 
   // Lifecycle
   mounted() {}
