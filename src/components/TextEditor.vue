@@ -2,6 +2,7 @@
   <section
     class="text-editor"
     v-if="ifShowThis"
+    @click="hiddenEmoji"
   >
     <!-- 标题 -->
     <h3 v-if="title && showTitle">
@@ -48,7 +49,6 @@
             v-show="ifShowTips"
             class="more-option"
           >
-
             <!-- emoji按钮 -->
             <mu-button
               small
@@ -63,12 +63,6 @@
               ></mu-icon>
               表情
             </mu-button>
-            <!-- emoji picker-->
-            <EmojiPicker
-              @select="selectEmoji"
-              :data="emojiIndex"
-            />
-
             <!-- 提交按钮 -->
             <div class="right-submit-wrapper">
               <span class="hiddenOnPhone">Ctrl or ⌘ + Enter</span>
@@ -82,8 +76,15 @@
                 {{title}}
               </mu-button>
             </div>
-
           </div>
+          <!-- emoji picker-->
+          <EmojiPicker
+            @click.stop
+            v-if="ifShowEmojiPicker"
+            @select="selectEmoji"
+            :data="emojiIndex"
+          />
+
         </div>
 
       </section>
@@ -196,6 +197,7 @@ export default class TextEditor extends Vue {
   submitting: boolean = false;
   emoji2Html: any = emoji2Html;
   emojiIndex: any = new EmojiIndex(data);
+  ifShowEmojiPicker: boolean = false;
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
 
@@ -210,6 +212,7 @@ export default class TextEditor extends Vue {
       this.hiddenThisHandler();
     }
     this.hiddenTipHandler();
+    this.hiddenEmojiHandler();
   }
 
   destroyed() {
@@ -217,6 +220,7 @@ export default class TextEditor extends Vue {
       this.removeHiddenThisHandler();
     }
     this.removeHiddenTipHandler();
+    this.removeHiddenEmojiHandler();
   }
 
   // Methods
@@ -224,6 +228,7 @@ export default class TextEditor extends Vue {
     // const emojiHtml = this.emoji2Html(emoji);
     // console.log(this.emojiIndex.findEmoji(emoji.colons))
     this.form.content += emoji.colons;
+    this.ifShowEmojiPicker = false;
   }
 
   clearForm() {
@@ -249,6 +254,10 @@ export default class TextEditor extends Vue {
     document.body.removeEventListener("click", this.hiddenTips);
   }
 
+  removeHiddenEmojiHandler() {
+    document.body.removeEventListener("click", this.hiddenEmoji);
+  }
+
   hiddenThisHandler() {
     // 点击外部，隐藏自身，内部stop阻止冒泡
     document.body.addEventListener("click", () => this.hiddenThis(), false);
@@ -259,16 +268,28 @@ export default class TextEditor extends Vue {
     document.body.addEventListener("click", this.hiddenTips, false);
   }
 
+  hiddenEmojiHandler() {
+    // 点击外部，隐藏操作按钮，内部stop阻止冒泡
+    document.body.addEventListener("click", this.hiddenEmoji, false);
+  }
+
   hiddenThis() {
     this.onShowThisChange(false);
+  }
+
+  hiddenEmoji() {
+    console.log(11)
+    this.ifShowEmojiPicker = false;
   }
 
   hiddenTips() {
     this.ifShowTips = false;
   }
 
-  // 选择表情
-  onOpenEmoji() {}
+  // 弹出表情框
+  onOpenEmoji() {
+    this.ifShowEmojiPicker = !this.ifShowEmojiPicker;
+  }
 
   // 提交
   async onSubmit() {
@@ -336,6 +357,13 @@ export default class TextEditor extends Vue {
     display: flex;
     .right-textarea {
       flex: 1;
+      .emoji-mart {
+        margin-top: 10px;
+        width: 100% !important;
+        .emoji-mart-anchors {
+          flex-wrap: wrap;
+        }
+      }
       .more-option {
         display: flex;
         justify-content: space-between;
