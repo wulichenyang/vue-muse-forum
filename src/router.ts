@@ -2,6 +2,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HomeView from './views/HomeView.vue';
 import PostListView from './views/PostListView.vue';
+import UserPostsView from './views/UserView/UserPostsView.vue';
+import UserCommentsView from './views/UserView/UserCommentsView.vue';
+import UserFansView from './views/UserView/UserFansView.vue';
+import UserFollowsView from './views/UserView/UserFollowsView.vue';
+import UserCollectionsView from './views/UserView/UserCollectionsView.vue';
 import cookie from './utils/cookie'
 import { access_token } from './config'
 import Toast from 'muse-ui-toast'
@@ -53,7 +58,35 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (users.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "userView" */ './views/UserView.vue'),
+      component: () => import(/* webpackChunkName: "userView" */ './views/UserView/UserView.vue'),
+      redirect: '/users/:id/posts',
+      children: [
+        {
+          path: 'posts',
+          name: 'userPosts',
+          component: UserPostsView,
+        },
+        {
+          path: 'comments',
+          name: 'userComments',
+          component: UserCommentsView,
+        },
+        {
+          path: 'fans',
+          name: 'userFans',
+          component: UserFansView,
+        },
+        {
+          path: 'follows',
+          name: 'userFollows',
+          component: UserFollowsView,
+        },
+        {
+          path: 'collections',
+          name: 'userCollections',
+          component: UserCollectionsView,
+        },
+      ]
     },
 
     // 文章分类详细页面
@@ -66,8 +99,10 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "ostDetail" */ './views/CategoryView.vue'),
     },
 
-
-    // 管理员可访问页面
+    
+    /***********************************************************
+     * 管理员可访问页面
+     * ********************************************************/
     {
       path: '/admin',
       name: 'admin',

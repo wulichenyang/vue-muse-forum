@@ -1,6 +1,6 @@
 <template>
-  <section class="user-wrapper">
-    user view
+  <section class="user-follows">
+    UserFollowsView
   </section>
 </template>
 
@@ -15,11 +15,16 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
+import UserAvatar from "@/components/UserAvatar.vue";
+import ContainerInner from "@/components/ContainerInner.vue";
+import Toast from "muse-ui-toast";
+import To from "@/utils/to";
 
 @Component({
-  components: {}
+  components: {
+  }
 })
-export default class UserView extends Vue {
+export default class UserFollowsView extends Vue {
   // Props
   // @Prop({
   //   type: String,
@@ -34,8 +39,7 @@ export default class UserView extends Vue {
   // searchKey!: string;
 
   // Data
-  // searchValue: string = "";
-  // ifFocusSearch: boolean = false;
+
 
   // Computed
   // get computedData() {
@@ -46,6 +50,7 @@ export default class UserView extends Vue {
   mounted() {}
 
   // Methods
+
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -63,30 +68,31 @@ export default class UserView extends Vue {
 </script>
 
 <style lang="scss">
-@import "../assets/css/var.scss";
-.user-wrapper {
+@import "../../assets/css/var.scss";
+
+.user-follows {
+
 }
 
-
 // @media screen and (min-width: 576px) {
-//   .user-wrapper {
+//   .user-follows {
 //     max-width: 540px;
 //   }
 // }
 // @media screen and (min-width: 768px) {
-//   .user-wrapper {
+//   .user-follows {
 //     max-width: 720px;
 //   }
 // }
 
 // @media screen and (min-width: 992px) {
-//   .user-wrapper {
+//   .user-follows {
 //     max-width: 960px;
 //   }
 // }
 
 // @media screen and (min-width: 1200px) {
-//   .user-wrapper {
+//   .user-follows {
 //     max-width: 1024px;
 //   }
 // }
