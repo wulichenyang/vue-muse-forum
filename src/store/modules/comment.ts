@@ -9,6 +9,10 @@ import {
   ReplyDetail,
   CommentRawDetail
 } from '@/assets/js/dataType'
+import {
+  toggleLike,
+  LikeTargetType,
+} from "@/api/like"
 import Vue from 'vue'
 
 export interface CommentDetailMap {
@@ -87,6 +91,30 @@ const actions = {
     return true
   },
 
+  // 修改评论是否点赞
+  async toggleCommentLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+    } = payload
+
+    context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消点赞行为
+      context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
 }
 
 // mutations
@@ -112,7 +140,26 @@ const mutations = {
         ]
       }
     }
-  }
+  },
+
+  // 修改评论项是否点赞
+  [types.TOGGLE_COMMENT_LIKE](state: State, payload: { targetId: string }) {
+    const {
+      targetId
+    } = payload;
+
+    let ifLikeBefore = state.commentDetailMap[targetId].ifLike;
+    let beforeLikeCount = state.commentDetailMap[targetId].likeCount;
+
+    state.commentDetailMap = {
+      ...state.commentDetailMap,
+      [targetId]: {
+        ...state.commentDetailMap[targetId],
+        likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+        ifLike: !(ifLikeBefore)
+      }
+    }
+  },
 }
 
 export default {

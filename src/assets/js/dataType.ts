@@ -25,6 +25,7 @@ export interface UserBrief {
 }
 
 export interface UserDetail extends UserBrief {
+  _id: string,
   // 用户手机账户
   phone?: string,
   // 用户邮箱账户
@@ -109,6 +110,7 @@ export interface PostBrief extends DateType {
   viewCount: number,
   likeCount: number,
   commentCount: number,
+  ifLike?: boolean,
 }
 
 // 服务端返回的postDetail，需要提取commentids处理
@@ -135,6 +137,7 @@ export interface CommentDetailCommon extends DateType {
   content: string,
   likeCount: number,
   state: CommentState,
+  ifLike?: boolean,
 }
 
 // 服务端返回的postDetail，需要提取commentids处理
@@ -156,4 +159,5 @@ export interface ReplyDetail extends DateType {
   content: string,
   likeCount: number,
   state: ReplyState,
+  ifLike?: boolean,
 }

@@ -67,8 +67,12 @@
             <mu-button
               flat
               color="primary"
-              class="like-btn"
-              @click.prevent="onLike()"
+              :class="postBrief.ifLike ? 'like-btn active' : 'like-btn'"
+              @click.prevent="onLike(
+                postBrief._id,
+                'post',
+                postBrief.category._id,
+                postBrief._id)"
             >
               <mu-icon
                 right
@@ -113,6 +117,7 @@ import { formatNumber } from "@/utils/format";
 import getPy from "@/utils/nameToPinyin";
 import { Getter, Action } from "vuex-class";
 import { PostBrief } from "@/assets/js/dataType";
+import { LikeTargetType } from "@/api/like";
 
 @Component({
   components: {}
@@ -150,11 +155,21 @@ export default class Post extends Vue {
   mounted() {}
 
   // Methods
-  onLike() {
+  onLike(
+    targetId: string,
+    type: LikeTargetType,
+    categoryId: string,
+  ) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
+
+    this.toggleBriefPostLike({
+      targetId,
+      type,
+      categoryId,
+    });
 
     console.log("like");
     return;
@@ -172,6 +187,7 @@ export default class Post extends Vue {
 
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
+  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

@@ -28,8 +28,10 @@
             small
             flat
             color="primary"
-            class="like-btn"
-            @click.prevent="onLike()"
+            :class="replyDetail.ifLike ? 'like-btn active' : 'like-btn'"
+            @click.prevent="onLike(
+                replyDetail._id,
+                'reply')"
           >
             <mu-icon
               right
@@ -54,7 +56,7 @@
 
         </div>
       </div>
-      
+
       <!-- 回复框 -->
       <TextEditor
         v-model="ifShowThis"
@@ -89,6 +91,7 @@ import { ReplyPayload, addReply } from "@/api/reply";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
+import { LikeTargetType } from "@/api/like";
 
 @Component({
   components: {
@@ -121,7 +124,7 @@ export default class Reply extends Vue {
 
   // 是否展示回复框
   ifShowThis: boolean = false;
-  
+
   // emoji转换为html
   showEmoji: any = showEmoji;
 
@@ -129,11 +132,19 @@ export default class Reply extends Vue {
   mounted() {}
 
   // Methods
-  onLike() {
+  onLike(targetId: string, type: LikeTargetType) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
+
+    this.toggleReplyLike({
+      targetId,
+      type,
+    });
+
+    console.log("like");
+    return;
   }
 
   showReplyInput() {
@@ -180,6 +191,8 @@ export default class Reply extends Vue {
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
+  @Action("toggleReplyLike") toggleReplyLike: any;
+
 }
 </script>
 

@@ -278,7 +278,6 @@ export default class TextEditor extends Vue {
   }
 
   hiddenEmoji() {
-    console.log(11)
     this.ifShowEmojiPicker = false;
   }
 

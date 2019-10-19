@@ -8,7 +8,10 @@ import {
   ReplyDetail,
 } from '@/assets/js/dataType'
 import Vue from 'vue'
-
+import {
+  toggleLike,
+  LikeTargetType,
+} from "@/api/like"
 export interface ReplyDetailMap {
   [replyId: string]: ReplyDetail
 }
@@ -47,6 +50,31 @@ const actions = {
     context.commit(types.ADD_REPLIES_TO_REPLY_MAP, (replyDetails as Array<ReplyDetail>))
     return true
   },
+  
+  // 修改回复是否点赞
+  async toggleReplyLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+    } = payload
+
+    context.commit(types.TOGGLE_REPLY_LIKE, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消点赞行为
+      context.commit(types.TOGGLE_REPLY_LIKE, { targetId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
 }
 
 // mutations
@@ -70,6 +98,26 @@ const mutations = {
       }
     }
   },
+  
+  // 修改回复项是否点赞
+  [types.TOGGLE_REPLY_LIKE](state: State, payload: { targetId: string }) {
+    const {
+      targetId
+    } = payload;
+
+    let ifLikeBefore = state.replyDetailMap[targetId].ifLike;
+    let beforeLikeCount = state.replyDetailMap[targetId].likeCount;
+
+    state.replyDetailMap = {
+      ...state.replyDetailMap,
+      [targetId]: {
+        ...state.replyDetailMap[targetId],
+        likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+        ifLike: !(ifLikeBefore)
+      }
+    }
+  },
+
 }
 
 export default {

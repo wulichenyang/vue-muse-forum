@@ -24,12 +24,20 @@ export const addPost = ({ categoryId, title, content, state }: PostPayload): Pro
   return post(`/categories/${categoryId}/posts`, { title, content, state })
 }
 
-export const fetchPostListByCategory = (categoryId: string): Promise<any> => {
-  return get(`/categories/${categoryId}/posts`)
+export const fetchPostListByCategory = (categoryId: string, userId?: string): Promise<any> => {
+  if (userId) {
+    return get(`/categories/${categoryId}/posts?userId=${userId}`)
+  } else {
+    return get(`/categories/${categoryId}/posts`)
+  }
 }
 
-export const fetchPostDetail = (postId: string): Promise<any> => {
-  return get(`/posts/${postId}`)
+export const fetchPostDetail = (postId: string, userId?: string): Promise<any> => {
+  if (userId) {
+    return get(`/posts/${postId}?userId=${userId}`)
+  } else {
+    return get(`/posts/${postId}`)
+  }
 }
 
 export const fetchAllPostList = (): Promise<any> => {

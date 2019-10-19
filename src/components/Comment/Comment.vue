@@ -25,8 +25,10 @@
             small
             flat
             color="primary"
-            class="like-btn"
-            @click.prevent="onLike()"
+            @click.prevent="onLike(
+                commentDetail._id,
+                'comment')"
+            :class="commentDetail.ifLike ? 'like-btn active' : 'like-btn'"
           >
             <mu-icon
               right
@@ -98,6 +100,7 @@ import { ReplyPayload, addReply } from "@/api/reply";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
+import { LikeTargetType } from "@/api/like";
 
 @Component({
   components: {
@@ -125,7 +128,7 @@ export default class Comment extends Vue {
 
   // 时间差函数
   dateDiff: any = dateDiff;
-  
+
   // emoji转换为html
   showEmoji: any = showEmoji;
 
@@ -139,11 +142,19 @@ export default class Comment extends Vue {
   mounted() {}
 
   // Methods
-  onLike() {
+  onLike(targetId: string, type: LikeTargetType) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
+
+    this.toggleCommentLike({
+      targetId,
+      type,
+    });
+
+    console.log("like");
+    return;
   }
 
   showReplyInput() {
@@ -190,6 +201,7 @@ export default class Comment extends Vue {
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
+  @Action("toggleCommentLike") toggleCommentLike: any;
   @Getter("replyDetail") replyDetail!: any;
 }
 </script>

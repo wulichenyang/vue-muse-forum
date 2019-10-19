@@ -63,12 +63,13 @@ export default class PostListView extends Vue {
   }
 
   async getPostListData() {
-    await this.getPostList(this.categoryIdNow);
+    await this.getPostList({categoryId: this.categoryIdNow, userId: this.userDetail && this.userDetail._id});
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
+  @Getter("userDetail") userDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("postIds") postIds!: any;
 

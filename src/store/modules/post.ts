@@ -4,6 +4,11 @@ import {
   fetchPostListByCategory,
   fetchPostDetail
 } from '@/api/post';
+import {
+  toggleLike,
+  LikeTargetType,
+  LikePayload
+} from "@/api/like"
 import To from '@/utils/to'
 import {
   PostBrief,
@@ -97,9 +102,10 @@ const getters = {
 
 // actions
 const actions = {
-  async getPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, categoryId: string) {
+  async getPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string, userId?: string }) {
+    const { categoryId, userId } = payload;
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchPostListByCategory(categoryId));
+    [err, res] = await To(fetchPostListByCategory(categoryId, userId));
 
     // 获取失败
     if (err) {
@@ -120,9 +126,9 @@ const actions = {
     }
   },
 
-  async getPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, postId: string) {
+  async getPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { postId: string, userId?: string }) {
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchPostDetail(postId));
+    [err, res] = await To(fetchPostDetail(payload.postId, payload.userId));
 
     // 获取失败
     if (err) {
@@ -152,6 +158,30 @@ const actions = {
   //   context.commit(types.ADD_REPLY_TO_POST_DETAIL, replyDetail)
   //   return true
   // },
+  async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+      categoryId,
+    } = payload
+
+    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消点赞行为
+      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
 }
 
 // mutations
@@ -165,6 +195,29 @@ const mutations = {
 
     state.categoryToPostMap[payload.categoryId].postBriefMap = {
       ...payload.postBriefMap
+    }
+  },
+
+  // 修改文章列表项是否点赞
+  [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { categoryId: string, targetId: string }) {
+    const {
+      categoryId,
+      targetId
+    } = payload;
+
+    let ifLikeBefore = state.categoryToPostMap[categoryId].postBriefMap[targetId].ifLike;
+    let beforeLikeCount = state.categoryToPostMap[categoryId].postBriefMap[targetId].likeCount;
+
+    state.categoryToPostMap[categoryId] = {
+      ...state.categoryToPostMap[categoryId],
+      postBriefMap: {
+        ...state.categoryToPostMap[categoryId].postBriefMap,
+        [targetId]: {
+          ...state.categoryToPostMap[categoryId].postBriefMap[targetId],
+          likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+          ifLike: !(ifLikeBefore)
+        }
+      }
     }
   },
 

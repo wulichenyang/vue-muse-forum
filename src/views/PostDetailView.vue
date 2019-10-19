@@ -149,7 +149,7 @@ export default class PostDetailView extends Vue {
 
   // Methods
   initPostDetail() {
-    this.getPostDetail(this.postIdNow);
+    this.getPostDetail({postId: this.postIdNow, userId: this.userDetail && this.userDetail._id});
   }
 
   // 提交comment回调
