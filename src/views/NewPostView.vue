@@ -13,7 +13,7 @@
             class="chip"
             v-for="(chip, index) in categoryIds"
             :key="categoryDetail(chip)._id"
-            :color="colorArray[index % (colorArray.length + 1)]"
+            :color="colorArray[index % (colorArray.length)]"
             @click="selectCategory(categoryDetail(chip))"
           >{{categoryDetail(chip).name}} {{categoryDetail(chip).postCount}}</mu-chip>
         </section>

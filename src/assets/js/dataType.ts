@@ -24,8 +24,32 @@ export interface UserBrief {
   avatar: string,
 }
 
-export interface UserDetail extends UserBrief {
-  _id: string,
+export interface OtherUserDetail extends UserBrief {
+  // 用户性别
+  gender: Gender,
+  // 用户简介
+  brief: string,
+
+  // 用户发帖数
+  postCount: number,
+  // 评论数
+  commentCount: number,
+  // 用户粉丝数
+  fansCount: number,
+  // 用户获赞数量
+  likeCount: number,
+
+  // 关注数
+  followPeopleCount: number,
+  followCategoryCount: number,
+  followPostCount: number,
+
+  // 收藏数
+  collectPostCount: number,
+
+}
+
+export interface UserDetail extends OtherUserDetail {
   // 用户手机账户
   phone?: string,
   // 用户邮箱账户
@@ -34,34 +58,18 @@ export interface UserDetail extends UserBrief {
   realname: string,
   // 用户角色
   role: Role,
-  // 用户性别
-  gender: Gender,
   // 用户出生日期
   birth: Date,
-  // 用户简介
-  brief: string,
-  // 用户发帖数
-  postCount: number,
-  // 用户粉丝数
-  fansCount: number,
-  // 用户获赞数量
-  likeCount: number,
 
   // 关注的人
   followPeople?: string[],
-  followPeopleCount: number,
-
   // 关注的文章类别ids
   followCategory?: string[],
-  followCategoryCount: number,
-
   // 关注的文章ids
   followPost?: string[],
-  followPostCount: number,
 
   // 收藏的文章ids
   collectPost?: string[],
-  collectPostCount: number,
 
   // 最近一次查询Notice消息的日期
   lastFindNoticeAt?: Date,

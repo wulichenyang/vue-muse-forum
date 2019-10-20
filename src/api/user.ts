@@ -22,8 +22,12 @@ export interface SignInUser {
   password: string,
 }
 
-export const fetchUser = () : Promise<any> => {
+export const fetchUserself = () : Promise<any> => {
   return get('/userself')
+}
+
+export const fetchOtherUser = (id: string) : Promise<any> => {
+  return get(`/users/${id}`)
 }
 
 // 用户注册/登录之前获取公钥

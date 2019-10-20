@@ -8,7 +8,7 @@
           class="chip"
           v-for="(chipId) in categoryIds"
           :key="categoryDetail(chipId)._id"
-          :color="categoryDetail(chipId)._id === categoryNow._id ? colorArray[0] : colorArray[1]"
+          :color="categoryDetail(chipId)._id === categoryNow._id ? museColorArray[0] : museColorArray[1]"
           @click="onSelectCategory(categoryDetail(chipId))"
         >{{categoryDetail(chipId).name}}</mu-button>
       </section>
@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Getter, Action } from "vuex-class";
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
-import { colorArray } from "@/config/index";
+import { museColorArray } from "@/config/index";
 import ContainerInner from "@/components/ContainerInner.vue";
 import { CategoryMap } from "@/store/modules/category";
 import To from "@/utils/to";
@@ -41,7 +41,7 @@ export default class HomeView extends Vue {
   // })
   // list!: string;
   categoryNow: CategoryDetail = <CategoryDetail>{};
-  colorArray: string[] = colorArray;
+  museColorArray: string[] = museColorArray;
   // @Model("onChange", {
   //   type: String
   // })

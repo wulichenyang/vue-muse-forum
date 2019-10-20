@@ -1,22 +1,39 @@
 <template>
   <mu-container>
     <ContainerInner class="user-detail-wrapper">
-
       <!-- 用户头部信息 -->
       <header class="user-header">
-        <UserAvatar />
-        <h3>你的昵称
+
+        <!-- 头像 -->
+        <UserAvatar
+          :user="otherUser"
+          :isLink="false"
+          :size="120"
+        />
+
+        <!-- 昵称 -->
+        <h3>
+          {{otherUser && otherUser.nickname}}
           <mu-icon value="man"></mu-icon>
         </h3>
-        <p>你的个人简介哦</p>
+
+        <!-- 个人简介 -->
+        <p v-if="otherUser && otherUser.brief">{{otherUser && otherUser.brief}}</p>
+        <p v-else>TA还没有个人简介哦~</p>
+
+        <!-- 关注/私信 按钮 -->
         <mu-button
+          v-if="otherUser && otherUser._id !== userDetail._id"
           small
           color="primary"
           class="follow-btn"
+          @click="followUser"
         >关注</mu-button>
         <mu-button
+          v-if="otherUser && otherUser._id !== userDetail._id"
           small
           color="secondary"
+          @click="messageTo"
         >私信</mu-button>
       </header>
 
@@ -33,7 +50,7 @@
           v-for="tab in tabs"
           :key="tab.route"
         >
-          {{tab.name}}
+          {{tab.name}}{{thisTabCount(tab.name)}}
         </mu-tab>
 
       </mu-tabs>
@@ -55,7 +72,7 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
+import { UserDetail, OtherUserDetail } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
@@ -105,6 +122,7 @@ export default class UserView extends Vue {
       name: "收藏"
     }
   ];
+
   tabIndexMap: any = {
     posts: 0,
     comments: 1,
@@ -112,14 +130,27 @@ export default class UserView extends Vue {
     follows: 3,
     collections: 4
   };
+
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
+
+  get otherUser() {
+    return this.otherUserDetail(this.otherUserId);
+  }
 
   // Lifecycle
   mounted() {
-    this.activeTabIndex = this.tabIndexMap[(this.$route.path.split("/") as Array<any>).pop()];
+    // tab 样式
+    this.activeTabIndex = this.tabIndexMap[
+      (this.$route.path.split("/") as Array<any>).pop()
+    ];
+
+    // 获取查看任意用户信息
+    if (!this.otherUser) {
+      this.getOtherUserDetail(this.otherUserId);
+    }
   }
 
   // Methods
@@ -129,11 +160,54 @@ export default class UserView extends Vue {
     });
   }
 
+  thisTabCount(tabName: string) {
+    switch (tabName) {
+      case "文章":
+        return this.otherUser && this.otherUser.postCount;
+        break;
+      case "评论":
+        return this.otherUser && this.otherUser.commentCount;
+        break;
+      case "粉丝":
+        return this.otherUser && this.otherUser.fansCount;
+      case "关注":
+        return (
+          this.otherUser && this.otherUser.followPeopleCount +
+          this.otherUser.followCategoryCount +
+          this.otherUser.followPostCount
+        );
+        break;
+      case "收藏":
+        return this.otherUser && this.otherUser.collectPostCount;
+        break;
+      default:
+        return "";
+        break;
+    }
+  }
+
+  followUser() {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+  }
+
+  messageTo() {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("otherUserDetail") otherUserDetail!: any;
+  @Getter("isLogin") isLogin!: boolean | null;
+  @Action("openLoginDialog") openLoginDialog: any;
+  @Action("getOtherUserDetail") getOtherUserDetail: any;
 
   // @Action("getUser") getUser: any;
 
@@ -157,6 +231,10 @@ export default class UserView extends Vue {
     background-size: cover;
     background-position-y: center;
     padding-bottom: 28px;
+    .avatar-btn {
+      margin-top: -20px;
+      border: 2px solid #fff;
+    }
     h3 {
     }
     p {

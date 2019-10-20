@@ -5,32 +5,18 @@
     :to="`/posts/${postBrief._id}`"
   >
     <article class="post-wrapper">
+      
       <!-- 用户信息 -->
       <router-link
         class="user-brief"
         :to="`/users/${postBrief.author._id}`"
       >
+      
         <!-- 头像 -->
-        <mu-button
+        <UserAvatar
           class="user-avatar"
-          fab
-        >
-          <mu-avatar
-            v-if="postBrief && postBrief.author && postBrief.author.avatar"
-            text-color="#fff"
-            color="pink400"
-            size="36"
-          >
-            <img :src="postBrief && postBrief.author && postBrief.author.avatar">
-          </mu-avatar>
-          <mu-avatar
-            v-else
-            text-color="#fff"
-            color="pink400"
-            size="36"
-          >{{firstLetter}}
-          </mu-avatar>
-        </mu-button>
+          :user="postBrief && postBrief.author"
+        />
 
         <!-- 作者昵称 -->
         <span>{{postBrief.author.nickname}}</span>
@@ -112,15 +98,17 @@ import {
   Model,
   Watch
 } from "vue-property-decorator";
+import UserAvatar from "@/components/UserAvatar.vue";
 import { dateDiff } from "@/utils/time";
 import { formatNumber } from "@/utils/format";
 import getPy from "@/utils/nameToPinyin";
 import { Getter, Action } from "vuex-class";
 import { PostBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
+import { hashId2DetaultAvatar } from "@/utils/hash";
 
 @Component({
-  components: {}
+  components: { UserAvatar }
 })
 export default class Post extends Vue {
   // Props
@@ -139,6 +127,7 @@ export default class Post extends Vue {
   // Data
   // 时间转换函数
   // localDate: any = localDate;
+
   // 时间差函数
   dateDiff: any = dateDiff;
   // 数字格式化单位函数 单位k
@@ -147,19 +136,18 @@ export default class Post extends Vue {
   // ifFocusSearch: boolean = false;
 
   // Computed
-  get firstLetter(): string {
-    return getPy(this.postBrief.author.nickname.substring(0, 1))[0];
+  // 默认头像名为avatar-n.jpg，n为id的哈希数值（1-64）
+  get defaultAvatarNum(): number {
+    return this.postBrief.author && this.postBrief.author._id
+      ? hashId2DetaultAvatar(this.postBrief.author._id, 64)
+      : 1;
   }
 
   // Lifecycle
   mounted() {}
 
   // Methods
-  onLike(
-    targetId: string,
-    type: LikeTargetType,
-    categoryId: string,
-  ) {
+  onLike(targetId: string, type: LikeTargetType, categoryId: string) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -168,7 +156,7 @@ export default class Post extends Vue {
     this.toggleBriefPostLike({
       targetId,
       type,
-      categoryId,
+      categoryId
     });
 
     console.log("like");

@@ -19,8 +19,7 @@
       />
       <!-- 用户选项 -->
       <UserOption
-        :role="userDetail && userDetail.role || 'user'"
-        :nickname="(userDetail)? userDetail.nickname: ''"
+        :userDetail="userDetail"
         :ifShow="ifShowUserOption"
       />
     </section>

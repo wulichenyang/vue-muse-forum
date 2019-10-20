@@ -40,11 +40,52 @@ export const qiniuConfig: any = {
   qiniuAddr: "pxyg1giq3.bkt.clouddn.com",
 }
 
-export const colorArray: string[] = [
+export const museColorArray: string[] = [
+  // MUSE-UI
   "primary",
   "secondary",
   "success",
   "warning",
   "info",
-  "error"
+  "error",
+]
+
+export const colorArray: string[] = [
+  // MUSE-UI
+
+  // "primary",
+  // "secondary",
+  // "success",
+  // "warning",
+  // "info",
+  // "error",
+
+  // 三元群
+  // '#E91E63',
+  // '#ECDD36',
+  // '#0590B5',
+  // '#9C0537',
+  // '#0C7D9C',
+
+  // 单色
+  // '#E91E63',
+  // '#EC6592',
+  // '#B5184C',
+  // '#690E2C',
+  // '#692D41',
+
+  // 主题1
+  '#555555',
+  '#80475E',
+  '#CC5A71',
+  '#C89B7B',
+  '#E3E87D',
+
+  // 主题2
+  // '#E91E63',
+  // '#ffb5b5',
+  // '#D0D0D0',
+  // '#f0decb',
+  // '#C89B7B',
+
 ];

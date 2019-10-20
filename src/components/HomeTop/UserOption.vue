@@ -1,21 +1,17 @@
 <template>
   <div
-    v-show="ifShow"
+    v-if="ifShow"
     class="user-option"
   >
     <!-- 用户头像按钮 -->
-    <mu-button
-      fab
-      @click="openMenu = !openMenu"
+    <!-- 头像 -->
+    <UserAvatar
+      class="user-avatar"
+      :user="userDetail"
+      @click.native="openMenuFun"
       ref="menuBtn"
-    >
-      <mu-avatar
-        text-color="#fff"
-        color="pink400"
-        size="30"
-      >{{firstLetter}}
-      </mu-avatar>
-    </mu-button>
+      :isLink="false"
+    />
 
     <!-- 弹出菜单 -->
     <mu-popover
@@ -27,7 +23,7 @@
         <!-- 管理员操作 -->
         <router-link
           to="/admin/categories"
-          v-if="role==='admin'"
+          v-if="userDetail && userDetail.role==='admin'"
         >
           <mu-list-item button>
             <mu-list-item-action>
@@ -134,9 +130,11 @@ import getPy from "@/utils/nameToPinyin";
 import {} from "@/assets/js/dataType";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
-
+import { hashId2DetaultAvatar } from "@/utils/hash";
+import UserAvatar from "@/components/UserAvatar.vue";
+import { UserDetail } from "@/assets/js/dataType";
 @Component({
-  components: {}
+  components: { UserAvatar }
 })
 export default class UserOption extends Vue {
   // Props
@@ -146,33 +144,35 @@ export default class UserOption extends Vue {
     required: true
   })
   ifShow!: boolean;
+
+  // 用户详细信息
   @Prop({
-    type: String,
-    default: "",
+    default: <UserDetail>{},
     required: true
   })
-  nickname!: string;
-  @Prop({
-    type: String,
-    default: "user",
-    required: true
-  })
-  role!: string;
+  userDetail!: UserDetail | null;
 
   // Data
   openMenu: boolean = false;
   triggerMenu: any = null;
   // 退出确认框
   openAlert: boolean = false;
+
   // Lifecycle
   mounted() {
-    this.triggerMenu = (this.$refs.menuBtn as any).$el;
+    // console.log(this.$refs.menuBtn)
+    // mounted时，子组件还没有渲染出来
+    // this.triggerMenu = (this.$refs.menuBtn as any).$el;
+  }
+
+  updated() {
+    // mounted时，子组件还没有渲染出来
+    if (!this.triggerMenu) {
+      this.triggerMenu = (this.$refs.menuBtn as any).$el;
+    }
   }
 
   // Computed
-  get firstLetter(): string {
-    return getPy(this.nickname.substring(0, 1))[0];
-  }
 
   // Methods
   openAlertDialog() {
@@ -181,6 +181,11 @@ export default class UserOption extends Vue {
 
   closeAlertDialog() {
     this.openAlert = false;
+  }
+
+  openMenuFun() {
+    console.log(123)
+    this.openMenu = !this.openMenu;
   }
 
   ensureSignout() {

@@ -51,6 +51,17 @@ a {
   }
 }
 
+// .mu-avatar {
+//   background: transparent !important;
+//   box-shadow: none !important;
+// }
+
+.mu-fab-button {
+  background-color: transparent !important;
+  width: initial !important;
+  height: initial !important;
+}
+
 // 小按钮格式
 .mu-button.mu-button-small {
   min-width: 56px;
