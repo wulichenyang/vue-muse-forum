@@ -8,9 +8,12 @@ export type LikeTargetType = 'post' | 'comment' | 'reply'
 
 export interface LikePayload {
   targetId: string,
-  type: LikeTargetType
+  type: LikeTargetType,
+  authorId: string,
 }
 
-export const toggleLike = ({ targetId, type}: LikePayload): Promise<any> => {
-  return post(`/like/${targetId}?type=${type}`, {})
+export const toggleLike = ({ targetId, type, authorId}: LikePayload): Promise<any> => {
+  return post(`/like/${targetId}?type=${type}`, {
+    authorId
+  })
 }

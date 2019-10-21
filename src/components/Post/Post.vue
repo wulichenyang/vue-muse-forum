@@ -188,6 +188,7 @@ export default class Post extends Vue {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .post-link {
+  text-align: left;
   display: block;
   &:not(:last-child) {
     border-bottom: $postBottomBorder;

@@ -92,17 +92,18 @@ const actions = {
   },
 
   // 修改评论是否点赞
-  async toggleCommentLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType }) {
+  async toggleCommentLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType , authorId: string}) {
     // 点赞
     const {
       targetId,
       type,
+      authorId
     } = payload
 
     context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
 
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(toggleLike({ targetId, type }));
+    [err, res] = await To(toggleLike({ targetId, type, authorId}));
 
     // 更新失败
     if (err) {

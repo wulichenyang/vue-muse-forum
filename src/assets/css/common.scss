@@ -155,3 +155,18 @@ blockquote {
 .like-btn.active {
   background: $mainWrapperBlurPink !important;
 }
+
+// 评论wrapper
+
+.comment-list-wrapper {
+  // Phone
+  margin-left: 5px;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 576px) {
+  .comment-list-wrapper {
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+}

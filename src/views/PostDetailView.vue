@@ -149,7 +149,10 @@ export default class PostDetailView extends Vue {
 
   // Methods
   initPostDetail() {
-    this.getPostDetail({postId: this.postIdNow, userId: this.userDetail && this.userDetail._id});
+    this.getPostDetail({
+      postId: this.postIdNow,
+      userId: this.userDetail && this.userDetail._id
+    });
   }
 
   // 提交comment回调
@@ -242,21 +245,12 @@ export default class PostDetailView extends Vue {
     padding-bottom: 10px;
   }
   main.article-content {
-  }
 
-  .comment-list-wrapper {
-    // Phone
-    margin-left: 5px;
-    margin-top: 20px;
   }
 }
 
 @media screen and (min-width: 576px) {
   .post-detail-wrapper {
-    .comment-list-wrapper {
-      margin-left: 20px;
-      margin-top: 20px;
-    }
   }
 }
 // @media screen and (min-width: 768px) {

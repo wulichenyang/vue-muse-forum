@@ -31,7 +31,9 @@
             :class="replyDetail.ifLike ? 'like-btn active' : 'like-btn'"
             @click.prevent="onLike(
                 replyDetail._id,
-                'reply')"
+                'reply',
+                replyDetail.from._id
+                )"
           >
             <mu-icon
               right
@@ -61,7 +63,7 @@
       <TextEditor
         v-model="ifShowThis"
         title="回复"
-        :toName="replyDetail.from.nickname"
+        :toName="replyDetail.from && replyDetail.from.nickname"
         :submitCallback="onSubmitReply"
         :showTitle="false"
         :hiddenWhenOutClick="true"
@@ -132,7 +134,7 @@ export default class Reply extends Vue {
   mounted() {}
 
   // Methods
-  onLike(targetId: string, type: LikeTargetType) {
+  onLike(targetId: string, type: LikeTargetType, authorId: string) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -141,6 +143,7 @@ export default class Reply extends Vue {
     this.toggleReplyLike({
       targetId,
       type,
+      authorId
     });
 
     console.log("like");
@@ -192,7 +195,6 @@ export default class Reply extends Vue {
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
   @Action("toggleReplyLike") toggleReplyLike: any;
-
 }
 </script>
 

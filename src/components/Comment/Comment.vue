@@ -27,7 +27,9 @@
             color="primary"
             @click.prevent="onLike(
                 commentDetail._id,
-                'comment')"
+                'comment',
+                commentDetail.author._id
+                )"
             :class="commentDetail.ifLike ? 'like-btn active' : 'like-btn'"
           >
             <mu-icon
@@ -66,7 +68,10 @@
       />
 
       <!-- 回复列表 -->
-      <section class="reply-list-wrapper">
+      <section
+        class="reply-list-wrapper"
+        v-if="commentDetail && commentDetail.reply"
+      >
         <Reply
           :key="replyId"
           v-for="replyId in commentDetail.reply"
@@ -142,7 +147,7 @@ export default class Comment extends Vue {
   mounted() {}
 
   // Methods
-  onLike(targetId: string, type: LikeTargetType) {
+  onLike(targetId: string, type: LikeTargetType, authorId: string) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -151,6 +156,7 @@ export default class Comment extends Vue {
     this.toggleCommentLike({
       targetId,
       type,
+      authorId
     });
 
     console.log("like");
@@ -209,12 +215,13 @@ export default class Comment extends Vue {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .comment-wrapper {
+  text-align: left;
   margin-bottom: 14px;
   display: flex;
   .right-comment-content {
     flex: 1;
     p {
-      margin: 5px 0;
+      margin: 5px 5px 5px 0;
     }
     .bottom-wrapper {
       display: flex;

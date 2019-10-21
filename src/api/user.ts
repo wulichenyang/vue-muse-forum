@@ -22,29 +22,29 @@ export interface SignInUser {
   password: string,
 }
 
-export const fetchUserself = () : Promise<any> => {
+export const fetchUserself = (): Promise<any> => {
   return get('/userself')
 }
 
-export const fetchOtherUser = (id: string) : Promise<any> => {
+export const fetchOtherUser = (id: string): Promise<any> => {
   return get(`/users/${id}`)
 }
 
 // 用户注册/登录之前获取公钥
 // 用于node-rsa 给密码加密
-export const fetchPublicKey = () : Promise<any> => {
+export const fetchPublicKey = (): Promise<any> => {
   return get('/publicKey')
 }
 
-export const signUp = (by: ByType, data: SignUpUser) : Promise<any> => {
+export const signUp = (by: ByType, data: SignUpUser): Promise<any> => {
   return post(`/signup?by=${by}`, data)
 }
 
-export const signIn = (by: ByType, data: SignInUser) : Promise<any> => {
+export const signIn = (by: ByType, data: SignInUser): Promise<any> => {
   return post(`/signin?by=${by}`, data)
 }
 
-export const signOut = () : Promise<any> => {
+export const signOut = (): Promise<any> => {
   return get('/signout')
 }
 // export const loginByPhone = (phone: string, password: string): Promise<any> => {

@@ -44,6 +44,14 @@ export const fetchAllPostList = (): Promise<any> => {
   return get('/posts')
 }
 
+export const fetchPostsOfOtherUser = (userId: string, loginUserId?: string): Promise<any> => {
+  if(loginUserId) {
+    return get(`/users/${userId}/posts?userId=${loginUserId}`)
+  } else {
+    return get(`/users/${userId}/posts`)
+  }
+}
+
 export const updatePost = ({ title, content, state, postId }: UpdatePostPayload): Promise<any> => {
   return put(`/posts/${postId}`, { title, content, state })
 }

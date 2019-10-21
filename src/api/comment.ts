@@ -15,3 +15,11 @@ export interface CommentPayload {
 export const addComment = ({ postId, content, state }: CommentPayload): Promise<any> => {
   return post(`/posts/${postId}/comments`, { content, state })
 }
+
+export const fetchCommentsOfOtherUser = (userId: string, loginUserId?: string): Promise<any> => {
+  if(loginUserId) {
+    return get(`/users/${userId}/comments?userId=${loginUserId}`)
+  } else {
+    return get(`/users/${userId}/comments`)
+  }
+}

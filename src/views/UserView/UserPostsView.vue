@@ -1,6 +1,10 @@
 <template>
   <section class="user-posts">
-    userview posts
+    <Post
+      v-for="postBrief in userPostList"
+      :key="postBrief._id"
+      :postBrief="postBrief"
+    />
   </section>
 </template>
 
@@ -17,11 +21,16 @@ import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
+import Post from "@/components/Post/Post.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import { fetchPostsOfOtherUser } from "@/api/post";
+import { PostBrief } from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
 
 @Component({
   components: {
+    Post
   }
 })
 export default class UserPostsView extends Vue {
@@ -32,6 +41,7 @@ export default class UserPostsView extends Vue {
   //   required: true,
   // })
   // list!: string;
+  @Getter("userDetail") userDetail!: UserDetail | null;
 
   // @Model("onChange", {
   //   type: String
@@ -39,18 +49,34 @@ export default class UserPostsView extends Vue {
   // searchKey!: string;
 
   // Data
-
+  userPostList: Array<PostBrief> = [];
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  mounted() {}
+  mounted() {
+    this.getPostsOfOtherUser();
+  }
 
   // Methods
-
+  async getPostsOfOtherUser() {
+    let err, res;
+    if (this.userDetail && this.userDetail._id) {
+      // 已登录，传入登录用户id，方便查询是否点赞
+      [err, res] = await To(fetchPostsOfOtherUser(this.otherUserId, this.userDetail._id));
+    } else {
+      [err, res] = await To(fetchPostsOfOtherUser(this.otherUserId));
+    }
+    if (err) {
+      return false;
+    }
+    if (res && res.code === 0) {
+      this.userPostList = res.data;
+    }
+  }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -71,7 +97,6 @@ export default class UserPostsView extends Vue {
 @import "../../assets/css/var.scss";
 
 .user-posts {
-
 }
 
 // @media screen and (min-width: 576px) {

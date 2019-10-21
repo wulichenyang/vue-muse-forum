@@ -50,19 +50,20 @@ const actions = {
     context.commit(types.ADD_REPLIES_TO_REPLY_MAP, (replyDetails as Array<ReplyDetail>))
     return true
   },
-  
+
   // 修改回复是否点赞
-  async toggleReplyLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType }) {
+  async toggleReplyLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, authorId: string }) {
     // 点赞
     const {
       targetId,
       type,
+      authorId
     } = payload
 
     context.commit(types.TOGGLE_REPLY_LIKE, { targetId })
 
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(toggleLike({ targetId, type }));
+    [err, res] = await To(toggleLike({ targetId, type, authorId }));
 
     // 更新失败
     if (err) {
@@ -98,7 +99,7 @@ const mutations = {
       }
     }
   },
-  
+
   // 修改回复项是否点赞
   [types.TOGGLE_REPLY_LIKE](state: State, payload: { targetId: string }) {
     const {
