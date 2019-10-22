@@ -58,7 +58,6 @@ export interface State {
   postDetailMap: PostDetailMap,
 }
 
-
 const initState: State = {
   // 各个文章分类下对应的文章
   categoryToPostMap: <CategoryToPostMap>{},
@@ -84,9 +83,6 @@ const getters = {
     if (!state.categoryToPostMap[categoryId]) {
       Vue.set(state.categoryToPostMap, categoryId, {});
     }
-    // if(!state.categoryToPostMap[categoryId].postBriefMap){
-    //   Vue.set(state.categoryToPostMap[categoryId], 'postBriefMap', {});
-    // }
     return state.categoryToPostMap[categoryId].postBriefMap
   },
 
@@ -275,6 +271,18 @@ const mutations = {
     }
   },
 
+  // 添加某用户下文章列表 ids
+  [types.SET_USER_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
+    // 初始化对象
+    if (!state.userToPostMap[payload.userId]) {
+      state.userToPostMap[payload.userId] = <UserToPost>{}
+    }
+
+    state.userToPostMap[payload.userId].postIds = [
+      ...payload.postIds
+    ]
+  },
+
   // 修改某分类下文章列表某项是否点赞
   [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { categoryId: string, targetId: string }) {
     const {
@@ -319,18 +327,6 @@ const mutations = {
     }
 
     state.categoryToPostMap[payload.categoryId].postIds = [
-      ...payload.postIds
-    ]
-  },
-
-  // 添加某用户下文章列表 ids
-  [types.SET_USER_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
-    // 初始化对象
-    if (!state.userToPostMap[payload.userId]) {
-      state.userToPostMap[payload.userId] = <UserToPost>{}
-    }
-
-    state.userToPostMap[payload.userId].postIds = [
       ...payload.postIds
     ]
   },

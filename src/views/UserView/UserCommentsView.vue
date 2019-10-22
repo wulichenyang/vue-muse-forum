@@ -5,9 +5,10 @@
     <section class="comment-list-wrapper">
 
       <Comment
-        :key="comment._id"
-        v-for="comment in userCommentsList"
-        :commentDetail="comment"
+        :key="commentId"
+        v-for="commentId in userCommentIds(otherUserId)"
+        :commentDetail="userCommentMap(otherUserId)[commentId]"
+        @emitToggleCommentLike="onToggleCommentLike"
       ></Comment>
 
     </section>
@@ -34,6 +35,7 @@ import To from "@/utils/to";
 import { UserDetail } from "@/assets/js/dataType";
 import { CommentDetail } from "@/assets/js/dataType";
 import { fetchCommentsOfOtherUser } from "@/api/comment";
+import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 
 @Component({
   components: {
@@ -56,7 +58,6 @@ export default class UserCommentsView extends Vue {
   userCommentsList: Array<CommentDetail> = [];
 
   // Data
-  @Getter("userDetail") userDetail!: UserDetail | null;
 
   // Computed
   get otherUserId() {
@@ -65,33 +66,38 @@ export default class UserCommentsView extends Vue {
 
   // Lifecycle
   mounted() {
-    this.getCommentsOfOtherUser();
+    if (!this.userCommentMap(this.otherUserId)) {
+      this.getCommentsOfOtherUser();
+    }
   }
 
   // Methods
   async getCommentsOfOtherUser() {
-    let err, res;
-    if (this.userDetail && this.userDetail._id) {
-      // 已登录，传入登录用户id，方便查询是否点赞
-      [err, res] = await To(
-        fetchCommentsOfOtherUser(this.otherUserId, this.userDetail._id)
-      );
-    } else {
-      [err, res] = await To(fetchCommentsOfOtherUser(this.otherUserId));
-    }
-    if (err) {
-      return false;
-    }
-    if (res && res.code === 0) {
-      this.userCommentsList = res.data;
-    }
+    // Vuex里没有当前用户的评论列表，请求数据
+    await this.getUserCommentList({
+      userId: this.otherUserId,
+      loginUserId: this.userDetail && this.userDetail._id
+    });
+  }
+
+  onToggleCommentLike(payload: CommentLikePayload) {
+    // const { targetId, type, authorId } = payload;
+    // this.toggleCommentLike({
+    //   targetId,
+    //   type,
+    //   authorId
+    // });
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userCommentMap") userCommentMap!: any;
+  @Getter("userCommentIds") userCommentIds!: any;
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
+  @Action("getUserCommentList") getUserCommentList: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")
@@ -106,7 +112,6 @@ export default class UserCommentsView extends Vue {
 @import "../../assets/css/var.scss";
 
 .user-comments {
-  
 }
 
 // @media screen and (min-width: 576px) {
