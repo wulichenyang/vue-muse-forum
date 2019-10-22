@@ -5,13 +5,13 @@
     :to="`/posts/${postBrief._id}`"
   >
     <article class="post-wrapper">
-      
+
       <!-- 用户信息 -->
       <router-link
         class="user-brief"
         :to="`/users/${postBrief.author._id}`"
       >
-      
+
         <!-- 头像 -->
         <UserAvatar
           class="user-avatar"
@@ -58,7 +58,7 @@
                 postBrief._id,
                 'post',
                 postBrief.category._id,
-                postBrief._id)"
+                postBrief.author._id)"
             >
               <mu-icon
                 right
@@ -147,7 +147,12 @@ export default class Post extends Vue {
   mounted() {}
 
   // Methods
-  onLike(targetId: string, type: LikeTargetType, categoryId: string) {
+  onLike(
+    targetId: string,
+    type: LikeTargetType,
+    categoryId: string,
+    authorId: string
+  ) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -156,7 +161,8 @@ export default class Post extends Vue {
     this.toggleBriefPostLike({
       targetId,
       type,
-      categoryId
+      categoryId,
+      authorId
     });
 
     console.log("like");

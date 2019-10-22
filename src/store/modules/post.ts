@@ -158,18 +158,19 @@ const actions = {
   //   context.commit(types.ADD_REPLY_TO_POST_DETAIL, replyDetail)
   //   return true
   // },
-  async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string }) {
+  async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
     // 点赞
     const {
       targetId,
       type,
       categoryId,
+      authorId
     } = payload
 
     context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
 
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(toggleLike({ targetId, type }));
+    [err, res] = await To(toggleLike({ targetId, type, authorId }));
 
     // 更新失败
     if (err) {

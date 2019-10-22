@@ -106,6 +106,7 @@ export default class UserCommentsView extends Vue {
 @import "../../assets/css/var.scss";
 
 .user-comments {
+  
 }
 
 // @media screen and (min-width: 576px) {
