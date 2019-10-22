@@ -172,9 +172,10 @@ export default class UserView extends Vue {
         return this.otherUser && this.otherUser.fansCount;
       case "关注":
         return (
-          this.otherUser && this.otherUser.followPeopleCount +
-          this.otherUser.followCategoryCount +
-          this.otherUser.followPostCount
+          this.otherUser &&
+          this.otherUser.followPeopleCount +
+            this.otherUser.followCategoryCount +
+            this.otherUser.followPostCount
         );
         break;
       case "收藏":
@@ -224,7 +225,9 @@ export default class UserView extends Vue {
 
 .user-detail-wrapper {
   padding: 0;
-  margin-top: 60px;
+  // Phone
+  margin-top: 20px;
+
   text-align: center;
   .user-header {
     background: url("/img/user-header-bg.jpg");
@@ -245,25 +248,25 @@ export default class UserView extends Vue {
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .user-wrapper {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .user-detail-wrapper {
+    margin-top: 36px;
+  }
+}
 // @media screen and (min-width: 768px) {
-//   .user-wrapper {
+//   .user-detail-wrapper {
 //     max-width: 720px;
 //   }
 // }
 
 // @media screen and (min-width: 992px) {
-//   .user-wrapper {
+//   .user-detail-wrapper {
 //     max-width: 960px;
 //   }
 // }
 
 // @media screen and (min-width: 1200px) {
-//   .user-wrapper {
+//   .user-detail-wrapper {
 //     max-width: 1024px;
 //   }
 // }

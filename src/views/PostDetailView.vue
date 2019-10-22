@@ -72,6 +72,7 @@
           :key="commentId"
           v-for="commentId in postData.comment"
           :commentDetail="commentDetail(commentId)"
+          @emitToggleCommentLike="onToggleCommentLike"
         ></Comment>
       </section>
 
@@ -100,6 +101,7 @@ import { CommentPayload, addComment, CommentState } from "@/api/comment";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { CommentRawDetail } from "@/assets/js/dataType";
+import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 
 @Component({
   components: {
@@ -148,6 +150,15 @@ export default class PostDetailView extends Vue {
   }
 
   // Methods
+  onToggleCommentLike(payload: CommentLikePayload) {
+    const { targetId, type, authorId } = payload;
+    this.toggleCommentLike({
+      targetId,
+      type,
+      authorId
+    });
+  }
+
   initPostDetail() {
     this.getPostDetail({
       postId: this.postIdNow,
@@ -194,9 +205,9 @@ export default class PostDetailView extends Vue {
   @Getter("postDetail") postDetail!: any;
   @Getter("userDetail") userDetail!: any;
   @Getter("commentDetail") commentDetail!: any;
-
   @Getter("isLogin") isLogin!: boolean | null;
-
+  
+  @Action("toggleCommentLike") toggleCommentLike: any;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
   @Action("addCommentToPostDetail") addCommentToPostDetail: any;
@@ -245,7 +256,6 @@ export default class PostDetailView extends Vue {
     padding-bottom: 10px;
   }
   main.article-content {
-
   }
 }
 

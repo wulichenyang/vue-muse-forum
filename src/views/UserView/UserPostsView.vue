@@ -1,9 +1,10 @@
 <template>
   <section class="user-posts">
     <Post
-      v-for="postBrief in userPostList"
-      :key="postBrief._id"
-      :postBrief="postBrief"
+      v-for="postId in userPostIds(otherUserId)"
+      :key="postId"
+      :postBrief="userPostBriefMap(otherUserId)[postId]"
+      @emitTogglePostLike="onTogglePostLike"
     />
   </section>
 </template>
@@ -27,6 +28,7 @@ import To from "@/utils/to";
 import { fetchPostsOfOtherUser } from "@/api/post";
 import { PostBrief } from "@/assets/js/dataType";
 import { UserDetail } from "@/assets/js/dataType";
+import { PostLikePayload } from "@/components/Post/Post.vue";
 
 @Component({
   components: {
@@ -58,31 +60,39 @@ export default class UserPostsView extends Vue {
 
   // Lifecycle
   mounted() {
-    this.getPostsOfOtherUser();
+    if (!this.userPostBriefMap(this.otherUserId)) {
+      this.getPostsOfOtherUser();
+    }
   }
 
   // Methods
   async getPostsOfOtherUser() {
-    let err, res;
-    if (this.userDetail && this.userDetail._id) {
-      // 已登录，传入登录用户id，方便查询是否点赞
-      [err, res] = await To(fetchPostsOfOtherUser(this.otherUserId, this.userDetail._id));
-    } else {
-      [err, res] = await To(fetchPostsOfOtherUser(this.otherUserId));
-    }
-    if (err) {
-      return false;
-    }
-    if (res && res.code === 0) {
-      this.userPostList = res.data;
-    }
+    // Vuex里没有当前用户的文章列表，请求数据
+    await this.getUserPostList({
+      userId: this.otherUserId,
+      loginUserId: this.userDetail && this.userDetail._id
+    });
+  }
+
+  onTogglePostLike(payload: PostLikePayload) {
+    const { targetId, type, categoryId, authorId } = payload;
+    this.toggleUserBriefPostLike({
+      targetId,
+      type,
+      categoryId,
+      authorId
+    });
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userPostBriefMap") userPostBriefMap!: any;
+  @Getter("userPostIds") userPostIds!: any;
 
+  @Action("getUserPostList") getUserPostList: any;
+  @Action("toggleUserBriefPostLike") toggleUserBriefPostLike: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")

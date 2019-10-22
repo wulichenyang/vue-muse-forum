@@ -2,7 +2,8 @@ import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
 import {
   fetchPostListByCategory,
-  fetchPostDetail
+  fetchPostDetail, 
+  fetchPostsOfOtherUser
 } from '@/api/post';
 import {
   toggleLike,
@@ -20,15 +21,25 @@ import {
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
-export interface CategoryToPost {
+export interface PostBriefAllInfo {
   postBriefMap: PostBriefMap,
-  // postDetailMap: PostDetailMap,
   postIds: string[],
-  // postDetailIds: string[],
+}
+
+export interface CategoryToPost extends PostBriefAllInfo {
+
+}
+
+export interface UserToPost extends PostBriefAllInfo {
+
 }
 
 export interface CategoryToPostMap {
   [categoryId: string]: CategoryToPost
+}
+
+export interface UserToPostMap {
+  [userId: string]: UserToPost
 }
 
 export interface PostBriefMap {
@@ -40,13 +51,19 @@ export interface PostDetailMap {
 }
 
 export interface State {
+  // 各个文章分类下对应的文章
   categoryToPostMap: CategoryToPostMap,
-  postDetailMap: PostDetailMap
+  // 各个用户所有发布的文章
+  userToPostMap: UserToPostMap,
+  postDetailMap: PostDetailMap,
 }
 
 
 const initState: State = {
+  // 各个文章分类下对应的文章
   categoryToPostMap: <CategoryToPostMap>{},
+  // 各个用户所有发布的文章
+  userToPostMap: <UserToPostMap>{},
   postDetailMap: <PostDetailMap>{}
 }
 
@@ -73,11 +90,6 @@ const getters = {
     return state.categoryToPostMap[categoryId].postBriefMap
   },
 
-  // 文章详细信息map
-  postDetailMap: (state: State) => {
-    return state.postDetailMap
-  },
-
   // 某分类下的文章ids
   postIds: (state: State) => (categoryId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
@@ -91,6 +103,36 @@ const getters = {
     return (state.categoryToPostMap[categoryId]).postIds
   },
 
+  // 某用户下的文章列表map
+  userPostBriefMap: (state: State) => (userId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    if (!state.userToPostMap[userId]) {
+      Vue.set(state.userToPostMap, userId, {});
+    }
+    // if(!state.userToPostMap[userId].postBriefMap){
+    //   Vue.set(state.userToPostMap[userId], 'postBriefMap', {});
+    // }
+    return state.userToPostMap[userId].postBriefMap
+  },
+
+  // 某用户下的文章ids
+  userPostIds: (state: State) => (userId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    // 初始化 userToPostMap 里对应id的映射对象
+    if (!state.userToPostMap[userId]) {
+      Vue.set(state.userToPostMap, userId, {});
+    }
+    if (!state.userToPostMap[userId].postIds) {
+      Vue.set(state.userToPostMap[userId], 'postIds', []);
+    }
+    return (state.userToPostMap[userId]).postIds
+  },
+
+  // 文章详细信息map
+  postDetailMap: (state: State) => {
+    return state.postDetailMap
+  },
+
   // 获取某篇文章详细内容
   postDetail: (state: State) => (postId: string) => {
     if (!state.postDetailMap[postId]) {
@@ -102,6 +144,7 @@ const getters = {
 
 // actions
 const actions = {
+  // 获取某分类下的文章列表信息
   async getPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string, userId?: string }) {
     const { categoryId, userId } = payload;
     let err, res: Ajax.AjaxResponse;
@@ -122,6 +165,31 @@ const actions = {
 
       context.commit(types.SET_POST_IDS, { categoryId, postIds })
       context.commit(types.ADD_POST_TO_BRIEF_MAP, { categoryId, postBriefMap })
+      return true
+    }
+  },
+
+  // 获取某用户的文章列表信息
+  async getUserPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
+    const { userId, loginUserId } = payload;
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(fetchPostsOfOtherUser(userId, loginUserId));
+
+    // 获取失败
+    if (err) {
+      return false
+    }
+
+    if (res && res.code === 0) {
+      // 获取成功
+      let postBriefMap: PostBriefMap = {};
+      let postIds: string[] = (res.data as Array<PostBrief>).map((x: PostBrief) => {
+        postBriefMap[x._id] = x;
+        return x._id
+      });
+
+      context.commit(types.SET_USER_POST_IDS, { userId, postIds })
+      context.commit(types.ADD_USER_POST_TO_BRIEF_MAP, { userId, postBriefMap })
       return true
     }
   },
@@ -154,10 +222,6 @@ const actions = {
     return true
   },
 
-  // async addReplyToPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: {postId: string, replyDetail: ReplyDetail}) {
-  //   context.commit(types.ADD_REPLY_TO_POST_DETAIL, replyDetail)
-  //   return true
-  // },
   async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
     // 点赞
     const {
@@ -187,7 +251,7 @@ const actions = {
 
 // mutations
 const mutations = {
-  // 添加文章列表
+  // 添加某分类下文章列表
   [types.ADD_POST_TO_BRIEF_MAP](state: State, payload: { categoryId: string, postBriefMap: PostBriefMap }) {
     // 初始化对象
     if (!state.categoryToPostMap[payload.categoryId]) {
@@ -199,7 +263,19 @@ const mutations = {
     }
   },
 
-  // 修改文章列表项是否点赞
+  // 添加某用户下文章列表
+  [types.ADD_USER_POST_TO_BRIEF_MAP](state: State, payload: { userId: string, postBriefMap: PostBriefMap }) {
+    // 初始化对象
+    if (!state.userToPostMap[payload.userId]) {
+      state.userToPostMap[payload.userId] = <UserToPost>{}
+    }
+
+    state.userToPostMap[payload.userId].postBriefMap = {
+      ...payload.postBriefMap
+    }
+  },
+
+  // 修改某分类下文章列表某项是否点赞
   [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { categoryId: string, targetId: string }) {
     const {
       categoryId,
@@ -235,7 +311,7 @@ const mutations = {
     }
   },
 
-  // 添加文章列表 ids
+  // 添加某分类下文章列表 ids
   [types.SET_POST_IDS](state: State, payload: { categoryId: string, postIds: string[] }) {
     // 初始化对象
     if (!state.categoryToPostMap[payload.categoryId]) {
@@ -243,6 +319,18 @@ const mutations = {
     }
 
     state.categoryToPostMap[payload.categoryId].postIds = [
+      ...payload.postIds
+    ]
+  },
+
+  // 添加某用户下文章列表 ids
+  [types.SET_USER_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
+    // 初始化对象
+    if (!state.userToPostMap[payload.userId]) {
+      state.userToPostMap[payload.userId] = <UserToPost>{}
+    }
+
+    state.userToPostMap[payload.userId].postIds = [
       ...payload.postIds
     ]
   },

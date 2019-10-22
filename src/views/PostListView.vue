@@ -4,6 +4,7 @@
       v-for="postId in postIds(categoryIdNow)"
       :key="postId"
       :postBrief="postBriefMap(categoryIdNow)[postId]"
+      @emitTogglePostLike="onTogglePostLike"
     />
   </section>
 </template>
@@ -20,6 +21,7 @@ import {
 import Post from "@/components/Post/Post.vue";
 import { Getter, Action } from "vuex-class";
 import { UserBrief, PostBrief } from "@/assets/js/dataType";
+import { PostLikePayload } from "@/components/Post/Post.vue";
 
 @Component({
   components: {
@@ -52,7 +54,7 @@ export default class PostListView extends Vue {
   // Lifecycle
   mounted() {
     if (!this.postBriefMap(this.categoryIdNow)) {
-      // Vuex里没有当前文章列表，请求数据
+      // Vuex里没有当前分类的文章列表，请求数据
       this.getPostListData();
     }
   }
@@ -63,11 +65,23 @@ export default class PostListView extends Vue {
   }
 
   async getPostListData() {
-    await this.getPostList({categoryId: this.categoryIdNow, userId: this.userDetail && this.userDetail._id});
+    await this.getPostList({
+      categoryId: this.categoryIdNow,
+      userId: this.userDetail && this.userDetail._id
+    });
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
+  onTogglePostLike(payload: PostLikePayload) {
+    const { targetId, type, categoryId, authorId } = payload;
+    this.toggleBriefPostLike({
+      targetId,
+      type,
+      categoryId,
+      authorId
+    });
+  }
 
   @Getter("userDetail") userDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
@@ -76,6 +90,7 @@ export default class PostListView extends Vue {
   @Action("getPostList") getPostList: any;
   // @Emit("select")
   // select(listItem: Song, index: number) {}
+  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
 
   // 监听路由变化，请求文章列表
   @Watch("$route", { immediate: true, deep: true })
@@ -96,7 +111,6 @@ export default class PostListView extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .post-view-wrapper {
-
 }
 
 // @media screen and (min-width: 576px) {

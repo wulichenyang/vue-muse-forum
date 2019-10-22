@@ -76,6 +76,7 @@
           :key="replyId"
           v-for="replyId in commentDetail.reply"
           :replyDetail="replyDetail(replyId)"
+          @emitToggleReplyLike="onToggleReplyLike"
         ></Reply>
       </section>
 
@@ -93,6 +94,7 @@ import {
   Model,
   Watch
 } from "vue-property-decorator";
+import { ReplyLikePayload } from "@/components/Comment/Reply/Reply.vue";
 import { formatNumber } from "@/utils/format";
 import { dateDiff } from "@/utils/time";
 import { Getter, Action } from "vuex-class";
@@ -106,7 +108,11 @@ import To from "@/utils/to";
 import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
-
+export interface CommentLikePayload {
+  targetId: string;
+  type: string;
+  authorId: string;
+}
 @Component({
   components: {
     UserAvatar,
@@ -152,15 +158,22 @@ export default class Comment extends Vue {
       this.openLoginDialog();
       return;
     }
-
-    this.toggleCommentLike({
+    this.emitToggleCommentLike({
       targetId,
       type,
       authorId
     });
-
     console.log("like");
     return;
+  }
+
+  onToggleReplyLike(payload: ReplyLikePayload) {
+    const { targetId, type, authorId } = payload;
+    this.toggleReplyLike({
+      targetId,
+      type,
+      authorId
+    });
   }
 
   showReplyInput() {
@@ -203,11 +216,13 @@ export default class Comment extends Vue {
     }
     return true;
   }
+  @Emit("emitToggleCommentLike")
+  emitToggleCommentLike(payload: CommentLikePayload) {}
 
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
+  @Action("toggleReplyLike") toggleReplyLike: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
-  @Action("toggleCommentLike") toggleCommentLike: any;
   @Getter("replyDetail") replyDetail!: any;
 }
 </script>

@@ -107,6 +107,13 @@ import { PostBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
 
+export interface PostLikePayload {
+  targetId: string;
+  type: string;
+  categoryId: string;
+  authorId: string;
+}
+
 @Component({
   components: { UserAvatar }
 })
@@ -158,7 +165,7 @@ export default class Post extends Vue {
       return;
     }
 
-    this.toggleBriefPostLike({
+    this.emitTogglePostLike({
       targetId,
       type,
       categoryId,
@@ -179,9 +186,11 @@ export default class Post extends Vue {
     return;
   }
 
+  @Emit("emitTogglePostLike")
+  emitTogglePostLike(payload: PostLikePayload) {}
+
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
-  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

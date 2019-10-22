@@ -95,6 +95,12 @@ import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
 
+export interface ReplyLikePayload {
+  targetId: string;
+  type: string;
+  authorId: string;
+}
+
 @Component({
   components: {
     UserAvatar,
@@ -140,12 +146,12 @@ export default class Reply extends Vue {
       return;
     }
 
-    this.toggleReplyLike({
+    this.emitToggleReplyLike({
       targetId,
       type,
       authorId
     });
-
+    
     console.log("like");
     return;
   }
@@ -190,11 +196,12 @@ export default class Reply extends Vue {
     }
     return true;
   }
+  @Emit("emitToggleReplyLike")
+  emitToggleReplyLike(payload: ReplyLikePayload) {}
 
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
-  @Action("toggleReplyLike") toggleReplyLike: any;
 }
 </script>
 
