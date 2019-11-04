@@ -36,6 +36,7 @@ import { UserDetail } from "@/assets/js/dataType";
 import { CommentDetail } from "@/assets/js/dataType";
 import { fetchCommentsOfOtherUser } from "@/api/comment";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
+import { LikePayload } from "@/api/like";
 
 @Component({
   components: {
@@ -81,12 +82,12 @@ export default class UserCommentsView extends Vue {
   }
 
   onToggleCommentLike(payload: CommentLikePayload) {
-    // const { targetId, type, authorId } = payload;
-    // this.toggleCommentLike({
-    //   targetId,
-    //   type,
-    //   authorId
-    // });
+    const { targetId, type, authorId } = payload;
+    this.toggleUserCommentLike({
+      targetId,
+      type,
+      authorId
+    });
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
@@ -97,6 +98,7 @@ export default class UserCommentsView extends Vue {
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
+  @Action("toggleUserCommentLike") toggleUserCommentLike!: (payload: LikePayload) => Promise<boolean>;
   @Action("getUserCommentList") getUserCommentList: any;
   // @Action("getUser") getUser: any;
 

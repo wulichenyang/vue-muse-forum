@@ -136,15 +136,53 @@ const actions = {
       authorId
     } = payload
 
+    // 在分类下的文章里修改评论是否点赞
     context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+    // 在某用户下的评论列表里修改评论是否点赞
+    context.commit(types.TOGGLE_USER_COMMENT_LIKE, { targetId, authorId })
 
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleLike({ targetId, type, authorId }));
 
     // 更新失败
     if (err) {
-      // 取消点赞行为
+      // 在分类下的文章里的评论取消是否点赞
       context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+      // 在某用户下的评论列表里修改评论是否点赞
+      context.commit(types.TOGGLE_USER_COMMENT_LIKE, { targetId, authorId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
+
+
+  // 在某用户下的评论列表里修改评论是否点赞
+  async toggleUserCommentLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, authorId: string }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+      authorId
+    } = payload
+
+    // 在分类下的文章里修改评论是否点赞
+    context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+    // 在某用户下的评论列表里修改评论是否点赞
+    context.commit(types.TOGGLE_USER_COMMENT_LIKE, { targetId, authorId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type, authorId }));
+
+    // 更新失败
+    if (err) {
+      // 在分类下的文章里的评论取消是否点赞
+      context.commit(types.TOGGLE_COMMENT_LIKE, { targetId })
+      // 在某用户下的评论列表里修改评论是否点赞
+      context.commit(types.TOGGLE_USER_COMMENT_LIKE, { targetId, authorId })
+
       return false
     }
 
@@ -211,20 +249,54 @@ const mutations = {
       targetId
     } = payload;
 
-    let ifLikeBefore = state.commentDetailMap[targetId].ifLike;
-    let beforeLikeCount = state.commentDetailMap[targetId].likeCount;
+    // 有缓存，则修改
+    if (state.commentDetailMap[targetId]) {
+      let ifLikeBefore = state.commentDetailMap[targetId].ifLike;
+      let beforeLikeCount = state.commentDetailMap[targetId].likeCount;
 
-    state.commentDetailMap = {
-      ...state.commentDetailMap,
-      [targetId]: {
-        ...state.commentDetailMap[targetId],
-        likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
-        ifLike: !(ifLikeBefore)
+      state.commentDetailMap = {
+        ...state.commentDetailMap,
+        [targetId]: {
+          ...state.commentDetailMap[targetId],
+          likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+          ifLike: !(ifLikeBefore)
+        }
       }
     }
   },
 
-  
+  // 在某用户下的某评论是否点赞
+  [types.TOGGLE_USER_COMMENT_LIKE](state: State, payload: { targetId: string, authorId: string }) {
+    const {
+      targetId,
+      authorId
+    } = payload;
+
+    // 有缓存，则修改
+    if (state.userToCommentMap[authorId] &&
+      state.userToCommentMap[authorId].commentDetailMap && state.userToCommentMap[authorId].commentDetailMap[targetId]
+    ) {
+      let ifLikeBefore = state.userToCommentMap[authorId].commentDetailMap[targetId].ifLike;
+      let beforeLikeCount = state.userToCommentMap[authorId].commentDetailMap[targetId].likeCount;
+
+      state.userToCommentMap = {
+        ...state.userToCommentMap,
+        [authorId]: {
+          ...state.userToCommentMap[authorId],
+          commentDetailMap: {
+            ...state.userToCommentMap[authorId].commentDetailMap,
+            [targetId]: {
+              ...state.userToCommentMap[authorId].commentDetailMap[targetId],
+              likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+              ifLike: !(ifLikeBefore)
+            }
+          }
+        }
+      }
+    }
+  },
+
+
   // 添加某用户下评论列表
   [types.ADD_USER_COMMENT_TO_BRIEF_MAP](state: State, payload: { userId: string, commentDetailMap: CommentDetailMap }) {
     // 初始化对象

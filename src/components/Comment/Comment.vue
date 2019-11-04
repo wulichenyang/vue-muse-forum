@@ -110,7 +110,7 @@ import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
 export interface CommentLikePayload {
   targetId: string;
-  type: string;
+  type: LikeTargetType;
   authorId: string;
 }
 @Component({

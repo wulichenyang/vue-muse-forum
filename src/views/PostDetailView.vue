@@ -96,6 +96,7 @@ import TextEditor from "@/components/TextEditor.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
 import UserName from "@/components/UserName.vue";
 import Comment from "@/components/Comment/Comment.vue";
+import { LikePayload } from "@/api/like";
 import { Getter, Action } from "vuex-class";
 import { CommentPayload, addComment, CommentState } from "@/api/comment";
 import Toast from "muse-ui-toast";
@@ -206,8 +207,8 @@ export default class PostDetailView extends Vue {
   @Getter("userDetail") userDetail!: any;
   @Getter("commentDetail") commentDetail!: any;
   @Getter("isLogin") isLogin!: boolean | null;
-  
-  @Action("toggleCommentLike") toggleCommentLike: any;
+
+  @Action("toggleCommentLike") toggleCommentLike!: (payload: LikePayload) => Promise<boolean>;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
   @Action("addCommentToPostDetail") addCommentToPostDetail: any;
