@@ -59,7 +59,7 @@ export default class RichTextEditor extends Vue {
   addRange: any;
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     // 监听富文本上传图片动作
     this.listenInsertPhoto();
   }

@@ -141,7 +141,7 @@ export default class UserView extends Vue {
   }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     // tab 样式
     this.activeTabIndex = this.tabIndexMap[
       (this.$route.path.split("/") as Array<any>).pop()

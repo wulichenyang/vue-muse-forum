@@ -167,7 +167,7 @@ export default class SignModal extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
 

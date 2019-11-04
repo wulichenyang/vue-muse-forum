@@ -114,7 +114,7 @@ export default class AdminCategoryAdd extends Vue {
   categoryBriefRules: any = categoryBriefRules;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // 更新当前avatarUrl
   onAvatarChange(avatarUrl: string) {

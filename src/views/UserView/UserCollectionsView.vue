@@ -47,7 +47,7 @@ export default class UserCollectionsView extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
 

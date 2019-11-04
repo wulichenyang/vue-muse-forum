@@ -17,7 +17,7 @@ export default class Logo extends Vue {
   // @Action("getUser") getUser: any;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 }
 </script>
 

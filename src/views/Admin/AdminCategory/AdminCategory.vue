@@ -95,7 +95,7 @@ export default class AdminCategory extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     console.log("mounded");
     this.initBreadcrumbs();
     // this.breadcrumbs = [

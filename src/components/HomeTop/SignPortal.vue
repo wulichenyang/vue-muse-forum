@@ -38,7 +38,7 @@ export default class SignPortal extends Vue {
   ifShow!: boolean;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   onShowSignIn(): void {

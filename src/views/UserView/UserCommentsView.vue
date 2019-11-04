@@ -65,7 +65,7 @@ export default class UserCommentsView extends Vue {
   }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     if (!this.userCommentMap(this.otherUserId)) {
       this.getCommentsOfOtherUser();
     }

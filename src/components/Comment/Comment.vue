@@ -150,7 +150,7 @@ export default class Comment extends Vue {
   ifShowThis: boolean = false;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   onLike(targetId: string, type: LikeTargetType, authorId: string) {

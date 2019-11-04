@@ -151,7 +151,7 @@ export default class Post extends Vue {
   }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   onLike(

@@ -47,7 +47,7 @@ export default class UserFollowsView extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
 

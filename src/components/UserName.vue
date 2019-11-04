@@ -21,7 +21,7 @@ export default class UserName extends Vue {
   user!: UserBrief;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 }
 </script>
 

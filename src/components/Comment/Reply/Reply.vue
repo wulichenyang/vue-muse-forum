@@ -137,7 +137,7 @@ export default class Reply extends Vue {
   showEmoji: any = showEmoji;
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   onLike(targetId: string, type: LikeTargetType, authorId: string) {

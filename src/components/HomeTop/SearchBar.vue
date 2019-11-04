@@ -38,7 +38,7 @@ export default class SearchBar extends Vue {
   searchValue: string = "";
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   onSearchFocus(): void {

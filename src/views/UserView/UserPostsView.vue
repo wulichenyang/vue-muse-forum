@@ -59,7 +59,7 @@ export default class UserPostsView extends Vue {
   }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     if (!this.userPostBriefMap(this.otherUserId)) {
       this.getPostsOfOtherUser();
     }
@@ -76,6 +76,13 @@ export default class UserPostsView extends Vue {
 
   onTogglePostLike(payload: PostLikePayload) {
     const { targetId, type, categoryId, authorId } = payload;
+
+    console.log(     
+      targetId,
+      type,
+      categoryId,
+      authorId)
+
     this.toggleUserBriefPostLike({
       targetId,
       type,

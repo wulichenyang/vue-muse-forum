@@ -143,7 +143,7 @@ export default class PostDetailView extends Vue {
   }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     if (!this.postData || !this.postData._id) {
       this.initPostDetail();
     }

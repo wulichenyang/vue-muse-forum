@@ -43,7 +43,7 @@ export default class XXXXXX extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   // selectSong(song: Song, index: number): void {

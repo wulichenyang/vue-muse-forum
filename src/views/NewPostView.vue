@@ -109,7 +109,7 @@ export default class NewPostView extends Vue {
   categoryNameRules: any = categoryNameRules;
 
   // Lifecycle
-  async mounted() {
+  private async mounted() {
     // Vuex为空，重新请求数据
     if (this.categoryIds.length === 0) {
       this.getCategories();

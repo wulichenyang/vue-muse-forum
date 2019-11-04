@@ -47,7 +47,7 @@ export default class UserFansView extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
 

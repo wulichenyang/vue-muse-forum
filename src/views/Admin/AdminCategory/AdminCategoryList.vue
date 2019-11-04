@@ -70,7 +70,7 @@ export default class AdminCategoryList extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     // Vuex里categoryList为空，重新请求数据
     if (this.categoryIds.length === 0) {
       this.getCategories();

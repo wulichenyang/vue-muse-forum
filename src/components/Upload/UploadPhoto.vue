@@ -68,7 +68,7 @@ export default class UploadPhoto extends Vue {
   qiniuaddr: string = qiniuConfig.qiniuAddr;
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     // 添加刷新页面监听
     window.addEventListener("beforeunload", e => this.beforeunloadFn(e));
   }

@@ -2,7 +2,7 @@ import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
 import {
   fetchPostListByCategory,
-  fetchPostDetail, 
+  fetchPostDetail,
   fetchPostsOfOtherUser
 } from '@/api/post';
 import {
@@ -55,6 +55,7 @@ export interface State {
   categoryToPostMap: CategoryToPostMap,
   // 各个用户所有发布的文章
   userToPostMap: UserToPostMap,
+  // 文章详细内容
   postDetailMap: PostDetailMap,
 }
 
@@ -218,6 +219,7 @@ const actions = {
     return true
   },
 
+  // 主页分类下的文章进行点赞和取消
   async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
     // 点赞
     const {
@@ -227,7 +229,10 @@ const actions = {
       authorId
     } = payload
 
+    // 主页分类下文章的点赞
     context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+    // 某用户的文章的点赞
+    context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
 
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleLike({ targetId, type, authorId }));
@@ -236,6 +241,9 @@ const actions = {
     if (err) {
       // 取消点赞行为
       context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+      
+      // 取消某用户的文章的点赞
+      context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
       return false
     }
 
@@ -243,6 +251,41 @@ const actions = {
       return true
     }
   },
+
+  // 对某用户的文章进行点赞和取消
+  async toggleUserBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+      categoryId,
+      authorId
+    } = payload
+
+    // 主页分类下文章的点赞
+    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+
+    // 某用户的文章的点赞
+    context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type, authorId }));
+
+    // 更新失败
+    if (err) {
+      // 取消主页分类下文章点赞
+      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
+
+      // 取消某用户的文章的点赞
+      context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
+
 }
 
 // mutations
@@ -283,24 +326,59 @@ const mutations = {
     ]
   },
 
-  // 修改某分类下文章列表某项是否点赞
+  // 修改某分类下文章列表某文章是否点赞
   [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { categoryId: string, targetId: string }) {
     const {
       categoryId,
       targetId
     } = payload;
 
-    let ifLikeBefore = state.categoryToPostMap[categoryId].postBriefMap[targetId].ifLike;
-    let beforeLikeCount = state.categoryToPostMap[categoryId].postBriefMap[targetId].likeCount;
+    // 有缓存则修改
+    if (state.categoryToPostMap[categoryId] &&
+      state.categoryToPostMap[categoryId].postBriefMap &&
+      state.categoryToPostMap[categoryId].postBriefMap[targetId]
+    ) {
+      let ifLikeBefore = state.categoryToPostMap[categoryId].postBriefMap[targetId].ifLike;
+      let beforeLikeCount = state.categoryToPostMap[categoryId].postBriefMap[targetId].likeCount;
 
-    state.categoryToPostMap[categoryId] = {
-      ...state.categoryToPostMap[categoryId],
-      postBriefMap: {
-        ...state.categoryToPostMap[categoryId].postBriefMap,
-        [targetId]: {
-          ...state.categoryToPostMap[categoryId].postBriefMap[targetId],
-          likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
-          ifLike: !(ifLikeBefore)
+      state.categoryToPostMap[categoryId] = {
+        ...state.categoryToPostMap[categoryId],
+        postBriefMap: {
+          ...state.categoryToPostMap[categoryId].postBriefMap,
+          [targetId]: {
+            ...state.categoryToPostMap[categoryId].postBriefMap[targetId],
+            likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+            ifLike: !(ifLikeBefore)
+          }
+        }
+      }
+    }
+
+  },
+
+  // 修改某用户下文章列表某文章是否点赞
+  [types.TOGGLE_USER_BRIEF_POST_LIKE](state: State, payload: { targetId: string, authorId: string }) {
+    const {
+      targetId,
+      authorId
+    } = payload;
+
+    // 有缓存则修改
+    if (state.userToPostMap[authorId] &&
+      state.userToPostMap[authorId].postBriefMap &&
+      state.userToPostMap[authorId].postBriefMap[targetId]) {
+      let ifLikeBefore = state.userToPostMap[authorId].postBriefMap[targetId].ifLike;
+      let beforeLikeCount = state.userToPostMap[authorId].postBriefMap[targetId].likeCount;
+
+      state.userToPostMap[authorId] = {
+        ...state.userToPostMap[authorId],
+        postBriefMap: {
+          ...state.userToPostMap[authorId].postBriefMap,
+          [targetId]: {
+            ...state.userToPostMap[authorId].postBriefMap[targetId],
+            likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+            ifLike: !(ifLikeBefore)
+          }
         }
       }
     }

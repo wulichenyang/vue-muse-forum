@@ -128,7 +128,7 @@ export default class HomeTop extends Vue {
     return false;
   }
   // Lifecycle
-  mounted() {
+  private mounted() {
     window.addEventListener("scroll", this.scrollFn);
   }
 

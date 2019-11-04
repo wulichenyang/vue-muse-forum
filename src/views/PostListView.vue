@@ -52,7 +52,7 @@ export default class PostListView extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     if (!this.postBriefMap(this.categoryIdNow)) {
       // Vuex里没有当前分类的文章列表，请求数据
       this.getPostListData();

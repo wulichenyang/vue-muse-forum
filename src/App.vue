@@ -22,7 +22,7 @@ import { museThemeConfig } from "@/config/index";
 export default class App extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Action("getUser") getUser: any;
-  mounted() {
+  private mounted() {
     // 已登录，请求用户数据
     if (!this.userDetail && cookie.getCookie(access_token)) {
       this.getUser();

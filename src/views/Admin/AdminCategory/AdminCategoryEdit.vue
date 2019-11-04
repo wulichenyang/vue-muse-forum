@@ -155,7 +155,7 @@ export default class AdminCategoryEdit extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     window.addEventListener("beforeunload", e => this.beforeunloadFn(e));
     // 获取该分类详细信息
     this.getCategoryItem();

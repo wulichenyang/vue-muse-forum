@@ -125,7 +125,7 @@ export default class Admin extends Vue {
   // }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 
   // Methods
   changeOpen() {

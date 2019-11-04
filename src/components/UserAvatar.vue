@@ -90,7 +90,7 @@ export default class UserAvatar extends Vue {
   }
 
   // Lifecycle
-  mounted() {}
+  private mounted() {}
 }
 </script>
 

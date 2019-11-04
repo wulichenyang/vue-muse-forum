@@ -207,7 +207,7 @@ export default class TextEditor extends Vue {
   // }
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     if (this.hiddenWhenOutClick) {
       this.hiddenThisHandler();
     }

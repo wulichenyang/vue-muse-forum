@@ -159,13 +159,13 @@ export default class UserOption extends Vue {
   openAlert: boolean = false;
 
   // Lifecycle
-  mounted() {
+  private mounted() {
     // console.log(this.$refs.menuBtn)
     // mounted时，子组件还没有渲染出来
     // this.triggerMenu = (this.$refs.menuBtn as any).$el;
   }
 
-  updated() {
+  private updated() {
     // mounted时，子组件还没有渲染出来
     if (!this.triggerMenu) {
       this.triggerMenu = (this.$refs.menuBtn as any).$el;
