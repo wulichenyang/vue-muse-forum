@@ -411,9 +411,9 @@ const mutations = {
 
   // 添加评论 id 到 postdetailMap
   [types.ADD_COMMENT_ID_TO_POST_DETAIL](state: State, commentDetail: CommentDetail) {
-    state.postDetailMap[commentDetail.postId].comment = [
+    state.postDetailMap[commentDetail.postId as string].comment = [
       commentDetail._id,
-      ...state.postDetailMap[commentDetail.postId].comment
+      ...state.postDetailMap[commentDetail.postId as string].comment
     ]
   },
 

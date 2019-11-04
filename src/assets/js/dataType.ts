@@ -121,6 +121,11 @@ export interface PostBrief extends DateType {
   ifLike?: boolean,
 }
 
+export interface PostInfoInComment {
+  _id: string,
+  title: string,
+}
+
 // 服务端返回的postDetail，需要提取commentids处理
 export interface PostDetailCommon extends PostBrief {
   content: string,
@@ -140,7 +145,7 @@ export interface PostDetail extends PostDetailCommon {
 
 export interface CommentDetailCommon extends DateType {
   _id: string,
-  postId: string,
+  postId: string | PostInfoInComment,
   author: UserBrief, // populate 生成
   content: string,
   likeCount: number,

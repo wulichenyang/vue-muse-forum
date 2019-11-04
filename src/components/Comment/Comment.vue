@@ -10,6 +10,14 @@
       <!-- 作者昵称 -->
       <UserName :user="commentDetail && commentDetail.author" />
 
+      <!-- 回复的文章标题 -->
+      <span v-if="commentDetail && commentDetail.postId">
+        评论了文章
+        <router-link :to="`/posts/${commentDetail.postId._id}`">
+          <br><strong class="title">{{commentDetail.postId.title}}</strong>
+        </router-link>
+      </span>
+
       <!-- 评论内容 -->
       <p v-html="commentDetail && commentDetail.content && showEmoji(commentDetail.content)"></p>
 
@@ -101,7 +109,11 @@ import { Getter, Action } from "vuex-class";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TextEditor from "@/components/TextEditor.vue";
 import Reply from "@/components/Comment/Reply/Reply.vue";
-import { CommentDetail, ReplyDetail } from "@/assets/js/dataType";
+import {
+  CommentDetail,
+  ReplyDetail,
+  PostInfoInComment
+} from "@/assets/js/dataType";
 import UserName from "@/components/UserName.vue";
 import { ReplyPayload, addReply } from "@/api/reply";
 import To from "@/utils/to";
@@ -129,7 +141,6 @@ export default class Comment extends Vue {
     required: true
   })
   commentDetail!: CommentDetail;
-
   // @Model("onChange", {
   //   type: String
   // })
@@ -234,6 +245,12 @@ export default class Comment extends Vue {
   margin-bottom: 14px;
   display: flex;
   .right-comment-content {
+    strong.title {
+      color: $primary;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
     flex: 1;
     p {
       margin: 5px 5px 5px 0;
