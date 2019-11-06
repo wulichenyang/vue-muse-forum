@@ -23,14 +23,14 @@
 
         <!-- 关注/私信 按钮 -->
         <mu-button
-          v-if="otherUser && otherUser._id !== userDetail._id"
+          v-if="otherUser && userDetail && otherUser._id !== userDetail._id"
           small
           color="primary"
           class="follow-btn"
           @click="followUser"
         >关注</mu-button>
         <mu-button
-          v-if="otherUser && otherUser._id !== userDetail._id"
+          v-if="otherUser && userDetail && otherUser._id !== userDetail._id"
           small
           color="secondary"
           @click="messageTo"
@@ -215,8 +215,13 @@ export default class UserView extends Vue {
   // @Emit("select")
   // select(listItem: Song, index: number) {}
 
-  // @Watch("child", { immediate: true, deep: true })
-  // onChildChanged(val: string, oldVal: string) {}
+  @Watch("$route", { immediate: true, deep: true })
+  onRouteChange(val: string, oldVal: string) {
+    if(oldVal !== val && (val as any).fullPath.endsWith('posts')) {
+      // 重置tab
+      this.activeTabIndex = 0
+    }
+  }
 }
 </script>
 

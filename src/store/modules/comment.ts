@@ -304,9 +304,8 @@ const mutations = {
       state.userToCommentMap[payload.userId] = <UserToComment>{}
     }
 
-    state.userToCommentMap[payload.userId].commentDetailMap = {
-      ...payload.commentDetailMap
-    }
+    state.userToCommentMap[payload.userId].commentDetailMap =
+      payload.commentDetailMap
   },
 
   // 添加某用户下评论列表 ids
@@ -316,9 +315,8 @@ const mutations = {
       state.userToCommentMap[payload.userId] = <UserToComment>{}
     }
 
-    state.userToCommentMap[payload.userId].commentIds = [
-      ...payload.commentIds
-    ]
+    state.userToCommentMap[payload.userId].commentIds = payload.commentIds
+
   },
 
 }

@@ -1,7 +1,8 @@
 import { Picker, EmojiIndex } from 'emoji-mart-vue-fast'
 import data from 'emoji-mart-vue-fast/data/all.json'
+// import data from "emoji-mart-vue-fast/data/messenger.json";
 
-let emojiIndex = new EmojiIndex(data)
+ export let emojiIndex = new EmojiIndex(data)
 
 /**
  * convert emoji object to html `<span>`s.

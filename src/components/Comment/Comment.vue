@@ -174,7 +174,6 @@ export default class Comment extends Vue {
       type,
       authorId
     });
-    console.log("like");
     return;
   }
 

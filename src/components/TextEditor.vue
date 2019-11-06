@@ -111,8 +111,9 @@ import { UserBrief } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import { Picker as EmojiPicker, EmojiIndex, Emoji } from "emoji-mart-vue-fast";
 import { emoji2Html } from "@/utils/emoji";
-import data from "emoji-mart-vue-fast/data/messenger.json";
+// import data from "emoji-mart-vue-fast/data/messenger.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
+import { emojiIndex } from "../utils/emoji";
 
 @Component({
   components: {
@@ -196,7 +197,7 @@ export default class TextEditor extends Vue {
   // 提交状态标志
   submitting: boolean = false;
   emoji2Html: any = emoji2Html;
-  emojiIndex: any = new EmojiIndex(data);
+  emojiIndex: any = emojiIndex;
   ifShowEmojiPicker: boolean = false;
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;

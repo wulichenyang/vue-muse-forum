@@ -3,7 +3,6 @@
 
     <!-- 评论列表 -->
     <section class="comment-list-wrapper">
-
       <Comment
         :key="commentId"
         v-for="commentId in userCommentIds(otherUserId)"
