@@ -14,7 +14,7 @@
         <!-- 昵称 -->
         <h3>
           {{otherUser && otherUser.nickname}}
-          <mu-icon value="man"></mu-icon>
+          <mu-icon value=":mudocs-icon-action-boy" ></mu-icon>
         </h3>
 
         <!-- 个人简介 -->
