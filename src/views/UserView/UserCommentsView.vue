@@ -2,7 +2,7 @@
   <section class="user-comments">
 
     <!-- 评论列表 -->
-    <section class="comment-list-wrapper">
+    <section class="user-comment-list-wrapper">
       <Comment
         :key="commentId"
         v-for="commentId in userCommentIds(otherUserId)"
@@ -97,7 +97,9 @@ export default class UserCommentsView extends Vue {
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
-  @Action("toggleUserCommentLike") toggleUserCommentLike!: (payload: LikePayload) => Promise<boolean>;
+  @Action("toggleUserCommentLike") toggleUserCommentLike!: (
+    payload: LikePayload
+  ) => Promise<boolean>;
   @Action("getUserCommentList") getUserCommentList: any;
   // @Action("getUser") getUser: any;
 
@@ -113,13 +115,39 @@ export default class UserCommentsView extends Vue {
 @import "../../assets/css/var.scss";
 
 .user-comments {
+  .user-comment-list-wrapper {
+    .comment-wrapper {
+      &:not(:last-child) {
+        border-bottom: $postBottomBorder;
+      }
+      background: $mainContainerBgColor;
+
+      margin-bottom: 0;
+      transition: 0.3s all;
+      // Phone
+      padding: $postPhonePadding;
+      &:hover {
+        transform: scale(1.01);
+        box-shadow: $postBoxShadowColor;
+        transition: 0.3s all;
+      }
+      strong {
+        display: inline-block;
+        margin-top: 5px;
+      }
+    }
+  }
 }
 
-// @media screen and (min-width: 576px) {
-//   .user-comments {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .user-comments {
+    .user-comment-list-wrapper {
+      .comment-wrapper {
+        
+      }
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .user-comments {
 //     max-width: 720px;
