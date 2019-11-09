@@ -267,12 +267,11 @@ export default class HomeTop extends Vue {
           this.submitting = false;
           // 清除表单
           this.clearForm();
-          // 设置登录状态
-          this.getUser();
           // 设置token到cookie中
           this.setCookie(signInRes.data.token);
           this.closeAlertDialog();
-          console.log(signInRes);
+          // 重新刷新
+          window.location.reload();
         }
       }
     }

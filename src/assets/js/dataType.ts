@@ -47,6 +47,9 @@ export interface OtherUserDetail extends UserBrief {
   // 收藏数
   collectPostCount: number,
 
+  // 是否关注
+  ifFollow?: boolean,
+
 }
 
 export interface UserDetail extends OtherUserDetail {

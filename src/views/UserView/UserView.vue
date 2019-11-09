@@ -14,7 +14,7 @@
         <!-- 昵称 -->
         <h3>
           {{otherUser && otherUser.nickname}}
-          <mu-icon value=":mudocs-icon-action-boy" ></mu-icon>
+          <mu-icon value=":mudocs-icon-action-boy"></mu-icon>
         </h3>
 
         <!-- 个人简介 -->
@@ -23,17 +23,21 @@
 
         <!-- 关注/私信 按钮 -->
         <mu-button
-          v-if="otherUser && userDetail && otherUser._id !== userDetail._id"
+          v-if="otherUser && userDetail && otherUser._id !== userDetail._id || otherUser && !userDetail"
           small
           color="primary"
           class="follow-btn"
-          @click="followUser"
-        >关注</mu-button>
+          @click="onToggleFollowUser(
+            otherUser._id,
+            'user'
+          )"
+        >{{otherUser.ifFollow ? '已关注':'关注'}}</mu-button>
+
         <mu-button
-          v-if="otherUser && userDetail && otherUser._id !== userDetail._id"
+          v-if="otherUser && userDetail && otherUser._id !== userDetail._id || otherUser && !userDetail"
           small
           color="secondary"
-          @click="messageTo"
+          @click="onMessageTo"
         >私信</mu-button>
       </header>
 
@@ -77,6 +81,7 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import { FollowTargetType } from "@/api/follow";
 
 @Component({
   components: {
@@ -149,7 +154,10 @@ export default class UserView extends Vue {
 
     // 获取查看任意用户信息
     if (!this.otherUser) {
-      this.getOtherUserDetail(this.otherUserId);
+      this.getOtherUserDetail({
+        targetUserId: this.otherUserId,
+        fromUserId: this.userDetail && this.userDetail._id
+      });
     }
   }
 
@@ -187,14 +195,18 @@ export default class UserView extends Vue {
     }
   }
 
-  followUser() {
+  onToggleFollowUser(targetId: string, type: FollowTargetType) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
+    this.togglesUserFollow({
+      targetId,
+      type
+    });
   }
 
-  messageTo() {
+  onMessageTo() {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -209,7 +221,7 @@ export default class UserView extends Vue {
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getOtherUserDetail") getOtherUserDetail: any;
-
+  @Action("togglesUserFollow") togglesUserFollow: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")
@@ -217,9 +229,9 @@ export default class UserView extends Vue {
 
   @Watch("$route", { immediate: true, deep: true })
   onRouteChange(val: string, oldVal: string) {
-    if(oldVal !== val && (val as any).fullPath.endsWith('posts')) {
+    if (oldVal !== val && (val as any).fullPath.endsWith("posts")) {
       // 重置tab
-      this.activeTabIndex = 0
+      this.activeTabIndex = 0;
     }
   }
 }

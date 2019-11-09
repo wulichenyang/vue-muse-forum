@@ -131,6 +131,7 @@ import {} from "@/assets/js/dataType";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
 import { hashId2DetaultAvatar } from "@/utils/hash";
+import Toast from "muse-ui-toast";
 import UserAvatar from "@/components/UserAvatar.vue";
 import { UserDetail } from "@/assets/js/dataType";
 @Component({
@@ -168,8 +169,12 @@ export default class UserOption extends Vue {
   private updated() {
     // mounted时，子组件还没有渲染出来
     if (!this.triggerMenu) {
-      this.triggerMenu = (this.$refs.menuBtn as any).$el;
+      this.initMenu();
     }
+  }
+
+  initMenu() {
+    this.triggerMenu = (this.$refs.menuBtn as any).$el;
   }
 
   // Computed
@@ -184,27 +189,31 @@ export default class UserOption extends Vue {
   }
 
   openMenuFun() {
-    console.log(123)
+    console.log(123);
     this.openMenu = !this.openMenu;
   }
 
   ensureSignout() {
     this.closeAlertDialog();
     this.signout();
-    this.$router.push({ path: "/" });
   }
 
   async signout() {
     let err, res;
     [err, res] = await To(signOut());
     if (err) {
+      Toast.error(`登出失败：${err}`)
       return;
     }
     if (res && res.code === 0) {
       // 清除cookie里的token
       cookie.removeCookie(access_token);
+      console.log(access_token);
       // 清除vuex里的用户信息
       this.clearUser();
+      // 刷新页面
+      // this.$router.push({ path: "/" });
+      window.location.reload();
     }
   }
 

@@ -26,8 +26,12 @@ export const fetchUserself = (): Promise<any> => {
   return get('/userself')
 }
 
-export const fetchOtherUser = (id: string): Promise<any> => {
-  return get(`/users/${id}`)
+export const fetchOtherUser = (targetUser: string, fromUser?: string): Promise<any> => {
+  if (fromUser) {
+    return get(`/users/${targetUser}?fromUserId=${fromUser}`)
+  } else {
+    return get(`/users/${targetUser}`)
+  }
 }
 
 // 用户注册/登录之前获取公钥

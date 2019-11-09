@@ -3,6 +3,11 @@ import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
 // import { CartProduct, CheckoutStatus, AddToCartPayload } from "../index"
 import { fetchUserself, fetchOtherUser } from '@/api/user';
+import {
+  FollowPayload,
+  FollowTargetType,
+  toggleFollow
+} from '@/api/follow'
 import To from '@/utils/to'
 import {
   UserDetail,
@@ -48,9 +53,14 @@ const getters = {
 // actions
 const actions = {
   // 获取任意用户信息
-  async getOtherUserDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, userId: string) {
+  async getOtherUserDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetUserId: string, fromUserId?: string }) {
+    const {
+      targetUserId,
+      fromUserId
+    } = payload;
+
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchOtherUser(userId));
+    [err, res] = await To(fetchOtherUser(targetUserId, fromUserId));
     if (err) {
       // 获取失败
       return false
@@ -87,6 +97,33 @@ const actions = {
   // 其他用户信息加入map
   setOtherUser(context: { commit: Commit; state: State }, payload: OtherUserDetail) {
     context.commit(types.SET_OTHER_USER_DETAIL, (payload as OtherUserDetail))
+  },
+
+  // 对某用户进行关注和取消
+  async togglesUserFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+    } = payload
+
+    // 对某用户的关注
+    context.commit(types.TOGGLE_OTHER_USER_FOLLOW, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleFollow({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消对某用户的关注
+      context.commit(types.TOGGLE_OTHER_USER_FOLLOW, { targetId })
+
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
   },
 
   // 清除用户信息和登录信息
@@ -126,10 +163,7 @@ const actions = {
 const mutations = {
   // 设置用户自身信息
   [types.SET_USER_DETAIL](state: State, payload: UserDetail) {
-    // 对象直接赋值不行，需要解构赋值？// TODO: fix
-    state.userDetail = {
-      ...payload
-    }
+    state.userDetail = payload
   },
 
   // 其他用户信息加入map
@@ -162,6 +196,27 @@ const mutations = {
   },
   [types.CLOSE_LOGIN_DIALOG](state: State) {
     state.openLoginDialog = false;
+  },
+
+  // 修改对某用户是否关注
+  [types.TOGGLE_OTHER_USER_FOLLOW](state: State, payload: { targetId: string }) {
+    const {
+      targetId,
+    } = payload;
+
+    // 有缓存则修改
+    if (state.otherUserMap[targetId] && state.otherUserMap[targetId]._id) {
+      let ifFollowBefore = state.otherUserMap[targetId].ifFollow;
+
+      state.otherUserMap = {
+        ...state.otherUserMap,
+        [targetId]: {
+          ...state.otherUserMap[targetId],
+          ifFollow: !(ifFollowBefore)
+        }
+      }
+
+    }
   },
 }
 
