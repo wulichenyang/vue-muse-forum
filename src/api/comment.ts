@@ -16,10 +16,10 @@ export const addComment = ({ postId, content, state }: CommentPayload): Promise<
   return post(`/posts/${postId}/comments`, { content, state })
 }
 
-export const fetchCommentsOfOtherUser = (userId: string, loginUserId?: string): Promise<any> => {
+export const fetchCommentsOfOtherUser = (targetUserId: string, loginUserId?: string): Promise<any> => {
   if(loginUserId) {
-    return get(`/users/${userId}/comments?userId=${loginUserId}`)
+    return get(`/users/${targetUserId}/comments?userId=${loginUserId}`)
   } else {
-    return get(`/users/${userId}/comments`)
+    return get(`/users/${targetUserId}/comments`)
   }
 }

@@ -5,6 +5,7 @@ import category from '@/store/modules/category'
 import post from '@/store/modules/post'
 import comment from '@/store/modules/comment'
 import reply from '@/store/modules/reply'
+import fans from '@/store/modules/fans'
 
 Vue.use(Vuex);
 
@@ -24,5 +25,6 @@ export default new Vuex.Store({
     post,
     comment,
     reply,
+    fans,
   }
 });

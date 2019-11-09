@@ -1,6 +1,17 @@
 <template>
   <section class="user-fans">
-    uUserFansView
+
+    <!-- 粉丝列表 -->
+    <section class="user-fans-wrapper">
+      <Fan
+        :key="fanId"
+        v-for="fanId in userFanIds(otherUserId)"
+        :userFansBrief="userFanMap(otherUserId)[fanId]"
+      >
+      </Fan>
+
+    </section>
+
   </section>
 </template>
 
@@ -15,13 +26,20 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
+import Fan from "@/components/Fan/Fan.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
+import { UserFansBrief } from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
+
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import { FollowPayload } from "@/api/follow";
+import { UserFansBriefMap } from "@/store/modules/fans";
 
 @Component({
   components: {
+    Fan
   }
 })
 export default class UserFansView extends Vue {
@@ -39,26 +57,48 @@ export default class UserFansView extends Vue {
   // searchKey!: string;
 
   // Data
-
+  userFansList: Array<UserFansBrief> = [];
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  private mounted() {}
-
+  private mounted() {
+    if (!this.userFanMap(this.otherUserId)) {
+      this.getFansOfOtherUser();
+    }
+  }
   // Methods
+  async getFansOfOtherUser() {
+    // Vuex里没有当前用户的评论列表，请求数据
+    await this.getUserFanList({
+      userId: this.otherUserId,
+      loginUserId: this.userDetail && this.userDetail._id
+    });
+  }
 
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
+  // toggleFansFollow(payload: FollowPayload) {
+  //   const { targetId, type } = payload;
+  //   this.toggleUserFollow({
+  //     targetId,
+  //     type,
+  //   });
   // }
+
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userFanMap") userFanMap!: (
+    userId: string
+  ) => Promise<UserFansBriefMap>;
+  @Getter("userFanIds") userFanIds!: (userId: string) => Promise<string[]>;
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
-  // @Action("getUser") getUser: any;
-
+  @Action("toggleUserFollow") toggleUserFollow!: (
+    payload: FollowPayload
+  ) => Promise<boolean>;
+  @Action("getUserFanList") getUserFanList: any;
   // @Emit("select")
   // select(listItem: Song, index: number) {}
 
@@ -71,7 +111,11 @@ export default class UserFansView extends Vue {
 @import "../../assets/css/var.scss";
 
 .user-fans {
-
+  .user-fans-wrapper {
+    &:not(:last-child) {
+      border-bottom: $postBottomBorder;
+    }
+  }
 }
 
 // @media screen and (min-width: 576px) {

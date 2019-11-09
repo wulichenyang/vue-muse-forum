@@ -153,12 +153,7 @@ export default class UserView extends Vue {
     ];
 
     // 获取查看任意用户信息
-    if (!this.otherUser) {
-      this.getOtherUserDetail({
-        targetUserId: this.otherUserId,
-        fromUserId: this.userDetail && this.userDetail._id
-      });
-    }
+    this.getUserInfoWhenNotSaved();
   }
 
   // Methods
@@ -200,10 +195,19 @@ export default class UserView extends Vue {
       this.openLoginDialog();
       return;
     }
-    this.togglesUserFollow({
+    this.toggleUserFollow({
       targetId,
       type
     });
+  }
+
+  getUserInfoWhenNotSaved() {
+    if (!this.otherUser) {
+      this.getOtherUserDetail({
+        targetUserId: this.otherUserId,
+        fromUserId: this.userDetail && this.userDetail._id
+      });
+    }
   }
 
   onMessageTo() {
@@ -221,7 +225,7 @@ export default class UserView extends Vue {
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getOtherUserDetail") getOtherUserDetail: any;
-  @Action("togglesUserFollow") togglesUserFollow: any;
+  @Action("toggleUserFollow") toggleUserFollow: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")
@@ -233,6 +237,8 @@ export default class UserView extends Vue {
       // 重置tab
       this.activeTabIndex = 0;
     }
+    // 获取查看任意用户信息
+    this.getUserInfoWhenNotSaved();
   }
 }
 </script>

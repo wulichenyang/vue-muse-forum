@@ -1,8 +1,5 @@
 import { Commit, Dispatch } from "vuex"
 import * as types from "../mutation-types"
-import {
-
-} from '@/api/comment';
 import To from '@/utils/to'
 import {
   CommentDetail,
@@ -78,7 +75,7 @@ const getters = {
     return state.commentDetailMap[commentId]
   },
 
-  // 某用户下的文章列表map
+  // 某用户下的评论列表map
   userCommentMap: (state: State) => (userId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
     if (!state.userToCommentMap[userId]) {
@@ -87,7 +84,7 @@ const getters = {
     return state.userToCommentMap[userId].commentDetailMap
   },
 
-  // 某用户下的文章ids
+  // 某用户下的评论ids
   userCommentIds: (state: State) => (userId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
     // 初始化 userToCommentMap 里对应id的映射对象

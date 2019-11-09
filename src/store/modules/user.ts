@@ -100,7 +100,7 @@ const actions = {
   },
 
   // 对某用户进行关注和取消
-  async togglesUserFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
+  async toggleUserFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
     // 点赞
     const {
       targetId,

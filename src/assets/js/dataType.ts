@@ -24,6 +24,22 @@ export interface UserBrief {
   avatar: string,
 }
 
+export interface FansInfo extends UserBrief {
+  // 用户简介
+  brief: string,
+}
+
+export interface UserFansBrief extends UserBrief {
+  // Follow id 唯一
+  _id: string,
+  // 粉丝信息
+  userId: FansInfo,
+  // 是否关注
+  ifFollow?: boolean
+}
+
+
+
 export interface OtherUserDetail extends UserBrief {
   // 用户性别
   gender: Gender,
