@@ -39,7 +39,7 @@
           small
           color="primary"
           class="follow-btn"
-          @click="onToggleFollowUser(
+          @click.prevent="onToggleFollowUser(
             userFansBrief.userId._id,
             'user'
           )"
@@ -68,6 +68,8 @@ import { UserFansBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
 import { UserDetail } from "@/assets/js/dataType";
+import { FollowPayload } from "@/api/follow";
+import { FollowTargetType } from "@/api/follow";
 
 export interface FanLikePayload {
   targetId: string;
@@ -109,30 +111,23 @@ export default class Fan extends Vue {
   private mounted() {}
 
   // Methods
-  // onToggleFollow(
-  //   targetId: string,
-  //   type: LikeTargetType,
-  //   categoryId: string,
-  //   authorId: string
-  // ) {
-  //   if (!this.isLogin) {
-  //     this.openLoginDialog();
-  //     return;
-  //   }
+  onToggleFollowUser(targetId: string, type: FollowTargetType) {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
 
-  //   this.emitToggleFollow({
-  //     targetId,
-  //     type,
-  //     categoryId,
-  //     authorId
-  //   });
+    this.emitToggleFollowUser({
+      targetId,
+      type
+    });
 
-  //   console.log("like");
-  //   return;
-  // }
+    console.log("follow user");
+    return;
+  }
 
-  // @Emit("emitToggleFollow")
-  // emitToggleFollow(payload: FollowPayload) {}
+  @Emit("emitToggleFollowUser")
+  emitToggleFollowUser(payload: FollowPayload) {}
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("isLogin") isLogin!: boolean | null;
   @Action("openLoginDialog") openLoginDialog: any;

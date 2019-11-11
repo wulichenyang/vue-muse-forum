@@ -110,6 +110,9 @@ const actions = {
     // 对某用户的关注
     context.commit(types.TOGGLE_OTHER_USER_FOLLOW, { targetId })
 
+    // 对某粉丝的关注
+    context.commit(types.TOGGLE_OTHER_USER_FANS_FOLLOW, { targetId })
+
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleFollow({ targetId, type }));
 
@@ -117,6 +120,9 @@ const actions = {
     if (err) {
       // 取消对某用户的关注
       context.commit(types.TOGGLE_OTHER_USER_FOLLOW, { targetId })
+
+      // 取消对某粉丝的关注
+      context.commit(types.TOGGLE_OTHER_USER_FANS_FOLLOW, { targetId })
 
       return false
     }

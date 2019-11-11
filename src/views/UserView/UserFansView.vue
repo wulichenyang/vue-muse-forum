@@ -6,10 +6,10 @@
       <Fan
         :key="fanId"
         v-for="fanId in userFanIds(otherUserId)"
-        :userFansBrief="userFanMap(otherUserId)[fanId]"
+        :userFansBrief="userFanMap[fanId]"
+        @emitToggleFollowUser="onToggleFollowUser"
       >
       </Fan>
-
     </section>
 
   </section>
@@ -66,7 +66,7 @@ export default class UserFansView extends Vue {
 
   // Lifecycle
   private mounted() {
-    if (!this.userFanMap(this.otherUserId)) {
+    if ((this.userFanIds(this.otherUserId) as any).length === 0) {
       this.getFansOfOtherUser();
     }
   }
@@ -79,23 +79,22 @@ export default class UserFansView extends Vue {
     });
   }
 
-  // toggleFansFollow(payload: FollowPayload) {
-  //   const { targetId, type } = payload;
-  //   this.toggleUserFollow({
-  //     targetId,
-  //     type,
-  //   });
-  // }
+  onToggleFollowUser(payload: FollowPayload) {
+    const { targetId, type } = payload;
+    // 
+    this.toggleUserFansFollow({
+      targetId,
+      type,
+    });
+  }
 
   @Getter("userDetail") userDetail!: UserDetail | null;
-  @Getter("userFanMap") userFanMap!: (
-    userId: string
-  ) => Promise<UserFansBriefMap>;
+  @Getter("userFanMap") userFanMap!: Promise<UserFansBriefMap>;
   @Getter("userFanIds") userFanIds!: (userId: string) => Promise<string[]>;
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
-  @Action("toggleUserFollow") toggleUserFollow!: (
+  @Action("toggleUserFansFollow") toggleUserFansFollow!: (
     payload: FollowPayload
   ) => Promise<boolean>;
   @Action("getUserFanList") getUserFanList: any;
