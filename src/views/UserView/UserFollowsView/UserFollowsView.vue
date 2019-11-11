@@ -1,6 +1,20 @@
 <template>
   <section class="user-follows">
-    UserFollowsView
+    <!-- sub tab -->
+    <section class="follows-tab">
+      <router-link :to="{name: 'userFollowsPosts'}">
+        文章
+      </router-link>
+      |
+      <router-link :to="{name: 'userFollowsCategories'}">
+        分类
+      </router-link>
+      |
+      <router-link :to="{name: 'userFollowsUsers'}">
+        用户
+      </router-link>
+    </section>
+    <router-view></router-view>
   </section>
 </template>
 
@@ -21,8 +35,7 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 
 @Component({
-  components: {
-  }
+  components: {}
 })
 export default class UserFollowsView extends Vue {
   // Props
@@ -39,7 +52,6 @@ export default class UserFollowsView extends Vue {
   // searchKey!: string;
 
   // Data
-
 
   // Computed
   // get computedData() {
@@ -68,10 +80,23 @@ export default class UserFollowsView extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../assets/css/var.scss";
+@import "../../../assets/css/var.scss";
 
 .user-follows {
-
+  .follows-tab {
+    text-align: right;
+    margin-right: 20px;
+    color: $linkFontColor;
+    padding: 10px;
+    a {
+      color: $tabNotActiveColor;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+    .router-link-active {
+      color: $primary;
+    }
+  }
 }
 
 // @media screen and (min-width: 576px) {

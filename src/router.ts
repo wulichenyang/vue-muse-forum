@@ -5,7 +5,10 @@ import PostListView from './views/PostListView.vue';
 import UserPostsView from './views/UserView/UserPostsView.vue';
 import UserCommentsView from './views/UserView/UserCommentsView.vue';
 import UserFansView from './views/UserView/UserFansView.vue';
-import UserFollowsView from './views/UserView/UserFollowsView.vue';
+import UserFollowsView from './views/UserView/UserFollowsView/UserFollowsView.vue';
+import UserFollowsPostsView from './views/UserView/UserFollowsView/UserFollowsPostsView.vue';
+import UserFollowsCategoriesView from './views/UserView/UserFollowsView/UserFollowsCategoriesView.vue';
+import UserFollowsUsersView from './views/UserView/UserFollowsView/UserFollowsUsersView.vue';
 import UserCollectionsView from './views/UserView/UserCollectionsView.vue';
 import cookie from './utils/cookie'
 import { access_token } from './config'
@@ -80,6 +83,24 @@ const router = new Router({
           path: 'follows',
           name: 'userFollows',
           component: UserFollowsView,
+          redirect: 'follows/followPosts',
+          children: [
+            {
+              path: 'followPosts',
+              name: 'userFollowsPosts',
+              component: UserFollowsPostsView
+            },
+            {
+              path: 'followCategories',
+              name: 'userFollowsCategories',
+              component: UserFollowsCategoriesView
+            },
+            {
+              path: 'followUsers',
+              name: 'userFollowsUsers',
+              component: UserFollowsUsersView
+            }
+          ]
         },
         {
           path: 'collections',
