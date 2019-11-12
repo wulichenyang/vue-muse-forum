@@ -2,14 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HomeView from './views/HomeView.vue';
 import PostListView from './views/PostListView.vue';
-import UserPostsView from './views/UserView/UserPostsView.vue';
-import UserCommentsView from './views/UserView/UserCommentsView.vue';
-import UserFansView from './views/UserView/UserFansView.vue';
-import UserFollowsView from './views/UserView/UserFollowsView/UserFollowsView.vue';
-import UserFollowsPostsView from './views/UserView/UserFollowsView/UserFollowsPostsView.vue';
-import UserFollowsCategoriesView from './views/UserView/UserFollowsView/UserFollowsCategoriesView.vue';
-import UserFollowsUsersView from './views/UserView/UserFollowsView/UserFollowsUsersView.vue';
-import UserCollectionsView from './views/UserView/UserCollectionsView.vue';
 import cookie from './utils/cookie'
 import { access_token } from './config'
 import Toast from 'muse-ui-toast'
@@ -67,45 +59,45 @@ const router = new Router({
         {
           path: 'posts',
           name: 'userPosts',
-          component: UserPostsView,
+          component: () => import(/* webpackChunkName: "userPostsView" */ './views/UserView/UserPostsView.vue'),
         },
         {
           path: 'comments',
           name: 'userComments',
-          component: UserCommentsView,
+          component: () => import(/* webpackChunkName: "userCommentsView" */ './views/UserView/UserCommentsView.vue'),
         },
         {
           path: 'fans',
           name: 'userFans',
-          component: UserFansView,
+          component: () => import(/* webpackChunkName: "userFansView" */ './views/UserView/UserFansView.vue'),
         },
         {
           path: 'follows',
           name: 'userFollows',
-          component: UserFollowsView,
+          component: () => import(/* webpackChunkName: "userFollowsView" */ './views/UserView/UserFollowsView/UserFollowsView.vue'),
           redirect: 'follows/followPosts',
           children: [
             {
               path: 'followPosts',
               name: 'userFollowsPosts',
-              component: UserFollowsPostsView
+              component: () => import(/* webpackChunkName: "userFollowsPostsView" */ './views/UserView/UserFollowsView/UserFollowsPostsView.vue'),
             },
             {
               path: 'followCategories',
               name: 'userFollowsCategories',
-              component: UserFollowsCategoriesView
+              component: () => import(/* webpackChunkName: "userFollowsCategoriesView" */ './views/UserView/UserFollowsView/UserFollowsCategoriesView.vue'),
             },
             {
               path: 'followUsers',
               name: 'userFollowsUsers',
-              component: UserFollowsUsersView
+              component: () => import(/* webpackChunkName: "userFollowsUsersView" */ './views/UserView/UserFollowsView/UserFollowsUsersView.vue'),
             }
           ]
         },
         {
           path: 'collections',
           name: 'userCollections',
-          component: UserCollectionsView,
+          component: () => import(/* webpackChunkName: "userCollectionsView" */ './views/UserView/UserCollectionsView.vue'),
         },
       ]
     },
@@ -117,7 +109,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (categories.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "ostDetail" */ './views/CategoryView.vue'),
+      component: () => import(/* webpackChunkName: "categoryView" */ './views/CategoryView.vue'),
     },
 
     
@@ -130,7 +122,7 @@ const router = new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Admin/Admin.vue'),
+      component: () => import(/* webpackChunkName: "admin" */ './views/Admin/Admin.vue'),
       children: [
         {
           path: 'categories',
@@ -138,7 +130,7 @@ const router = new Router({
           // route level code-splitting
           // this generates a separate chunk (category.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "category" */ './views/Admin/AdminCategory/AdminCategory.vue'),
+          component: () => import(/* webpackChunkName: "adminCategory" */ './views/Admin/AdminCategory/AdminCategory.vue'),
           redirect: 'categories/list',
           children: [
             {
@@ -147,7 +139,7 @@ const router = new Router({
               // route level code-splitting
               // this generates a separate chunk (categoryAdd.[hash].js) for this route
               // which is lazy-loaded when the route is visited.
-              component: () => import(/* webpackChunkName: "categoryAdd" */ './views/Admin/AdminCategory/AdminCategoryList.vue'),
+              component: () => import(/* webpackChunkName: "adminCategoryList" */ './views/Admin/AdminCategory/AdminCategoryList.vue'),
 
             },
             {
@@ -156,7 +148,7 @@ const router = new Router({
               // route level code-splitting
               // this generates a separate chunk (categoryAdd.[hash].js) for this route
               // which is lazy-loaded when the route is visited.
-              component: () => import(/* webpackChunkName: "categoryAdd" */ './views/Admin/AdminCategory/AdminCategoryAdd.vue'),
+              component: () => import(/* webpackChunkName: "adminCategoryAdd" */ './views/Admin/AdminCategory/AdminCategoryAdd.vue'),
 
             },
             {
@@ -165,7 +157,7 @@ const router = new Router({
               // route level code-splitting
               // this generates a separate chunk (categoryEdit.[hash].js) for this route
               // which is lazy-loaded when the route is visited.
-              component: () => import(/* webpackChunkName: "categoryEdit" */ './views/Admin/AdminCategory/AdminCategoryEdit.vue'),
+              component: () => import(/* webpackChunkName: "adminCategoryEdit" */ './views/Admin/AdminCategory/AdminCategoryEdit.vue'),
 
             },
           ]
@@ -176,7 +168,7 @@ const router = new Router({
           // route level code-splitting
           // this generates a separate chunk (category.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "post" */ './views/Admin/AdminPost.vue'),
+          component: () => import(/* webpackChunkName: "adminPost" */ './views/Admin/AdminPost.vue'),
         },
         {
           path: 'comments',
@@ -184,7 +176,7 @@ const router = new Router({
           // route level code-splitting
           // this generates a separate chunk (comment.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "comment" */ './views/Admin/AdminComment.vue'),
+          component: () => import(/* webpackChunkName: "adminComment" */ './views/Admin/AdminComment.vue'),
         },
         {
           path: 'users',
@@ -192,7 +184,7 @@ const router = new Router({
           // route level code-splitting
           // this generates a separate chunk (user.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          component: () => import(/* webpackChunkName: "user" */ './views/Admin/AdminUser.vue'),
+          component: () => import(/* webpackChunkName: "adminUser" */ './views/Admin/AdminUser.vue'),
         },
       ]
     },
