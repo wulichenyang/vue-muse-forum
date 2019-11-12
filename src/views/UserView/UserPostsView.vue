@@ -3,7 +3,7 @@
     <Post
       v-for="postId in userPostIds(otherUserId)"
       :key="postId"
-      :postBrief="userPostBriefMap(otherUserId)[postId]"
+      :postBrief="postBriefMap(otherUserId)[postId]"
       @emitTogglePostLike="onTogglePostLike"
     />
   </section>
@@ -60,33 +60,31 @@ export default class UserPostsView extends Vue {
 
   // Lifecycle
   private mounted() {
-    if (!this.userPostBriefMap(this.otherUserId)) {
-      this.getPostsOfOtherUser();
-    }
+    this.getPostsIfNoCache();
   }
 
   // Methods
-  async getPostsOfOtherUser() {
-    // Vuex里没有当前用户的文章列表，请求数据
-    await this.getUserPostList({
-      userId: this.otherUserId,
-      loginUserId: this.userDetail && this.userDetail._id
-    });
+  async getPostsIfNoCache() {
+    if (
+      !this.userPostIds(this.otherUserId) ||
+      this.userPostIds(this.otherUserId).length === 0
+    ) {
+      // Vuex里没有当前文章列表ids，请求数据
+      await this.getUserPostList({
+        userId: this.otherUserId,
+        loginUserId: this.userDetail && this.userDetail._id
+      });
+    }
   }
 
   onTogglePostLike(payload: PostLikePayload) {
-    const { targetId, type, categoryId, authorId } = payload;
+    const { targetId, type, authorId } = payload;
 
-    console.log(     
+    console.log(targetId, type, authorId);
+
+    this.toggleBriefPostLike({
       targetId,
       type,
-      categoryId,
-      authorId)
-
-    this.toggleUserBriefPostLike({
-      targetId,
-      type,
-      categoryId,
       authorId
     });
   }
@@ -95,11 +93,11 @@ export default class UserPostsView extends Vue {
   // }
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
-  @Getter("userPostBriefMap") userPostBriefMap!: any;
+  @Getter("postBriefMap") postBriefMap!: any;
   @Getter("userPostIds") userPostIds!: any;
 
   @Action("getUserPostList") getUserPostList: any;
-  @Action("toggleUserBriefPostLike") toggleUserBriefPostLike: any;
+  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")

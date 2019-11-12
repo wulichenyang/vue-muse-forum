@@ -21,25 +21,12 @@ import {
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
-export interface PostBriefAllInfo {
-  postBriefMap: PostBriefMap,
-  postIds: string[],
+export interface CategoryToPostIdsMap {
+  [categoryId: string]: string[]
 }
 
-export interface CategoryToPost extends PostBriefAllInfo {
-
-}
-
-export interface UserToPost extends PostBriefAllInfo {
-
-}
-
-export interface CategoryToPostMap {
-  [categoryId: string]: CategoryToPost
-}
-
-export interface UserToPostMap {
-  [userId: string]: UserToPost
+export interface UserToPostIdsMap {
+  [userId: string]: string[]
 }
 
 export interface PostBriefMap {
@@ -51,19 +38,26 @@ export interface PostDetailMap {
 }
 
 export interface State {
-  // 各个文章分类下对应的文章
-  categoryToPostMap: CategoryToPostMap,
-  // 各个用户所有发布的文章
-  userToPostMap: UserToPostMap,
+  // 各个文章分类下对应的文章ids
+  categoryToPostMapIds: CategoryToPostIdsMap,
+  // 各个用户所有发布的文章ids
+  userToPostMapIds: UserToPostIdsMap,
+
+  // 文章列表项简略内容表
+  postBriefMap: PostBriefMap,
   // 文章详细内容
   postDetailMap: PostDetailMap,
 }
 
 const initState: State = {
-  // 各个文章分类下对应的文章
-  categoryToPostMap: <CategoryToPostMap>{},
-  // 各个用户所有发布的文章
-  userToPostMap: <UserToPostMap>{},
+  // 各个文章分类下对应的文章ids
+  categoryToPostMapIds: <CategoryToPostIdsMap>{},
+  // 各个用户所有发布的文章ids
+  userToPostMapIds: <UserToPostIdsMap>{},
+
+  // 文章列表项简略内容表
+  postBriefMap: <PostBriefMap>{},
+  // 文章详细内容
   postDetailMap: <PostDetailMap>{}
 }
 
@@ -78,51 +72,29 @@ const absorbCommentIds = (postRawDetail: PostRawDetail): PostDetail => {
 // getters
 const getters = {
 
-  // 某分类下的文章列表map
+  // 文章简略列表map
   postBriefMap: (state: State) => (categoryId: string) => {
-    // 动态属性需要手动初始化，防止第一次渲染不更新数据
-    if (!state.categoryToPostMap[categoryId]) {
-      Vue.set(state.categoryToPostMap, categoryId, {});
-    }
-    return state.categoryToPostMap[categoryId].postBriefMap
+    return state.postBriefMap
   },
 
   // 某分类下的文章ids
-  postIds: (state: State) => (categoryId: string) => {
+  categoryPostIds: (state: State) => (categoryId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
-    // 初始化categoryToPostMap里对应id的映射对象
-    if (!state.categoryToPostMap[categoryId]) {
-      Vue.set(state.categoryToPostMap, categoryId, {});
+    // 初始化categoryToPostMap里对应id的映射数组对象
+    if (!state.categoryToPostMapIds[categoryId]) {
+      Vue.set(state.categoryToPostMapIds, categoryId, []);
     }
-    if (!state.categoryToPostMap[categoryId].postIds) {
-      Vue.set(state.categoryToPostMap[categoryId], 'postIds', []);
-    }
-    return (state.categoryToPostMap[categoryId]).postIds
-  },
-
-  // 某用户下的文章列表map
-  userPostBriefMap: (state: State) => (userId: string) => {
-    // 动态属性需要手动初始化，防止第一次渲染不更新数据
-    if (!state.userToPostMap[userId]) {
-      Vue.set(state.userToPostMap, userId, {});
-    }
-    // if(!state.userToPostMap[userId].postBriefMap){
-    //   Vue.set(state.userToPostMap[userId], 'postBriefMap', {});
-    // }
-    return state.userToPostMap[userId].postBriefMap
+    return (state.categoryToPostMapIds[categoryId])
   },
 
   // 某用户下的文章ids
   userPostIds: (state: State) => (userId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
-    // 初始化 userToPostMap 里对应id的映射对象
-    if (!state.userToPostMap[userId]) {
-      Vue.set(state.userToPostMap, userId, {});
+    // 初始化 userToPostMapIds 里对应id的映射对象
+    if (!state.userToPostMapIds[userId]) {
+      Vue.set(state.userToPostMapIds, userId, []);
     }
-    if (!state.userToPostMap[userId].postIds) {
-      Vue.set(state.userToPostMap[userId], 'postIds', []);
-    }
-    return (state.userToPostMap[userId]).postIds
+    return (state.userToPostMapIds[userId])
   },
 
   // 文章详细信息map
@@ -161,7 +133,7 @@ const actions = {
       });
 
       context.commit(types.SET_POST_IDS, { categoryId, postIds })
-      context.commit(types.ADD_POST_TO_BRIEF_MAP, { categoryId, postBriefMap })
+      context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
       return true
     }
   },
@@ -186,7 +158,7 @@ const actions = {
       });
 
       context.commit(types.SET_USER_POST_IDS, { userId, postIds })
-      context.commit(types.ADD_USER_POST_TO_BRIEF_MAP, { userId, postBriefMap })
+      context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
       return true
     }
   },
@@ -219,65 +191,25 @@ const actions = {
     return true
   },
 
-  // 主页分类下的文章进行点赞和取消
-  async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
+  // 对文章简略列表的某文章进行点赞/取消
+  async toggleBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, authorId: string }) {
     // 点赞
     const {
       targetId,
       type,
-      categoryId,
       authorId
     } = payload
 
-    // 主页分类下文章的点赞
-    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
-    // 某用户的文章的点赞
-    context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
+    // 对某文章的点赞/取消
+    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
 
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleLike({ targetId, type, authorId }));
 
     // 更新失败
     if (err) {
-      // 取消点赞行为
-      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
-      
-      // 取消某用户的文章的点赞
-      context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
-      return false
-    }
-
-    if (res && res.code === 0) {
-      return true
-    }
-  },
-
-  // 对某用户的文章进行点赞和取消
-  async toggleUserBriefPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, categoryId: string, authorId: string }) {
-    // 点赞
-    const {
-      targetId,
-      type,
-      categoryId,
-      authorId
-    } = payload
-
-    // 主页分类下文章的点赞
-    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
-
-    // 某用户的文章的点赞
-    context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
-
-    let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(toggleLike({ targetId, type, authorId }));
-
-    // 更新失败
-    if (err) {
-      // 取消主页分类下文章点赞
-      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { categoryId, targetId })
-
-      // 取消某用户的文章的点赞
-      context.commit(types.TOGGLE_USER_BRIEF_POST_LIKE, { targetId, authorId })
+      // 取消/恢复 点赞行为
+      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
       return false
     }
 
@@ -290,96 +222,47 @@ const actions = {
 
 // mutations
 const mutations = {
-  // 添加某分类下文章列表
-  [types.ADD_POST_TO_BRIEF_MAP](state: State, payload: { categoryId: string, postBriefMap: PostBriefMap }) {
+  // 添加文章列表
+  [types.ADD_POST_TO_BRIEF_MAP](state: State, payload: { postBriefMap: PostBriefMap }) {
     // 初始化对象
-    if (!state.categoryToPostMap[payload.categoryId]) {
-      state.categoryToPostMap[payload.categoryId] = <CategoryToPost>{}
+    if (!state.postBriefMap) {
+      state.postBriefMap = {}
     }
 
-    state.categoryToPostMap[payload.categoryId].postBriefMap = {
-      ...payload.postBriefMap
-    }
-  },
-
-  // 添加某用户下文章列表
-  [types.ADD_USER_POST_TO_BRIEF_MAP](state: State, payload: { userId: string, postBriefMap: PostBriefMap }) {
-    // 初始化对象
-    if (!state.userToPostMap[payload.userId]) {
-      state.userToPostMap[payload.userId] = <UserToPost>{}
-    }
-
-    state.userToPostMap[payload.userId].postBriefMap = {
+    state.postBriefMap = {
+      ...state.postBriefMap,
       ...payload.postBriefMap
     }
   },
 
   // 添加某用户下文章列表 ids
   [types.SET_USER_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
-    // 初始化对象
-    if (!state.userToPostMap[payload.userId]) {
-      state.userToPostMap[payload.userId] = <UserToPost>{}
+    // 初始化数组对象
+    if (!state.userToPostMapIds[payload.userId]) {
+      state.userToPostMapIds[payload.userId] = []
     }
 
-    state.userToPostMap[payload.userId].postIds = [
+    state.userToPostMapIds[payload.userId] = [
       ...payload.postIds
     ]
   },
 
   // 修改某分类下文章列表某文章是否点赞
-  [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { categoryId: string, targetId: string }) {
+  [types.TOGGLE_BRIEF_POST_LIKE](state: State, payload: { targetId: string }) {
     const {
-      categoryId,
       targetId
     } = payload;
 
     // 有缓存则修改
-    if (state.categoryToPostMap[categoryId] &&
-      state.categoryToPostMap[categoryId].postBriefMap &&
-      state.categoryToPostMap[categoryId].postBriefMap[targetId]
+    if (state.postBriefMap[targetId]
     ) {
-      let ifLikeBefore = state.categoryToPostMap[categoryId].postBriefMap[targetId].ifLike;
-      let beforeLikeCount = state.categoryToPostMap[categoryId].postBriefMap[targetId].likeCount;
+      let ifLikeBefore = state.postBriefMap[targetId].ifLike;
+      let beforeLikeCount = state.postBriefMap[targetId].likeCount;
 
-      state.categoryToPostMap[categoryId] = {
-        ...state.categoryToPostMap[categoryId],
-        postBriefMap: {
-          ...state.categoryToPostMap[categoryId].postBriefMap,
-          [targetId]: {
-            ...state.categoryToPostMap[categoryId].postBriefMap[targetId],
-            likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
-            ifLike: !(ifLikeBefore)
-          }
-        }
-      }
-    }
-
-  },
-
-  // 修改某用户下文章列表某文章是否点赞
-  [types.TOGGLE_USER_BRIEF_POST_LIKE](state: State, payload: { targetId: string, authorId: string }) {
-    const {
-      targetId,
-      authorId
-    } = payload;
-
-    // 有缓存则修改
-    if (state.userToPostMap[authorId] &&
-      state.userToPostMap[authorId].postBriefMap &&
-      state.userToPostMap[authorId].postBriefMap[targetId]) {
-      let ifLikeBefore = state.userToPostMap[authorId].postBriefMap[targetId].ifLike;
-      let beforeLikeCount = state.userToPostMap[authorId].postBriefMap[targetId].likeCount;
-
-      state.userToPostMap[authorId] = {
-        ...state.userToPostMap[authorId],
-        postBriefMap: {
-          ...state.userToPostMap[authorId].postBriefMap,
-          [targetId]: {
-            ...state.userToPostMap[authorId].postBriefMap[targetId],
-            likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
-            ifLike: !(ifLikeBefore)
-          }
-        }
+      state.postBriefMap[targetId] = {
+        ...state.postBriefMap[targetId],
+        likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+        ifLike: !(ifLikeBefore)
       }
     }
   },
@@ -399,12 +282,12 @@ const mutations = {
 
   // 添加某分类下文章列表 ids
   [types.SET_POST_IDS](state: State, payload: { categoryId: string, postIds: string[] }) {
-    // 初始化对象
-    if (!state.categoryToPostMap[payload.categoryId]) {
-      state.categoryToPostMap[payload.categoryId] = <CategoryToPost>{}
+    // 初始化数组对象
+    if (!state.categoryToPostMapIds[payload.categoryId]) {
+      state.categoryToPostMapIds[payload.categoryId] = []
     }
 
-    state.categoryToPostMap[payload.categoryId].postIds = [
+    state.categoryToPostMapIds[payload.categoryId] = [
       ...payload.postIds
     ]
   },

@@ -1,7 +1,7 @@
 <template>
   <section class="post-view-wrapper">
     <Post
-      v-for="postId in postIds(categoryIdNow)"
+      v-for="postId in categoryPostIds(categoryIdNow)"
       :key="postId"
       :postBrief="postBriefMap(categoryIdNow)[postId]"
       @emitTogglePostLike="onTogglePostLike"
@@ -53,10 +53,7 @@ export default class PostListView extends Vue {
 
   // Lifecycle
   private mounted() {
-    if (!this.postBriefMap(this.categoryIdNow)) {
-      // Vuex里没有当前分类的文章列表，请求数据
-      this.getPostListData();
-    }
+    this.getPostsIfNoCache();
   }
 
   // Methods
@@ -74,18 +71,27 @@ export default class PostListView extends Vue {
   //   this.select(song, index);
   // }
   onTogglePostLike(payload: PostLikePayload) {
-    const { targetId, type, categoryId, authorId } = payload;
+    const { targetId, type, authorId } = payload;
     this.toggleBriefPostLike({
       targetId,
       type,
-      categoryId,
       authorId
     });
   }
 
+  getPostsIfNoCache() {
+    if (
+      !this.categoryPostIds(this.categoryIdNow) ||
+      this.categoryPostIds(this.categoryIdNow).length === 0
+    ) {
+      // Vuex里没有当前文章列表ids，请求数据
+      this.getPostListData();
+    }
+  }
+
   @Getter("userDetail") userDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
-  @Getter("postIds") postIds!: any;
+  @Getter("categoryPostIds") categoryPostIds!: any;
 
   @Action("getPostList") getPostList: any;
   // @Emit("select")
@@ -98,10 +104,7 @@ export default class PostListView extends Vue {
     if (to) {
       let toPath = to.fullPath;
       if (toPath.includes("/categories")) {
-        if (!this.postBriefMap(this.categoryIdNow)) {
-          // Vuex里没有当前文章列表，请求数据
-          this.getPostListData();
-        }
+        this.getPostsIfNoCache();
       }
     }
   }

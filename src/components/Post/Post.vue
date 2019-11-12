@@ -57,7 +57,6 @@
               @click.prevent="onLike(
                 postBrief._id,
                 'post',
-                postBrief.category._id,
                 postBrief.author._id)"
             >
               <mu-icon
@@ -110,7 +109,6 @@ import { hashId2DetaultAvatar } from "@/utils/hash";
 export interface PostLikePayload {
   targetId: string;
   type: string;
-  categoryId: string;
   authorId: string;
 }
 
@@ -157,7 +155,6 @@ export default class Post extends Vue {
   onLike(
     targetId: string,
     type: LikeTargetType,
-    categoryId: string,
     authorId: string
   ) {
     if (!this.isLogin) {
@@ -168,7 +165,6 @@ export default class Post extends Vue {
     this.emitTogglePostLike({
       targetId,
       type,
-      categoryId,
       authorId
     });
 
