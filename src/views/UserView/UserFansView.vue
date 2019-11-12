@@ -4,6 +4,7 @@
     <!-- 粉丝列表 -->
     <section class="user-fans-wrapper">
       <Fan
+        :isFan="true"
         :key="fanId"
         v-for="fanId in userFanIds(otherUserId)"
         :userFansBrief="userFanMap[fanId]"
@@ -72,7 +73,7 @@ export default class UserFansView extends Vue {
   }
   // Methods
   async getFansOfOtherUser() {
-    // Vuex里没有当前用户的评论列表，请求数据
+    // Vuex里没有当前用户的粉丝列表，请求数据
     await this.getUserFanList({
       userId: this.otherUserId,
       loginUserId: this.userDetail && this.userDetail._id
@@ -91,9 +92,6 @@ export default class UserFansView extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("userFanMap") userFanMap!: Promise<UserFansBriefMap>;
   @Getter("userFanIds") userFanIds!: (userId: string) => Promise<string[]>;
-
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-
   @Action("toggleUserFansFollow") toggleUserFansFollow!: (
     payload: FollowPayload
   ) => Promise<boolean>;

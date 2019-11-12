@@ -1,6 +1,15 @@
 <template>
   <section class="user-follows-users">
-    users
+    
+    <!-- 关注用户列表 -->
+    <Fan
+      :isFan="false"
+      :key="fanId"
+      v-for="fanId in userFollowUserIds(otherUserId)"
+      :userFansBrief="userFanMap[fanId]"
+      @emitToggleFollowUser="onToggleFollowUser"
+    >
+    </Fan>
   </section>
 </template>
 
@@ -15,13 +24,22 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
+import Fan from "@/components/Fan/Fan.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
+import { UserFansBrief } from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
+
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import { FollowPayload } from "@/api/follow";
+import { UserFansBriefMap } from "@/store/modules/fans";
 
 @Component({
-  components: {}
+  components: {
+    Fan,
+    ContainerInner
+  }
 })
 export default class UserFollowsUsersView extends Vue {
   // Props
@@ -38,25 +56,46 @@ export default class UserFollowsUsersView extends Vue {
   // searchKey!: string;
 
   // Data
+  userFansList: Array<UserFansBrief> = [];
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  private mounted() {}
-
+  private mounted() {
+    if ((this.userFollowUserIds(this.otherUserId) as any).length === 0) {
+      this.getFollowUsers();
+    }
+  }
   // Methods
+  async getFollowUsers() {
+    // Vuex里没有当前用户的关注用户列表，请求数据
+    await this.getFollowUserList({
+      userId: this.otherUserId,
+      loginUserId: this.userDetail && this.userDetail._id
+    });
+  }
 
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  onToggleFollowUser(payload: FollowPayload) {
+    const { targetId, type } = payload;
+    //
+    this.toggleUserFansFollow({
+      targetId,
+      type
+    });
+  }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-
-  // @Action("getUser") getUser: any;
-
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userFanMap") userFanMap!: Promise<UserFansBriefMap>;
+  @Getter("userFollowUserIds") userFollowUserIds!: (
+    userId: string
+  ) => Promise<string[]>;
+  @Action("toggleUserFansFollow") toggleUserFansFollow!: (
+    payload: FollowPayload
+  ) => Promise<boolean>;
+  @Action("getFollowUserList") getFollowUserList: any;
   // @Emit("select")
   // select(listItem: Song, index: number) {}
 

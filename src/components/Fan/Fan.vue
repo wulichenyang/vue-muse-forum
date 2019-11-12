@@ -2,20 +2,20 @@
   <!-- 文章简单信息 -->
   <router-link
     class="fan-link"
-    :to="`/users/${userFansBrief &&userFansBrief.userId && userFansBrief.userId._id}`"
+    :to="`/users/${getTargetUserId()}`"
   >
     <article class="fan-wrapper">
 
       <!-- 粉丝信息 -->
       <router-link
         class="left-user-brief"
-        :to="`/users/${userFansBrief && userFansBrief.userId && userFansBrief.userId._id}`"
+        :to="`/users/${getTargetUserId()}`"
       >
 
         <!-- 头像 -->
         <UserAvatar
           class="user-avatar"
-          :user="userFansBrief && userFansBrief.userId"
+          :user="getTargetUser()"
         />
 
       </router-link>
@@ -25,22 +25,22 @@
       <!-- 中间主要信息部分 -->
       <section class="middle-wrapper">
         <!-- 用户昵称 -->
-        <h3>{{userFansBrief && userFansBrief.userId && userFansBrief.userId.nickname}}</h3>
+        <h3>{{getTargetUser() && getTargetUser().nickname}}</h3>
 
         <!-- 用户简介 -->
-        <p>{{userFansBrief && userFansBrief.userId && userFansBrief.userId.brief}}123</p>
+        <p>{{getTargetUser() && getTargetUser().brief}}</p>
 
       </section>
 
       <!-- 右边关注按钮部分 -->
       <section class="right-wrapper">
         <mu-button
-          v-if="userFansBrief && userDetail && userFansBrief.userId._id !== userDetail._id || userFansBrief && userFansBrief.userId && !userDetail"
+          v-if="userFansBrief && userDetail && getTargetUser()._id !== userDetail._id || getTargetUser() && !userDetail"
           small
           color="primary"
           class="follow-btn"
           @click.prevent="onToggleFollowUser(
-            userFansBrief.userId._id,
+            getTargetUser()._id,
             'user'
           )"
         >{{userFansBrief.ifFollow ? '已关注':'关注'}}</mu-button>
@@ -90,6 +90,13 @@ export default class Fan extends Vue {
   })
   userFansBrief!: UserFansBrief;
 
+  // 是粉丝还是被粉
+  @Prop({
+    type: Boolean,
+    required: true
+  })
+  isFan!: boolean;
+
   // @Model("onChange", {
   //   type: String
   // })
@@ -102,9 +109,39 @@ export default class Fan extends Vue {
   // Computed
   // 默认头像名为avatar-n.jpg，n为id的哈希数值（1-64）
   get defaultAvatarNum(): number {
-    return this.userFansBrief.userId && this.userFansBrief.userId._id
-      ? hashId2DetaultAvatar(this.userFansBrief.userId._id, 64)
+    return this.getTargetUserId()
+      ? hashId2DetaultAvatar(this.getTargetUserId(), 64)
       : 1;
+  }
+
+  getTargetUserId() {
+    if (this.isFan) {
+      return (
+        this.userFansBrief &&
+        this.userFansBrief.userId &&
+        this.userFansBrief.userId._id
+      );
+    } else {
+      return (
+        this.userFansBrief &&
+        this.userFansBrief.targetId &&
+        this.userFansBrief.targetId._id
+      );
+    }
+  }
+
+  getTargetUser() {
+    if (this.isFan) {
+      return (
+        this.userFansBrief &&
+        this.userFansBrief.userId
+      );
+    } else {
+      return (
+        this.userFansBrief &&
+        this.userFansBrief.targetId
+      );
+    }
   }
 
   // Lifecycle

@@ -32,10 +32,12 @@ export interface FansInfo extends UserBrief {
 export interface UserFansBrief extends UserBrief {
   // Follow id 唯一
   _id: string,
-  // 粉丝信息
+  // sourceUser 信息
   userId: FansInfo,
   // 是否关注
-  ifFollow?: boolean
+  ifFollow?: boolean,
+  // targetUser 信息
+  targetId: FansInfo,
 }
 
 
