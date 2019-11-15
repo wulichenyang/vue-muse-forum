@@ -1,5 +1,6 @@
 // 捕获 Promise 里的错误，以[err, data]形式返回
-// Use Case：let [err, res] = await to(getUser())
+// Use Case：let err, res;
+// [err, res] = await to(getUser())
 // if(err) {}
 // handle res...
 module.exports = function to(promise: Promise<any>) {
