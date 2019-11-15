@@ -1,0 +1,77 @@
+// Muse-UI 配色
+$primary: #e91e63; 
+$secondary: #424242;
+$success: #4caf50;
+$warning: #fdd835;
+$info: #2196f3;
+$error: #e91e63;
+$track: #bdbdbd;
+
+$mainWrapperBlurPink: #ffdfdf;
+
+
+// Frame size
+$homeTopHeight: 50px;
+$asideMenuWidth: 220px;
+// $bottomNavHeight: 64px;
+$backHeaderHeight: 64px;
+$avatarSize: 64px;
+$topAvatarSize: 30px;
+$postAvatarSize: 36px;
+$fansAvatarSize: 48px;
+$iconSize: 28px;
+$avatarBigSize: 100px;
+$tipBorderLength: 220px;
+$postPhonePadding: 16px 20px 8px 20px;
+$mainPadding: 27px 36px;
+$mainWrapperBorderRadius: 0px;
+$phoneMainWrapperBorderRadius: 20px;
+
+// Font size
+// $mainFontSize: 14px;
+// $tabFontSize: 14px;
+// $tipTopFontSize: 16px;
+// $tipStrongFontSize: 64px;
+// $tipLinkFontSize: 14px;
+// $iconFontSize: 32px;
+// $primaryBtnFontSize: 16px;
+// $formFontSize: 16px;
+// $confirmFontSize: 20px;
+// $titleFontSize: 18px;
+// $briefFontSize: 14px;
+// $radioFontSize: 24px;
+// $svgFontSize: 24px;
+
+// Font color
+$mainHeaderFontColor: #5c5c5c;
+$mainContentFontColor: #bbbbbb;
+$logoFontColor: rgb(51, 51, 51);
+$linkFontColor: #999;
+$tabNotActiveColor: rgba(0,0,0,.54);
+// $navLinkFontColor: #666f83;
+// $primaryBtnFontColor: #fff;
+// $confirmBtnColor: #2f86f6;
+
+// Background color
+$mainBodyBgColor: #f6f6f6;
+$mainContainerBgColor: #fff;
+$bottomBorderColor: #ececec;
+// $noticeBgColor: #fff;
+// $loadingBgColor: #fff;
+// $coverBgColor: rgba(255, 255, 255, 0.3);
+// $bottomNavBgColor: #fff;
+// $primaryBtnBgColor:#57c595;
+// $mapToolBgColor: #fff;
+
+// Border
+$searchBarBorder: solid 1px #ddd;
+// $tipDashedBorder: dashed 4px $linkFontColor;
+$postBottomBorder: 1px solid $bottomBorderColor;
+// $toolRightBorder: solid 1px #afaeae;
+
+// Box-shadow
+$topHeaderShadowColor: 0 3px 5px rgba(100, 100, 100, 0.2);
+$postBoxShadowColor: 0px 0px 10px #dfdfdf;
+$boxShadowColor: 0 0px 10px rgba(26, 26, 26, 0.1);
+// $boxShadowSearchColor: 0px 0px 2px #afaeae;
+$avatarShadowSearchColor: 0px 0px 3px #afaeae;

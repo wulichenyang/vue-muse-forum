@@ -1,0 +1,172 @@
+@import "./assets/css/normalize.css";
+@import "./assets/css/var.scss";
+// 掘金文章样式
+@import "./assets/css/article-content.css";
+
+html {
+  height: 100%;
+}
+
+body,
+html {
+  background: $mainBodyBgColor !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $mainHeaderFontColor;
+}
+
+a {
+  // color: $linkFontColor;
+  cursor: pointer;
+}
+
+.mu-icon-button {
+  width: $iconSize;
+  height: $iconSize;
+}
+
+// 修复muse-ui hover时背景颜色有变化
+.mu-button.hover:before {
+  opacity: 0 !important;
+  background-color: transparent !important;
+}
+
+// 默认按钮格式
+.mu-button,
+.mu-chip {
+  // border-radius: $mainWrapperBorderRadius !important;
+  overflow: hidden;
+  transition: .3s all;
+
+  // 按钮hover变大
+  &:hover {
+    transform: scale(1.12);
+    transition: .2s all;
+  }
+}
+
+// .mu-avatar {
+//   background: transparent !important;
+//   box-shadow: none !important;
+// }
+
+.mu-fab-button {
+  background-color: transparent !important;
+  width: initial !important;
+  height: initial !important;
+}
+
+// 小按钮格式
+.mu-button.mu-button-small {
+  min-width: 56px;
+}
+
+// 提交表单按钮靠右
+.submit-button-wrapper {
+  .mu-form-item-content {
+    justify-content: flex-end !important;
+  }
+}
+
+.primary-color {
+  color: $primary !important;
+}
+
+// 修复表单全局颜色
+.mu-form-item__error,
+.mu-form-item__focus {
+  color: $primary !important;
+
+  .mu-input__focus,
+  .mu-input__error,
+  .mu-form-item-label,
+  .mu-form-item-icon,
+  .mu-form-item-help {
+    color: $primary !important;
+  }
+}
+
+// 修复面包屑导航颜色
+.mu-breadcrumbs-item:not(.is-disabled) {
+  .router-link-active {
+    color: $primary;
+  }
+}
+
+// 富文本编辑器
+.ql-editor {
+  min-height: 360px;
+}
+
+// chips
+
+.chip {
+  margin: 8px !important;
+  vertical-align: middle;
+}
+
+// 用户头像
+.mu-avatar {
+  cursor: pointer;
+  box-shadow: $avatarShadowSearchColor;
+  overflow: hidden;
+}
+
+// 圆角
+.mu-popover,
+.mu-dialog {
+  // Phone
+  border-radius: $phoneMainWrapperBorderRadius !important;
+}
+
+// 方角设置
+@media screen and (min-width: 576px) {
+
+  .mu-popover,
+  .mu-dialog {
+    // Not Phone
+    border-radius: $mainWrapperBorderRadius !important;
+  }
+}
+
+// 块式引用
+blockquote {
+  color: #666;
+  padding: 1px 23px;
+  margin: 22px 0;
+  border-left: 4px solid #cbcbcb;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  line-height: 2.5rem;
+}
+
+// 空心按钮
+.empty-btn {
+  border: 1px solid $primary !important;
+}
+
+// 点赞按钮活跃
+.like-btn.active {
+  background: $mainWrapperBlurPink !important;
+}
+
+// 评论wrapper
+
+.comment-list-wrapper {
+  // Phone
+  margin-left: 5px;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 576px) {
+  .comment-list-wrapper {
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+}

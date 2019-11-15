@@ -3,7 +3,7 @@
 // [err, res] = await to(getUser())
 // if(err) {}
 // handle res...
-module.exports = function to(promise: Promise<any>) {
+export default function to(promise: Promise<any>) {
   // // 检测是否是 Promise 对象
   // if (!promise || !Promise.prototype.isPrototypeOf(promise)) {
   //   return new Promise((resolve, reject) => {
