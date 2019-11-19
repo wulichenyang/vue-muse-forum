@@ -3,8 +3,7 @@
     <ContainerInner class="category-view-wrapper">
 
       <!-- 分类简介头部 -->
-      <CategoryDetailHeader />
-
+      <CategoryDetailHeader :categoryHeaderDetail="categoryHeaderDetail(this.categoryIdNow)" />
       <!-- 分类下的所有文章列表 -->
       <!-- <Post
         v-for="postId in userPostIds(otherUserId)"
@@ -26,7 +25,7 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import Post from "@/components/Post/Post.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
@@ -52,21 +51,41 @@ export default class CategoryView extends Vue {
   // ifFocusSearch: boolean = false;
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get categoryIdNow(): string {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  private mounted() {}
+  private mounted() {
+    this.getCategoryHeaderDetailIfNoCache();
+  }
 
   // Methods
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
+  async getCategoryHeaderDetailData() {
+    await this.getCategoryHeaderDetail({
+      categoryId: this.categoryIdNow,
+      userId: this.userDetail && this.userDetail._id
+    });
+  }
 
-  // @Action("getUser") getUser: any;
+  getCategoryHeaderDetailIfNoCache() {
+    if (
+      this.categoryHeaderDetail(this.categoryIdNow) &&
+      !this.categoryHeaderDetail(this.categoryIdNow)._id
+    ) {
+      // Vuex里没有当前分类详细信息缓存，请求数据
+      this.getCategoryHeaderDetailData();
+    }
+  }
+
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
+
+  @Action("getCategoryHeaderDetail") getCategoryHeaderDetail!: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

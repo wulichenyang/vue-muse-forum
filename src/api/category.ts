@@ -27,6 +27,14 @@ export const fetchCategoryList = (): Promise<any> => {
   return get('/categories')
 }
 
+export const fetchCategoryHeaderDetail = (categoryId: string, userId?: string): Promise<any> => {
+  if (userId) {
+    return get(`/categories/${categoryId}?userId=${userId}`)
+  } else {
+    return get(`/categories/${categoryId}`)
+  }
+}
+
 export const updateCategory = ({ avatar, brief, name, sort, id }: UpdateCategoryPayload): Promise<any> => {
   return put(`/admin/categories/${id}`, { avatar, brief, name, sort })
 }

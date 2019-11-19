@@ -1,6 +1,6 @@
 <template>
   <header class="category-detail-header">
-    header
+    {{categoryHeaderDetail}}
   </header>
 </template>
 
@@ -14,16 +14,7 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
-
-export interface CategoryHeaderDetail {
-  _id: string;
-  name: string;
-  brief: string;
-  avatar: string;
-  followCount: number;
-  postCount: number;
-}
+import { CategoryHeaderDetail } from "@/assets/js/dataType";
 
 @Component({
   components: {}

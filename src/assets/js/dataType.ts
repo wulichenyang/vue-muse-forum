@@ -127,6 +127,16 @@ export interface CategoryDetail extends CategoryBrief, DateType {
   sort: number,
 }
 
+
+export interface CategoryHeaderDetail {
+  _id: string;
+  name: string;
+  brief: string;
+  avatar: string;
+  followCount: number;
+  postCount: number;
+}
+
 export type PostState = 'published' | 'draft'
 export type CommentState = PostState
 export type ReplyState = PostState
