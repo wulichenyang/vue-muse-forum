@@ -250,9 +250,15 @@ export default class UserView extends Vue {
   padding: 0;
   // Phone
   margin-top: 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 
   text-align: center;
   .user-header {
+    // Phone
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+
     background: url("/img/user-header-bg.jpg");
     background-size: cover;
     background-position-y: center;
@@ -274,6 +280,10 @@ export default class UserView extends Vue {
 @media screen and (min-width: 576px) {
   .user-detail-wrapper {
     margin-top: 36px;
+    .user-header {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 }
 // @media screen and (min-width: 768px) {

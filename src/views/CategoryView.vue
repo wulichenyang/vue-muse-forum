@@ -5,12 +5,12 @@
       <!-- 分类简介头部 -->
       <CategoryDetailHeader :categoryHeaderDetail="categoryHeaderDetail(this.categoryIdNow)" />
       <!-- 分类下的所有文章列表 -->
-      <!-- <Post
-        v-for="postId in userPostIds(otherUserId)"
+      <Post
+        v-for="postId in categoryPostIds(categoryIdNow)"
         :key="postId"
-        :postBrief="userPostBriefMap(otherUserId)[postId]"
+        :postBrief="postBriefMap(categoryIdNow)[postId]"
         @emitTogglePostLike="onTogglePostLike"
-      /> -->
+      />
     </ContainerInner>
   </mu-container>
 </template>
@@ -29,8 +29,13 @@ import { UserDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import Post from "@/components/Post/Post.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
+import { PostLikePayload } from "@/components/Post/Post.vue";
 @Component({
-  components: { CategoryDetailHeader, Post, ContainerInner }
+  components: {
+    CategoryDetailHeader,
+    Post,
+    ContainerInner
+  }
 })
 export default class CategoryView extends Vue {
   // Props
@@ -58,12 +63,30 @@ export default class CategoryView extends Vue {
   // Lifecycle
   private mounted() {
     this.getCategoryHeaderDetailIfNoCache();
+    this.getPostsIfNoCache();
   }
 
   // Methods
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
+
+  getPostsIfNoCache() {
+    if (
+      !this.categoryPostIds(this.categoryIdNow) ||
+      this.categoryPostIds(this.categoryIdNow).length === 0
+    ) {
+      // Vuex里没有当前文章列表ids，请求数据
+      this.getPostListData();
+    }
+  }
+
+  async getPostListData() {
+    await this.getPostList({
+      categoryId: this.categoryIdNow,
+      userId: this.userDetail && this.userDetail._id
+    });
+  }
 
   async getCategoryHeaderDetailData() {
     await this.getCategoryHeaderDetail({
@@ -82,9 +105,22 @@ export default class CategoryView extends Vue {
     }
   }
 
+  onTogglePostLike(payload: PostLikePayload) {
+    const { targetId, type, authorId } = payload;
+    this.toggleBriefPostLike({
+      targetId,
+      type,
+      authorId
+    });
+  }
+
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
+  @Getter("postBriefMap") postBriefMap!: any;
+  @Getter("categoryPostIds") categoryPostIds!: any;
 
+  @Action("getPostList") getPostList: any;
+  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
   @Action("getCategoryHeaderDetail") getCategoryHeaderDetail!: any;
 
   // @Emit("select")
@@ -98,6 +134,7 @@ export default class CategoryView extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .category-view-wrapper {
+  padding: 0;
 }
 
 // @media screen and (min-width: 576px) {
