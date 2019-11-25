@@ -35,12 +35,12 @@
       <!-- 右边关注按钮部分 -->
       <section class="right-wrapper">
         <mu-button
-          v-if="userFansBrief && userDetail && getTargetUser()._id !== userDetail._id || getTargetUser() && !userDetail"
+          v-if="userFansBrief && userDetail && getTargetUserId() !== userDetail._id || getTargetUser() && !userDetail"
           small
           color="primary"
           class="follow-btn"
           @click.prevent="onToggleFollowUser(
-            getTargetUser()._id,
+            getTargetUserId(),
             'user'
           )"
         >{{userFansBrief.ifFollow ? '已关注':'关注'}}</mu-button>
@@ -115,33 +115,11 @@ export default class Fan extends Vue {
   }
 
   getTargetUserId() {
-    if (this.isFan) {
-      return (
-        this.userFansBrief &&
-        this.userFansBrief.userId &&
-        this.userFansBrief.userId._id
-      );
-    } else {
-      return (
-        this.userFansBrief &&
-        this.userFansBrief.targetId &&
-        this.userFansBrief.targetId._id
-      );
-    }
+    return this.userFansBrief && this.userFansBrief.user && this.userFansBrief.user._id;
   }
 
   getTargetUser() {
-    if (this.isFan) {
-      return (
-        this.userFansBrief &&
-        this.userFansBrief.userId
-      );
-    } else {
-      return (
-        this.userFansBrief &&
-        this.userFansBrief.targetId
-      );
-    }
+    return this.userFansBrief && this.userFansBrief.user;
   }
 
   // Lifecycle

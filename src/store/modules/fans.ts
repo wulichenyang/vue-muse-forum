@@ -17,8 +17,9 @@ export interface UserToFansIdsMap {
   [userId: string]: string[]
 }
 
-export interface userToFollowUserIdsMap extends UserToFansIdsMap{}
+export interface userToFollowUserIdsMap extends UserToFansIdsMap { }
 
+// 某用户关注用户或粉丝信息Map
 export interface UserFansBriefMap {
   [fansId: string]: UserFansBrief
 }
@@ -88,8 +89,8 @@ const actions = {
       // 获取成功
       let userFansBriefMap: UserFansBriefMap = {};
       let fansIds: string[] = (res.data as Array<UserFansBrief>).map((x: UserFansBrief) => {
-        userFansBriefMap[(x.userId as FansInfo)._id] = x;
-        return x.userId._id
+        userFansBriefMap[x.user._id] = x;
+        return x.user._id
       });
 
       context.commit(types.SET_USER_FANS_IDS, { userId, fansIds })
@@ -113,8 +114,8 @@ const actions = {
       // 获取成功
       let userFansBriefMap: UserFansBriefMap = {};
       let fansIds: string[] = (res.data as Array<UserFansBrief>).map((x: UserFansBrief) => {
-        userFansBriefMap[(x.userId as FansInfo)._id] = x;
-        return x.userId._id
+        userFansBriefMap[x.user._id] = x;
+        return x.user._id
       });
 
       context.commit(types.SET_FOLLOW_USERS_IDS, { userId, fansIds })
@@ -187,7 +188,7 @@ const mutations = {
     } = payload;
 
     // 有缓存则修改
-    if (state.userFansBriefMap[targetId] && state.userFansBriefMap[targetId]._id) {
+    if (state.userFansBriefMap[targetId] && state.userFansBriefMap[targetId].user && state.userFansBriefMap[targetId].user._id) {
       let ifFollowBefore = state.userFansBriefMap[targetId].ifFollow;
 
       state.userFansBriefMap = {

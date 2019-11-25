@@ -29,17 +29,12 @@ export interface FansInfo extends UserBrief {
   brief: string,
 }
 
-export interface UserFansBrief extends UserBrief {
-  // Follow id 唯一
-  _id: string,
-  // sourceUser 信息
-  userId: FansInfo,
-  // 是否关注
+export interface UserFansBrief {
+  // 登录用户是否关注该用户
   ifFollow?: boolean,
-  // targetUser 信息
-  targetId: FansInfo,
+  // 粉丝信息或被关注者信息
+  user: FansInfo
 }
-
 
 
 export interface OtherUserDetail extends UserBrief {
