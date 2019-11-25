@@ -157,6 +157,12 @@ export default class HomeTop extends Vue {
 
   onSearchPost(key: string) {
     console.log(key);
+    this.$router.push({
+      name: 'search',
+      query: {
+        key : key
+      }
+    })
   }
 
   openAlertDialog() {

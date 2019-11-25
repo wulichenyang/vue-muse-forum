@@ -46,6 +46,16 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "postDetail" */ './views/PostDetailView.vue'),
     },
 
+    // 搜索文章、用户
+    {
+      path: '/search',
+      name: 'search',
+      // route level code-splitting
+      // this generates a separate chunk (posts.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "searchResultView" */ './views/SearchResultView.vue'),
+    },
+
     // 用户详细信息
     {
       path: '/users/:id',
