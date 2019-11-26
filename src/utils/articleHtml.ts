@@ -40,7 +40,6 @@ const htmlToString = (html: string) => {
 
   // 删除所有html标签
   html = html.replace(/<[^>]+>/g, "");
-
   return html;
 
 }

@@ -25,11 +25,24 @@
 
       <!-- 右边主要信息部分 -->
       <section class="right-wrapper">
+
         <!-- 标题 -->
         <router-link :to="`/posts/${postBrief._id}`">
           <h2>{{postBrief.title}}</h2>
+          <div class="right-center-wrapper">
+            <div class="first-pic-wrapper">
+              <div class="first-pic-inner">
+                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574787624555&di=c2f513dd1d5b31519820fa170e6aefa3&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F40589d4825127ef89c43064f07e78f6dfb5bc6cc167f1-mkR4k8_fw658">
+              </div>
+              <!-- <img
+                v-if="postBrief.firstPic"
+                :src="postBrief.firstPic"
+                :alt="postBrief.title"
+              > -->
+            </div>
+            <p class="content-brief">{{postBrief.content}}</p>
+          </div>
         </router-link>
-
         <!-- 底部信息 -->
         <div class="bottom-wrapper">
 
@@ -152,11 +165,7 @@ export default class Post extends Vue {
   private mounted() {}
 
   // Methods
-  onLike(
-    targetId: string,
-    type: LikeTargetType,
-    authorId: string
-  ) {
+  onLike(targetId: string, type: LikeTargetType, authorId: string) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
@@ -238,6 +247,34 @@ export default class Post extends Vue {
       // Phone
       padding-left: 10px;
 
+      .right-center-wrapper {
+        // Phone
+        display: block;
+        
+        .first-pic-wrapper {
+          // Phone
+          width: 100%;
+          margin-right: 0;
+          height: auto;
+
+          margin-bottom: 5px;
+          .first-pic-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+            img {
+              display: block;
+              width: 100%;
+            }
+          }
+        }
+
+        .content-brief {
+          flex: 1;
+        }
+      }
+
       h2 {
         // Phone
         margin: 24px 0 10px 0;
@@ -245,6 +282,11 @@ export default class Post extends Vue {
           text-decoration: underline;
         }
       }
+      .content-brief {
+        margin-top: 0;
+        font-size: $contentBriefFontSize;
+      }
+
       // 底部信息
       .bottom-wrapper {
         display: flex;
@@ -292,6 +334,19 @@ export default class Post extends Vue {
       // 右部分主要信息
       .right-wrapper {
         padding-left: 50px;
+        .right-center-wrapper {
+          display: flex;
+          .first-pic-wrapper {
+            margin-right: 18px;
+            width: 190px;
+            height: 105px;
+            .first-pic-inner {
+              img {
+                
+              }
+            }
+          }
+        }
         h2 {
           margin: 16px 0;
         }

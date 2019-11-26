@@ -2,13 +2,22 @@
   <section class="search-result-wrapper">
     <mu-container>
       <ContainerInner class="post-main-content">
-        <section class="post-view-wrapper">
+        <section
+          v-if="searchPostList && searchPostList.length"
+          class="post-view-wrapper"
+        >
           <Post
             v-for="post in searchPostList"
             :key="post._id"
             :postBrief="post"
             @emitTogglePostLike="onTogglePostLike"
           />
+        </section>
+        <section
+          v-else
+          class="no-search"
+        >
+          <p>没有找到啊 T.T</p>
         </section>
       </ContainerInner>
     </mu-container>
@@ -97,6 +106,13 @@ export default class SearchResultView extends Vue {
 
   @Getter("userDetail") userDetail!: any;
   @Action("toggleBriefPostLike") toggleBriefPostLike: any;
+  @Watch("$route", { immediate: true, deep: true })
+  onRouterChanged(to: any, from: any) {
+    // 监听搜索值改变
+    if (from && from.query.key !== to.query.key) {
+      this.getPostListData();
+    }
+  }
 }
 </script>
 
@@ -108,6 +124,10 @@ export default class SearchResultView extends Vue {
   }
   .post-main-content {
     padding: 0 !important;
+  }
+  .no-search {
+    padding: 20px;
+    text-align: center;
   }
 }
 

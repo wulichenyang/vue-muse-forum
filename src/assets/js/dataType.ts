@@ -141,6 +141,10 @@ export interface PostBrief extends DateType {
   author: UserBrief, // populate 生成
   category: CategoryBrief, // populate 生成
   title: string,
+  // 文章里第一张图片（或为空）
+  firstPic: string | null,
+  // 截取的部分内容
+  content: string,
   viewCount: number,
   likeCount: number,
   commentCount: number,
