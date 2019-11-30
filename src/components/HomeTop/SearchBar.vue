@@ -74,12 +74,12 @@ export default class SearchBar extends Vue {
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 4px;
-  // Phone
-  display: none;
   input {
+    // Phone
+    max-width: 80px;
+
     color: $mainHeaderFontColor;
     height: 33px;
-    max-width: 200px;
     border: none;
     outline: none;
     background: transparent;
@@ -100,7 +100,9 @@ export default class SearchBar extends Vue {
   // Not Phone
   .search-bar {
     display: flex;
-
+    input {
+      max-width: 200px;
+    }
   }
 }
 </style>

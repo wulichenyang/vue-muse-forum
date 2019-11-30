@@ -10,6 +10,7 @@
             v-for="post in searchPostList"
             :key="post._id"
             :postBrief="post"
+            :keyword="searchKeyNow"
             @emitTogglePostLike="onTogglePostLike"
           />
         </section>

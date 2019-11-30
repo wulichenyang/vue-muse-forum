@@ -71,9 +71,25 @@ const htmlImgToText = (html: string) => {
   return html;
 }
 
+// 用正则表达式实现html编码（转义）
+const html2Escape = (sHtml: string) => {
+  return sHtml.replace(/[<>&"]/g, (c) => {
+    return ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' } as any)[c];
+  });
+}
 
-export default {
+// 用正则表达式实现html解码（反转义）
+const escape2Html = (str: string) => {
+  var arrEntities = { 'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"' };
+  return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, (all, t) => {
+    return (arrEntities as any)[t];
+  });
+}
+
+export {
   abstractImagesFromHTML,
   htmlToString,
   htmlImgToText,
+  html2Escape,
+  escape2Html,
 }

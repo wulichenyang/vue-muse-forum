@@ -45,7 +45,7 @@
 
         <mu-divider></mu-divider>
 
-        <mu-list-item button>
+        <mu-list-item :to="`/users/${userDetail._id}`"  button>
           <mu-list-item-action>
             <mu-icon value="person"></mu-icon>
           </mu-list-item-action>
@@ -216,7 +216,6 @@ export default class UserOption extends Vue {
       window.location.reload();
     }
   }
-
   @Action("clearUser") clearUser: any;
 }
 </script>

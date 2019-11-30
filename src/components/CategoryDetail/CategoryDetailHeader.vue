@@ -20,6 +20,19 @@
       <span>{{categoryHeaderDetail.followCount}} 人关注</span>
     </section>
 
+    <section class="category-follow-btn">
+      <!-- 关注/私信 按钮 -->
+      <mu-button
+        small
+        color="primary"
+        class="follow-btn"
+        @click="onToggleFollowCategory(
+            categoryHeaderDetail._id,
+            'category'
+          )"
+      >{{categoryHeaderDetail.ifFollow ? '已关注':'关注'}}</mu-button>
+    </section>
+
   </header>
 </template>
 
@@ -34,6 +47,8 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { CategoryHeaderDetail } from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
+import { FollowTargetType } from "@/api/follow";
 
 @Component({
   components: {}
@@ -65,13 +80,21 @@ export default class CategoryDetailHeader extends Vue {
   private mounted() {}
 
   // Methods
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  onToggleFollowCategory(targetId: string, type: FollowTargetType) {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+    this.toggleCategoryFollow({
+      targetId,
+      type
+    });
+  }
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("isLogin") isLogin!: boolean | null;
+  @Action("openLoginDialog") openLoginDialog: any;
+  @Action("toggleCategoryFollow") toggleCategoryFollow: any;
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-
-  // @Action("getUser") getUser: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}
@@ -85,6 +108,7 @@ export default class CategoryDetailHeader extends Vue {
 @import "../../assets/css/var.scss";
 .category-detail-header {
   display: flex;
+
   // Phone
   padding: 16px 24px;
 
@@ -96,6 +120,8 @@ export default class CategoryDetailHeader extends Vue {
     margin-right: 20px;
   }
   .category-brief {
+    margin-right: 20px;
+    flex: 1;
     h2 {
       margin: 10px 0;
     }
@@ -105,6 +131,10 @@ export default class CategoryDetailHeader extends Vue {
     .post-count {
       margin-right: 16px;
     }
+  }
+  .category-follow-btn {
+    display: flex;
+    align-items: center;
   }
 }
 

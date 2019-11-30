@@ -6,7 +6,11 @@ import {
   CategoryDetail,
   CategoryHeaderDetail
 } from '@/assets/js/dataType'
-
+import {
+  FollowPayload,
+  FollowTargetType,
+  toggleFollow
+} from '@/api/follow'
 import {
   fetchCategoryHeaderDetail
 } from '@/api/category'
@@ -40,8 +44,8 @@ const getters = {
   categoryDetail: (state: State) => (id: string) => {
     return (state.categoryMap as CategoryMap)[id]
   },
-  categoryHeaderDetail: (state: State) =>(categoryId: string) => {
-    if(!(state.categoryHeaderDetailMap as CategoryHeaderDetailMap )[categoryId]) {
+  categoryHeaderDetail: (state: State) => (categoryId: string) => {
+    if (!(state.categoryHeaderDetailMap as CategoryHeaderDetailMap)[categoryId]) {
       (state.categoryHeaderDetailMap as CategoryHeaderDetailMap)[categoryId] = <CategoryHeaderDetail>{}
     }
     return state.categoryHeaderDetailMap[categoryId]
@@ -98,20 +102,51 @@ const actions = {
       return true
     }
   },
+
+  // 对某分类进行关注和取消
+  async toggleCategoryFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+    } = payload
+
+    // 对某分类的关注
+    context.commit(types.TOGGLE_CATEGORY_FOLLOW, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleFollow({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消对某分类的关注
+      context.commit(types.TOGGLE_CATEGORY_FOLLOW, { targetId })
+
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
+
 }
 
 // mutations
 const mutations = {
+  // 设置分类详细信息map
   [types.SET_CATEGORY_MAP](state: State, categoryMap: CategoryMap) {
     state.categoryMap = {
       ...categoryMap
     }
   },
+  // 设置分类ids
   [types.SET_CATEGORY_IDS](state: State, ids: string[]) {
     state.categoryIds = [
       ...ids
     ]
   },
+  // 添加分类中发文数量
   [types.ADD_CATEGORY_POST_COUNT](state: State, categoryId: string) {
     console.log((state.categoryMap as CategoryMap)[categoryId]);
     (state.categoryMap as CategoryMap)[categoryId] = {
@@ -119,12 +154,36 @@ const mutations = {
       postCount: (state.categoryMap as CategoryMap)[categoryId].postCount + 1
     }
   },
+  // 添加分类详细内容
   [types.ADD_CATEGORY_HEADER_DETAIL](state: State, categoryHeaderDetail: CategoryHeaderDetail) {
     const categoryId = categoryHeaderDetail._id;
 
     state.categoryHeaderDetailMap = {
       ...state.categoryHeaderDetailMap,
       [categoryId]: categoryHeaderDetail
+    }
+  },
+
+  // 修改对某分类是否关注
+  [types.TOGGLE_CATEGORY_FOLLOW](state: State, payload: { targetId: string }) {
+    const {
+      targetId,
+    } = payload;
+
+    // 有缓存则修改
+    if (state.categoryHeaderDetailMap[targetId] && state.categoryHeaderDetailMap[targetId]._id) {
+      let ifFollowBefore = state.categoryHeaderDetailMap[targetId].ifFollow;
+      let followCount = state.categoryHeaderDetailMap[targetId].followCount;
+
+      state.categoryHeaderDetailMap = {
+        ...state.categoryHeaderDetailMap,
+        [targetId]: {
+          ...state.categoryHeaderDetailMap[targetId],
+          followCount: ifFollowBefore ? --followCount : ++followCount,
+          ifFollow: !(ifFollowBefore),
+        }
+      }
+
     }
   },
 }

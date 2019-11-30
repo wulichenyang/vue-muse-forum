@@ -28,19 +28,32 @@
 
         <!-- 标题 -->
         <router-link :to="`/posts/${postBrief._id}`">
-          <h2>{{postBrief.title}}</h2>
+          <h2 v-html="keyword === '' ? postBrief.title : replaceKeyword(postBrief.title)"></h2>
           <div class="right-center-wrapper">
-            <div class="first-pic-wrapper">
-              <div class="first-pic-inner">
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574787624555&di=c2f513dd1d5b31519820fa170e6aefa3&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F40589d4825127ef89c43064f07e78f6dfb5bc6cc167f1-mkR4k8_fw658">
+            <div
+              class="first-pic-wrapper"
+              v-if="postBrief.firstPic"
+            >
+              <!-- <div
+                class="first-pic-inner larger-on-hover"
+                :style="`backgroundImage: url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574787624555&di=c2f513dd1d5b31519820fa170e6aefa3&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F40589d4825127ef89c43064f07e78f6dfb5bc6cc167f1-mkR4k8_fw658)`"
+              >
+                <img
+                  :alt="postBrief.title"
+                  src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1574787624555&di=c2f513dd1d5b31519820fa170e6aefa3&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F40589d4825127ef89c43064f07e78f6dfb5bc6cc167f1-mkR4k8_fw658"
+                >
+            </div> -->
+              <div
+                class="first-pic-inner larger-on-hover"
+                :style="`backgroundImage: url(${postBrief.firstPic && escape2Html(postBrief.firstPic)})`"
+              >
+                <img
+                  :alt="postBrief.title"
+                  :src="postBrief.firstPic && escape2Html(postBrief.firstPic)"
+                >
               </div>
-              <!-- <img
-                v-if="postBrief.firstPic"
-                :src="postBrief.firstPic"
-                :alt="postBrief.title"
-              > -->
             </div>
-            <p class="content-brief">{{postBrief.content}}</p>
+            <p v-html="postBrief.content" class="content-brief"></p>
           </div>
         </router-link>
         <!-- 底部信息 -->
@@ -118,6 +131,7 @@ import { Getter, Action } from "vuex-class";
 import { PostBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
+import { escape2Html } from "@/utils/articleHtml.ts";
 
 export interface PostLikePayload {
   targetId: string;
@@ -137,6 +151,14 @@ export default class Post extends Vue {
   })
   postBrief!: PostBrief;
 
+  // 搜索帖子返回高亮标题关键字
+  @Prop({
+    type: String,
+    default: "",
+    required: false
+  })
+  keyword!: string;
+
   // @Model("onChange", {
   //   type: String
   // })
@@ -150,6 +172,9 @@ export default class Post extends Vue {
   dateDiff: any = dateDiff;
   // 数字格式化单位函数 单位k
   formatNumber: any = formatNumber;
+  // 将图片url的html转码反转义
+  escape2Html: (rawString: string) => string = escape2Html;
+
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
 
@@ -189,6 +214,14 @@ export default class Post extends Vue {
 
     console.log("comment");
     return;
+  }
+
+  // 搜索返回高亮关键字
+  replaceKeyword(title: string) {
+    return title.replace(
+      new RegExp(this.keyword, "g"),
+      `<span>${this.keyword}</span>`
+    );
   }
 
   @Emit("emitTogglePostLike")
@@ -250,20 +283,22 @@ export default class Post extends Vue {
       .right-center-wrapper {
         // Phone
         display: block;
-        
+
         .first-pic-wrapper {
           // Phone
           width: 100%;
           margin-right: 0;
           height: auto;
+          margin-bottom: 10px;
 
-          margin-bottom: 5px;
           .first-pic-inner {
             width: 100%;
             height: 100%;
             border-radius: 4px;
             overflow: hidden;
+            background-size: cover;
             img {
+              // Phone
               display: block;
               width: 100%;
             }
@@ -280,6 +315,11 @@ export default class Post extends Vue {
         margin: 24px 0 10px 0;
         &:hover {
           text-decoration: underline;
+        }
+
+        span {
+          // 搜索时高亮字体
+          color: $primary;
         }
       }
       .content-brief {
@@ -342,7 +382,7 @@ export default class Post extends Vue {
             height: 105px;
             .first-pic-inner {
               img {
-                
+                display: none;
               }
             }
           }

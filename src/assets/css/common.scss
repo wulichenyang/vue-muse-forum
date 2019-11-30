@@ -37,6 +37,13 @@ a {
   background-color: transparent !important;
 }
 
+.larger-on-hover {
+  transition: .3s all;
+  &:hover {
+    transform: scale(1.05);
+    transition: .2s all;
+  }
+}
 // 默认按钮格式
 .mu-button,
 .mu-chip {

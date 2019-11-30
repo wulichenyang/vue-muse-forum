@@ -130,6 +130,7 @@ export interface CategoryHeaderDetail {
   avatar: string;
   followCount: number;
   postCount: number;
+  ifFollow?: boolean; 
 }
 
 export type PostState = 'published' | 'draft'
