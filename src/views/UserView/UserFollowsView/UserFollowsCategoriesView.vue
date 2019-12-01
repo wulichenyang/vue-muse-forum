@@ -1,6 +1,10 @@
 <template>
   <section class="user-follows-categories">
-    categories
+    <CategoryDetailHeader
+      v-for="categoryId in userFollowCategoryIds(otherUserId)"
+      :key="categoryId"
+      :categoryHeaderDetail="categoryHeaderDetail(categoryId)"
+    />
   </section>
 </template>
 
@@ -19,9 +23,12 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import { UserDetail } from "@/assets/js/dataType";
+import { CategoryHeaderDetail } from "@/assets/js/dataType";
+import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 
 @Component({
-  components: {}
+  components: { CategoryDetailHeader }
 })
 export default class UserFollowsCategoriesView extends Vue {
   // Props
@@ -40,22 +47,42 @@ export default class UserFollowsCategoriesView extends Vue {
   // Data
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  private mounted() {}
+  private mounted() {
+    this.getCategoryListIfNoCache();
+  }
 
   // Methods
+  getCategoryListIfNoCache() {
+    if ((this.userFollowCategoryIds(this.otherUserId) as any).length === 0) {
+      this.getFollowCategories();
+    }
+  }
+
+  async getFollowCategories() {
+    // Vuex里没有当前用户的关注用户列表，请求数据
+    await this.getFollowCategoryList({
+      userId: this.otherUserId,
+      loginUserId: this.userDetail && this.userDetail._id
+    });
+  }
 
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
-
-  // @Action("getUser") getUser: any;
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("categoryHeaderDetail") categoryHeaderDetail!: Promise<
+    CategoryHeaderDetail
+  >;
+  @Getter("userFollowCategoryIds") userFollowCategoryIds!: (
+    userId: string
+  ) => Promise<string[]>;
+  @Action("getFollowCategoryList") getFollowCategoryList: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

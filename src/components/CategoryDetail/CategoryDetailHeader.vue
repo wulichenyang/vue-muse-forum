@@ -1,39 +1,44 @@
 <template>
-  <header class="category-detail-header">
-    <!-- 分类图标 -->
-    <section class="category-avatar">
-      <mu-button
-        class="avatar-btn"
-        fab
-      >
-        <mu-avatar :size="size">
-          <img :src="categoryHeaderDetail.avatar">
-        </mu-avatar>
-      </mu-button>
-    </section>
+  <router-link
+    :to="`/categories/${categoryHeaderDetail._id}`"
+  >
+    <header class="category-detail-header larger-item-hover ">
+      <!-- 分类图标 -->
+      <section class="category-avatar">
+        <mu-button
+          class="avatar-btn"
+          fab
+        >
+          <mu-avatar :size="size">
+            <img :src="categoryHeaderDetail.avatar">
+          </mu-avatar>
+        </mu-button>
+      </section>
 
-    <!-- 分类简介 -->
-    <section class="category-brief">
-      <h2>{{categoryHeaderDetail.name}}</h2>
-      <p>{{categoryHeaderDetail.brief}}</p>
-      <span class="post-count">{{categoryHeaderDetail.postCount}} 文章</span>
-      <span>{{categoryHeaderDetail.followCount}} 人关注</span>
-    </section>
+      <!-- 分类简介 -->
+      <section class="category-brief">
+        <h2>{{categoryHeaderDetail.name}}</h2>
+        <p>{{categoryHeaderDetail.brief}}</p>
+        <span class="post-count">{{categoryHeaderDetail.postCount}} 文章</span>
+        <span>{{categoryHeaderDetail.followCount}} 人关注</span>
+      </section>
 
-    <section class="category-follow-btn">
-      <!-- 关注/私信 按钮 -->
-      <mu-button
-        small
-        color="primary"
-        class="follow-btn"
-        @click="onToggleFollowCategory(
+      <section class="category-follow-btn">
+        <!-- 关注/私信 按钮 -->
+        <mu-button
+          small
+          color="primary"
+          class="follow-btn"
+          @click.prevent="onToggleFollowCategory(
             categoryHeaderDetail._id,
             'category'
           )"
-      >{{categoryHeaderDetail.ifFollow ? '已关注':'关注'}}</mu-button>
-    </section>
+        >{{categoryHeaderDetail.ifFollow ? '已关注':'关注'}}</mu-button>
+      </section>
 
-  </header>
+    </header>
+  </router-link>
+
 </template>
 
 <script lang="ts">
@@ -95,7 +100,6 @@ export default class CategoryDetailHeader extends Vue {
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("toggleCategoryFollow") toggleCategoryFollow: any;
 
-
   // @Emit("select")
   // select(listItem: Song, index: number) {}
 
@@ -108,6 +112,7 @@ export default class CategoryDetailHeader extends Vue {
 @import "../../assets/css/var.scss";
 .category-detail-header {
   display: flex;
+  background-color: #fff;
 
   // Phone
   padding: 16px 24px;
@@ -120,8 +125,9 @@ export default class CategoryDetailHeader extends Vue {
     margin-right: 20px;
   }
   .category-brief {
-    margin-right: 20px;
     flex: 1;
+    margin-right: 20px;
+    text-align: left;
     h2 {
       margin: 10px 0;
     }

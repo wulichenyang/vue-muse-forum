@@ -4,7 +4,7 @@
     class="post-link"
     :to="`/posts/${postBrief._id}`"
   >
-    <article class="post-wrapper">
+    <article class="post-wrapper larger-item-hover">
 
       <!-- 用户信息 -->
       <router-link
@@ -249,15 +249,10 @@ export default class Post extends Vue {
 
   .post-wrapper {
     background: $mainContainerBgColor;
-    transition: 0.3s all;
     // Phone
     padding: $postPhonePadding;
     border-radius: $phoneMainWrapperBorderRadius;
-    &:hover {
-      transform: scale(1.01);
-      box-shadow: $postBoxShadowColor;
-      transition: 0.3s all;
-    }
+
     // 用户信息
     .mu-button {
       width: $postAvatarSize;

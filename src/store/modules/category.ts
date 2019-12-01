@@ -14,6 +14,10 @@ import {
 import {
   fetchCategoryHeaderDetail
 } from '@/api/category'
+import {
+  fetchFollowCategoryList
+} from '@/api/follow'
+import Vue from 'vue'
 
 export interface CategoryMap {
   [categoryId: string]: CategoryDetail
@@ -23,37 +27,65 @@ export interface CategoryHeaderDetailMap {
   [categoryId: string]: CategoryHeaderDetail
 }
 
+
+export interface UserFollowCategoryIdsMap {
+  [userId: string]: string[]
+}
+
 export interface State {
-  // For categoryList
+  // 主页分类简略信息map
   categoryMap: CategoryMap;
+  // 主页分类ids
   categoryIds: string[];
-  // For categoryDetail
+  // 主页分类详细信息map
   categoryHeaderDetailMap: CategoryHeaderDetailMap;
+  // 用户关注的分类ids
+  userFollowCategoryIdsMap: UserFollowCategoryIdsMap
 }
 
 const initState: State = {
+  // 主页分类简略信息map
   categoryMap: <CategoryMap>{},
+  // 主页分类ids
   categoryIds: [],
-  categoryHeaderDetailMap: <CategoryHeaderDetailMap>{}
+  // 主页分类详细信息map
+  categoryHeaderDetailMap: <CategoryHeaderDetailMap>{},
+  // 用户关注的分类ids
+  userFollowCategoryIdsMap: <UserFollowCategoryIdsMap>{},
+
 }
 
 // getters
 const getters = {
+  // 主页分类简略信息map
   categoryMap: (state: State) => state.categoryMap,
+  // 主页分类ids
   categoryIds: (state: State) => state.categoryIds,
+  // 主页分类详细信息
   categoryDetail: (state: State) => (id: string) => {
     return (state.categoryMap as CategoryMap)[id]
   },
+  // 分类id索引主页分类详细信息
   categoryHeaderDetail: (state: State) => (categoryId: string) => {
     if (!(state.categoryHeaderDetailMap as CategoryHeaderDetailMap)[categoryId]) {
       (state.categoryHeaderDetailMap as CategoryHeaderDetailMap)[categoryId] = <CategoryHeaderDetail>{}
     }
     return state.categoryHeaderDetailMap[categoryId]
-  }
+  },
+
+  // 某用户下的关注分类ids
+  userFollowCategoryIds: (state: State) => (userId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    if (!state.userFollowCategoryIdsMap[userId]) {
+      Vue.set(state.userFollowCategoryIdsMap, userId, []);
+    }
+    return (state.userFollowCategoryIdsMap[userId])
+  },
 }
 
 // actions
 const actions = {
+  // 获取主页分类简略信息列表
   async getCategoryList(context: { dispatch: Dispatch, commit: Commit; state: State }) {
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(fetchCategoryList());
@@ -75,10 +107,12 @@ const actions = {
     }
   },
 
+  // 增加分类发文数量
   addCategoryPostCount(context: { dispatch: Dispatch, commit: Commit; state: State }, categoryId: string) {
     context.commit(types.ADD_CATEGORY_POST_COUNT, categoryId)
   },
 
+  // 获取主页分类详细信息
   async getCategoryHeaderDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: {
     categoryId: string, userId: string
   }) {
@@ -103,7 +137,7 @@ const actions = {
     }
   },
 
-  // 对某分类进行关注和取消
+  // 用户对某分类进行关注和取消
   async toggleCategoryFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
     // 点赞
     const {
@@ -129,6 +163,32 @@ const actions = {
       return true
     }
   },
+  
+  // 获取某用户的关注用户列表信息
+  async getFollowCategoryList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
+    const { userId, loginUserId } = payload;
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(fetchFollowCategoryList(userId, loginUserId));
+
+    // 获取失败
+    if (err) {
+      return false
+    }
+
+    if (res && res.code === 0) {
+      // 获取成功
+      let categoryHeaderDetailMap: CategoryHeaderDetailMap = {};
+      let categoryIds: string[] = (res.data as Array<CategoryHeaderDetail>).map((x: CategoryHeaderDetail) => {
+        categoryHeaderDetailMap[x._id] = x;
+        return x._id
+      });
+
+      context.commit(types.SET_FOLLOW_CATEGORY_LIST_IDS, { userId, categoryIds })
+      context.commit(types.ADD_USER_CATEGORY_LIST_TO_CATEGORY_HEADER_DETAIL_MAP, { categoryHeaderDetailMap })
+      return true
+    }
+  },
+
 
 }
 
@@ -184,6 +244,19 @@ const mutations = {
         }
       }
 
+    }
+  },
+  
+  // 添加某用户下关注的分类列表 ids
+  [types.SET_FOLLOW_CATEGORY_LIST_IDS](state: State, payload: { userId: string, categoryIds: string[] }) {
+    state.userFollowCategoryIdsMap[payload.userId] = payload.categoryIds
+  },
+
+  // 添加主页分类详细信息
+  [types.ADD_USER_CATEGORY_LIST_TO_CATEGORY_HEADER_DETAIL_MAP](state: State, payload: { categoryHeaderDetailMap: CategoryHeaderDetailMap }) {
+    state.categoryHeaderDetailMap = {
+      ...state.categoryHeaderDetailMap,
+      ...payload.categoryHeaderDetailMap
     }
   },
 }

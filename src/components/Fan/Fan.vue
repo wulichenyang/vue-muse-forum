@@ -4,7 +4,7 @@
     class="fan-link"
     :to="`/users/${getTargetUserId()}`"
   >
-    <article class="fan-wrapper">
+    <article class="fan-wrapper larger-item-hover ">
 
       <!-- 粉丝信息 -->
       <router-link
@@ -164,15 +164,10 @@ export default class Fan extends Vue {
   .fan-wrapper {
     display: flex;
     background: $mainContainerBgColor;
-    transition: 0.3s all;
     // Phone
     padding: $postPhonePadding;
     border-radius: $phoneMainWrapperBorderRadius;
-    &:hover {
-      transform: scale(1.01);
-      box-shadow: $postBoxShadowColor;
-      transition: 0.3s all;
-    }
+
 
     // 用户信息
     .left-user-brief {

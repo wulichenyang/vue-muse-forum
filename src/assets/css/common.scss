@@ -38,12 +38,22 @@ a {
 }
 
 .larger-on-hover {
-  transition: .3s all;
+  transition: 0.3s all;
   &:hover {
     transform: scale(1.05);
     transition: .2s all;
   }
 }
+
+.larger-item-hover {
+  transition: 0.3s all;
+  &:hover {
+    transform: scale(1.01);
+    transition: 0.3s all;
+    box-shadow: $postBoxShadowColor;
+  }
+}
+
 // 默认按钮格式
 .mu-button,
 .mu-chip {

@@ -34,3 +34,14 @@ export const fetchFollowUsers = (targetUserId: string, loginUserId?: string): Pr
     return get(`/users/${targetUserId}/follows/users`)
   }
 }
+
+
+// 获取某用户的关注分类列表
+// /users/${id}/follows/categories?userId=${loginUserId}
+export const fetchFollowCategoryList = (targetUserId: string, loginUserId?: string): Promise<any> => {
+  if(loginUserId) {
+    return get(`/users/${targetUserId}/follows/categories?userId=${loginUserId}`)
+  } else {
+    return get(`/users/${targetUserId}/follows/categories`)
+  }
+}

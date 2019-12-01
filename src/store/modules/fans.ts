@@ -17,7 +17,7 @@ export interface UserToFansIdsMap {
   [userId: string]: string[]
 }
 
-export interface userToFollowUserIdsMap extends UserToFansIdsMap { }
+export interface UserToFollowUserIdsMap extends UserToFansIdsMap { }
 
 // 某用户关注用户或粉丝信息Map
 export interface UserFansBriefMap {
@@ -28,7 +28,7 @@ export interface State {
   // 用户下的粉丝ids
   userToFansIdsMap: UserToFansIdsMap,
   // 用户下的关注用户ids
-  userToFollowUserIdsMap: userToFollowUserIdsMap,
+  userToFollowUserIdsMap: UserToFollowUserIdsMap,
   // 用户列表（粉丝，关注用户）map
   userFansBriefMap: UserFansBriefMap,
 }
@@ -37,7 +37,7 @@ const initState: State = {
   // 用户下的粉丝ids
   userToFansIdsMap: <UserToFansIdsMap>{},
   // 用户下的关注用户ids
-  userToFollowUserIdsMap: <userToFollowUserIdsMap>{},
+  userToFollowUserIdsMap: <UserToFollowUserIdsMap>{},
   // 用户列表（粉丝，关注用户）map
   userFansBriefMap: <UserFansBriefMap>{},
 }
