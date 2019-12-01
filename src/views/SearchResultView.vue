@@ -97,11 +97,30 @@ export default class SearchResultView extends Vue {
   //   this.select(song, index);
   // }
   onTogglePostLike(payload: PostLikePayload) {
+    console.log(payload)
     const { targetId, type, authorId } = payload;
     this.toggleBriefPostLike({
       targetId,
       type,
       authorId
+    });
+    this.onToggleSearchPostLike(targetId);
+  }
+
+  onToggleSearchPostLike(postId: string) {
+    console.log(postId);
+    this.searchPostList = this.searchPostList.map(post => {
+      if (post._id === postId) {
+        let ifLikeBefore = post.ifLike;
+        let beforeLikeCount = post.likeCount;
+        return {
+          ...post,
+          ifLike: !ifLikeBefore,
+          likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount
+        };
+      } else {
+        return post;
+      }
     });
   }
 

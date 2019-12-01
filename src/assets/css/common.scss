@@ -67,6 +67,10 @@ a {
     transition: .2s all;
   }
 }
+// 默认icon大小
+.material-icons {
+  font-size: 18px !important;
+}
 
 // .mu-avatar {
 //   background: transparent !important;
@@ -171,6 +175,7 @@ blockquote {
 // 点赞按钮活跃
 .like-btn.active {
   background: $mainWrapperBlurPink !important;
+  color: $primary !important;
 }
 
 // 评论wrapper

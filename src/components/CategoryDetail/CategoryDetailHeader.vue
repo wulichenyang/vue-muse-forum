@@ -112,7 +112,7 @@ export default class CategoryDetailHeader extends Vue {
 @import "../../assets/css/var.scss";
 .category-detail-header {
   display: flex;
-  background-color: #fff;
+  background-color: $mainContainerBgColor;
 
   // Phone
   padding: 16px 24px;

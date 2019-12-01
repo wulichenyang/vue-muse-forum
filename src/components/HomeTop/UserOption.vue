@@ -45,21 +45,30 @@
 
         <mu-divider></mu-divider>
 
-        <mu-list-item :to="`/users/${userDetail._id}`"  button>
+        <mu-list-item
+          :to="`/users/${userDetail._id}`"
+          button
+        >
           <mu-list-item-action>
             <mu-icon value="person"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的主页</mu-list-item-title>
         </mu-list-item>
 
-        <mu-list-item button>
+        <mu-list-item
+          :to="`/users/${userDetail._id}/follows`"
+          button
+        >
           <mu-list-item-action>
             <mu-icon value="favorite"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的关注</mu-list-item-title>
         </mu-list-item>
 
-        <mu-list-item button>
+        <mu-list-item
+          :to="`/users/${userDetail._id}/collections`"
+          button
+        >
           <mu-list-item-action>
             <mu-icon value="star"></mu-icon>
           </mu-list-item-action>
@@ -202,7 +211,7 @@ export default class UserOption extends Vue {
     let err, res;
     [err, res] = await To(signOut());
     if (err) {
-      Toast.error(`登出失败：${err}`)
+      Toast.error(`登出失败：${err}`);
       return;
     }
     if (res && res.code === 0) {
@@ -231,6 +240,8 @@ export default class UserOption extends Vue {
     width: $topAvatarSize;
     height: $topAvatarSize;
     background: transparent;
+  }
+  .mu-item-action {
   }
 }
 

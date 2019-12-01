@@ -1,5 +1,6 @@
 <template>
   <mu-container>
+    <!-- 文章详细内容 -->
     <ContainerInner class="post-detail-wrapper">
       <!-- 作者信息 -->
       <section class="user-info">
@@ -22,7 +23,7 @@
         </div>
 
         <!-- 右侧关注按钮 -->
-        <div class="right-wrapper">
+        <!-- <div class="right-wrapper">
           <mu-button
             :flat="ifFollowUser ? false : true"
             small
@@ -32,7 +33,7 @@
           >
             关注
           </mu-button>
-        </div>
+        </div> -->
       </section>
 
       <!-- 文章内容 -->
@@ -46,21 +47,77 @@
 
       </article>
 
-      <!-- 相关分类标签 -->
-      <blockquote>相关文章分类标签</blockquote>
-      <router-link :to="postData && postData.category && `/categories/${postData.category._id}` || ''">
+      <!-- 固定操作栏 -->
+      <section class="tool-bar">
+
+        <!-- 点赞/点赞数 -->
         <mu-button
           flat
-          small
-          class="right-btn empty-btn"
-          color="pink400"
+          color="gray"
+          :class="postData.ifLike ? 'like-btn active' : 'like-btn'"
+          @click.prevent="onLike(
+                postData._id,
+                'post',
+                postData.author._id)"
         >
-          {{postData&& postData.category && postData.category.name}}
+          <mu-icon
+            right
+            value="thumb_up"
+          ></mu-icon>
+          {{formatNumber(postData.likeCount)}}
         </mu-button>
-      </router-link>
+
+        <!-- 评论 -->
+        <mu-button
+          flat
+          color="gray"
+          class="comment-btn"
+          @click.prevent="toComment()"
+        >
+          <mu-icon
+            right
+            color="gray"
+            value="textsms"
+          ></mu-icon>
+          评论
+        </mu-button>
+        <!-- 关注 -->
+        <mu-button
+          flat
+          color="gray"
+        >
+          <mu-icon value="add_box"></mu-icon>
+          关注
+        </mu-button>
+        <!-- 收藏 -->
+        <mu-button
+          flat
+          color="gray"
+        >
+          <mu-icon value="grade"></mu-icon>
+          收藏
+        </mu-button>
+        <!--  -->
+      </section>
+
+      <!-- 相关分类标签 -->
+      <section>
+        <blockquote>相关文章分类标签</blockquote>
+        <router-link :to="postData && postData.category && `/categories/${postData.category._id}` || ''">
+          <mu-button
+            flat
+            small
+            class="right-btn empty-btn"
+            color="pink400"
+          >
+            {{postData && postData.category && postData.category.name}}
+          </mu-button>
+        </router-link>
+      </section>
 
       <!-- 纯文字编辑框（评论） -->
       <TextEditor
+        id="comment-editor"
         title="评论"
         :submitCallback="onSubmitComment"
         :user="userDetail"
@@ -77,6 +134,7 @@
       </section>
 
     </ContainerInner>
+
   </mu-container>
 </template>
 
@@ -103,6 +161,7 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { CommentRawDetail } from "@/assets/js/dataType";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
+import { LikeTargetType } from "@/api/like";
 
 @Component({
   components: {
@@ -144,9 +203,17 @@ export default class PostDetailView extends Vue {
   }
 
   // Lifecycle
-  private mounted() {
+  private async mounted() {
     if (!this.postData || !this.postData._id) {
-      this.initPostDetail();
+      await this.initPostDetail();
+    }
+
+    // 如果是进入评论，滚动至评论
+    // !!必须同步等到数据获取完毕后在执行this.$nextTick
+    if (this.$route.hash === "#comment-editor") {
+      this.$nextTick(() => {
+        this.toComment();
+      });
     }
   }
 
@@ -160,8 +227,8 @@ export default class PostDetailView extends Vue {
     });
   }
 
-  initPostDetail() {
-    this.getPostDetail({
+  async initPostDetail(): Promise<boolean> {
+    return await this.getPostDetail({
       postId: this.postIdNow,
       userId: this.userDetail && this.userDetail._id
     });
@@ -203,12 +270,36 @@ export default class PostDetailView extends Vue {
     }
   }
 
+  onLike(targetId: string, type: LikeTargetType, authorId: string) {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+
+    this.toggleDetailPostLike({
+      targetId,
+      type,
+      authorId
+    });
+
+    console.log("like");
+    return;
+  }
+  toComment() {
+    (document.getElementById("comment-editor") as any).scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+
   @Getter("postDetail") postDetail!: any;
   @Getter("userDetail") userDetail!: any;
   @Getter("commentDetail") commentDetail!: any;
   @Getter("isLogin") isLogin!: boolean | null;
 
-  @Action("toggleCommentLike") toggleCommentLike!: (payload: LikePayload) => Promise<boolean>;
+  @Action("toggleDetailPostLike") toggleDetailPostLike: any;
+  @Action("toggleCommentLike") toggleCommentLike!: (
+    payload: LikePayload
+  ) => Promise<boolean>;
   @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
   @Action("addCommentToPostDetail") addCommentToPostDetail: any;
@@ -224,6 +315,7 @@ export default class PostDetailView extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .post-detail-wrapper {
+  position: relative;
   // 用户信息
   .user-info {
     display: flex;
@@ -257,6 +349,23 @@ export default class PostDetailView extends Vue {
     padding-bottom: 10px;
   }
   main.article-content {
+    min-height: 560px;
+  }
+
+  .tool-bar {
+    width: 100%;
+    bottom: 0;
+    position: sticky;
+    // box-shadow: $toolBarTopShadowColor;
+    border-top: $toolBarTopBorder;
+    background-color: $mainContainerBgColor;
+    padding: 8px 0;
+    .mu-button-wrapper {
+      i {
+        margin-right: 4px;
+        opacity: 0.8;
+      }
+    }
   }
 }
 

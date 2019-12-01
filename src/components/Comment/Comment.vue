@@ -32,7 +32,7 @@
           <mu-button
             small
             flat
-            color="primary"
+            color="gray"
             @click.prevent="onLike(
                 commentDetail._id,
                 'comment',
@@ -56,7 +56,7 @@
           >
             <mu-icon
               right
-              color="secondary"
+              color="gray"
               value="textsms"
             ></mu-icon>
             <!-- {{formatNumber(commentDetail.commentCount)}} -->

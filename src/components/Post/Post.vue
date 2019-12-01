@@ -53,7 +53,10 @@
                 >
               </div>
             </div>
-            <p v-html="postBrief.content" class="content-brief"></p>
+            <p
+              v-html="postBrief.content"
+              class="content-brief"
+            ></p>
           </div>
         </router-link>
         <!-- 底部信息 -->
@@ -78,7 +81,7 @@
             <!-- 点赞/点赞数 -->
             <mu-button
               flat
-              color="primary"
+              color="gray"
               :class="postBrief.ifLike ? 'like-btn active' : 'like-btn'"
               @click.prevent="onLike(
                 postBrief._id,
@@ -100,7 +103,7 @@
             >
               <mu-icon
                 right
-                color="secondary"
+                color="gray"
                 value="textsms"
               ></mu-icon>
               {{formatNumber(postBrief.commentCount)}}
@@ -212,7 +215,14 @@ export default class Post extends Vue {
       return;
     }
 
-    console.log("comment");
+    this.$router.push({
+      name: "post",
+      params: {
+        id: this.postBrief._id
+      },
+      hash: '#comment-editor'
+    });
+
     return;
   }
 

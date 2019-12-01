@@ -27,7 +27,7 @@
           <mu-button
             small
             flat
-            color="primary"
+            color="gray"
             :class="replyDetail.ifLike ? 'like-btn active' : 'like-btn'"
             @click.prevent="onLike(
                 replyDetail._id,
@@ -51,7 +51,7 @@
           >
             <mu-icon
               right
-              color="secondary"
+              color="gray"
               value="textsms"
             ></mu-icon>
           </mu-button>

@@ -133,7 +133,10 @@ export default class UserView extends Vue {
     comments: 1,
     fans: 2,
     follows: 3,
-    collections: 4
+    followPosts: 3,
+    followCategories: 3,
+    followUsers: 3,
+    collections: 4,
   };
 
   // Computed
@@ -147,16 +150,20 @@ export default class UserView extends Vue {
 
   // Lifecycle
   private mounted() {
-    // tab 样式
-    this.activeTabIndex = this.tabIndexMap[
-      (this.$route.path.split("/") as Array<any>).pop()
-    ];
+    // 更新 tab 样式
+    this.updateTabIndex();
 
     // 获取查看任意用户信息
     this.getUserInfoWhenNotSaved();
   }
 
   // Methods
+  updateTabIndex() {
+    this.activeTabIndex = this.tabIndexMap[
+      (this.$route.path.split("/") as Array<any>).pop()
+    ];
+  }
+
   toPage(route: string) {
     this.$router.push({
       name: route
@@ -239,6 +246,10 @@ export default class UserView extends Vue {
     }
     // 获取查看任意用户信息
     this.getUserInfoWhenNotSaved();
+
+    if (oldVal !== val) {
+      this.updateTabIndex();
+    }
   }
 }
 </script>

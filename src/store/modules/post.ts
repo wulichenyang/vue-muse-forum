@@ -202,6 +202,7 @@ const actions = {
 
     // 对某文章的点赞/取消
     context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
+    context.commit(types.TOGGLE_DETAIL_POST_LIKE, { targetId })
 
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleLike({ targetId, type, authorId }));
@@ -209,6 +210,36 @@ const actions = {
     // 更新失败
     if (err) {
       // 取消/恢复 点赞行为
+      context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
+      context.commit(types.TOGGLE_DETAIL_POST_LIKE, { targetId })
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
+
+  // 对某文章详细内容的 点赞/取消 进行更新
+  async toggleDetailPostLike(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: LikeTargetType, authorId: string }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+      authorId
+    } = payload
+
+    // 对某文章的点赞/取消
+    context.commit(types.TOGGLE_DETAIL_POST_LIKE, { targetId })
+    context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleLike({ targetId, type, authorId }));
+
+    // 更新失败
+    if (err) {
+      // 取消/恢复 点赞行为
+      context.commit(types.TOGGLE_DETAIL_POST_LIKE, { targetId })
       context.commit(types.TOGGLE_BRIEF_POST_LIKE, { targetId })
       return false
     }
@@ -261,6 +292,26 @@ const mutations = {
 
       state.postBriefMap[targetId] = {
         ...state.postBriefMap[targetId],
+        likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
+        ifLike: !(ifLikeBefore)
+      }
+    }
+  },
+
+  // 修改某文章详细内容是否点赞
+  [types.TOGGLE_DETAIL_POST_LIKE](state: State, payload: { targetId: string }) {
+    const {
+      targetId
+    } = payload;
+
+    // 有缓存则修改
+    if (state.postDetailMap[targetId]
+    ) {
+      let ifLikeBefore = state.postDetailMap[targetId].ifLike;
+      let beforeLikeCount = state.postDetailMap[targetId].likeCount;
+
+      state.postDetailMap[targetId] = {
+        ...state.postDetailMap[targetId],
         likeCount: ifLikeBefore ? --beforeLikeCount : ++beforeLikeCount,
         ifLike: !(ifLikeBefore)
       }
