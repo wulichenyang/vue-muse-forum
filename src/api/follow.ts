@@ -25,7 +25,7 @@ export const fetchFansOfOtherUser = (targetUserId: string, loginUserId?: string)
   }
 }
 
-// 获取某用户的关注用户列表
+// 获取某用户的关注的用户列表
 // /users/${id}/follows/users?userId=${loginUserId}
 export const fetchFollowUsers = (targetUserId: string, loginUserId?: string): Promise<any> => {
   if(loginUserId) {
@@ -36,12 +36,23 @@ export const fetchFollowUsers = (targetUserId: string, loginUserId?: string): Pr
 }
 
 
-// 获取某用户的关注分类列表
+// 获取某用户的关注的分类列表
 // /users/${id}/follows/categories?userId=${loginUserId}
 export const fetchFollowCategoryList = (targetUserId: string, loginUserId?: string): Promise<any> => {
   if(loginUserId) {
     return get(`/users/${targetUserId}/follows/categories?userId=${loginUserId}`)
   } else {
     return get(`/users/${targetUserId}/follows/categories`)
+  }
+}
+
+
+// 获取某用户的关注的文章列表
+// /users/${id}/follows/categories?userId=${loginUserId}
+export const fetchFollowPostsOfOtherUser = (targetUserId: string, loginUserId?: string): Promise<any> => {
+  if(loginUserId) {
+    return get(`/users/${targetUserId}/follows/posts?userId=${loginUserId}`)
+  } else {
+    return get(`/users/${targetUserId}/follows/posts`)
   }
 }

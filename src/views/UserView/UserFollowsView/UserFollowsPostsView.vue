@@ -1,6 +1,11 @@
 <template>
   <section class="user-follows-posts">
-    posts
+    <Post
+      v-for="postId in userFollowPostIds(otherUserId)"
+      :key="postId"
+      :postBrief="postBriefMap(otherUserId)[postId]"
+      @emitTogglePostLike="onTogglePostLike"
+    />
   </section>
 </template>
 
@@ -14,14 +19,18 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import {} from "@/assets/js/dataType";
+import { UserDetail } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import Post from "@/components/Post/Post.vue";
+import { PostLikePayload } from "@/components/Post/Post.vue";
 
 @Component({
-  components: {}
+  components: {
+    Post
+  }
 })
 export default class UserFollowsPostsView extends Vue {
   // Props
@@ -40,20 +49,45 @@ export default class UserFollowsPostsView extends Vue {
   // Data
 
   // Computed
-  // get computedData() {
-  //   return ' cc' + this.searchValue;
-  // }
+  get otherUserId() {
+    return this.$route.params.id;
+  }
 
   // Lifecycle
-  private mounted() {}
+  private mounted() {
+    this.getUserFollowPostsIfNoCache();
+  }
 
   // Methods
+  async getUserFollowPostsIfNoCache() {
+    if (
+      !this.userFollowPostIds(this.otherUserId) ||
+      this.userFollowPostIds(this.otherUserId).length === 0
+    ) {
+      // Vuex里没有当前文章列表ids，请求数据
+      await this.getUserFollowPostList({
+        userId: this.otherUserId,
+        loginUserId: this.userDetail && this.userDetail._id
+      });
+    }
+  }
 
-  // selectSong(song: Song, index: number): void {
-  //   this.select(song, index);
-  // }
+  onTogglePostLike(payload: PostLikePayload) {
+    const { targetId, type, authorId } = payload;
+    this.toggleBriefPostLike({
+      targetId,
+      type,
+      authorId
+    });
+  }
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("userDetail") userDetail!: UserDetail | null;
+  @Getter("postBriefMap") postBriefMap!: any;
+  @Getter("userFollowPostIds") userFollowPostIds!: any;
+
+  @Action("getUserFollowPostList") getUserFollowPostList: any;
+
+  @Action("toggleBriefPostLike") toggleBriefPostLike: any;
 
   // @Action("getUser") getUser: any;
 

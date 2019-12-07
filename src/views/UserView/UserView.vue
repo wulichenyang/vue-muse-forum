@@ -22,23 +22,47 @@
         <p v-else>TA还没有个人简介哦~</p>
 
         <!-- 关注/私信 按钮 -->
-        <mu-button
-          v-if="otherUser && userDetail && otherUser._id !== userDetail._id || otherUser && !userDetail"
-          small
-          color="primary"
-          class="follow-btn"
-          @click="onToggleFollowUser(
+        <!-- 用户非本人时可见 -->
+        <section v-if="otherUser && userDetail && otherUser._id !== userDetail._id || otherUser && !userDetail">
+          <mu-button
+            v-if="otherUser.ifFollow"
+            small
+            color="primary"
+            class="follow-btn"
+            @click="onToggleFollowUser(
             otherUser._id,
             'user'
           )"
-        >{{otherUser.ifFollow ? '已关注':'关注'}}</mu-button>
+          >
+            <mu-icon value="done"></mu-icon>
+            已关注
+          </mu-button>
+          <mu-button
+            v-else
+            small
+            color="primary"
+            class="follow-btn"
+            @click="onToggleFollowUser(
+            otherUser._id,
+            'user'
+          )"
+          >
+            <mu-icon value="add"></mu-icon>
+            关注
+          </mu-button>
 
-        <mu-button
-          v-if="otherUser && userDetail && otherUser._id !== userDetail._id || otherUser && !userDetail"
-          small
-          color="secondary"
-          @click="onMessageTo"
-        >私信</mu-button>
+          <mu-button
+            small
+            color="secondary"
+            @click="onMessageTo"
+          >
+            <mu-icon
+              value="mail"
+              class="mail-icon"
+            ></mu-icon>
+            私信
+          </mu-button>
+        </section>
       </header>
 
       <!-- TABS -->
@@ -136,7 +160,7 @@ export default class UserView extends Vue {
     followPosts: 3,
     followCategories: 3,
     followUsers: 3,
-    collections: 4,
+    collections: 4
   };
 
   // Computed
@@ -284,6 +308,9 @@ export default class UserView extends Vue {
     }
     .follow-btn {
       margin-right: 12px;
+    }
+    .mail-icon {
+      margin-right: 2px;
     }
   }
 }

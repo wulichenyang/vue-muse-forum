@@ -27,7 +27,7 @@
         >
           <mu-list-item button>
             <mu-list-item-action>
-              <mu-icon value="add_box"></mu-icon>
+              <mu-icon value="vertical_split"></mu-icon>
             </mu-list-item-action>
             <mu-list-item-title>后台管理</mu-list-item-title>
           </mu-list-item>
@@ -60,7 +60,7 @@
           button
         >
           <mu-list-item-action>
-            <mu-icon value="favorite"></mu-icon>
+            <mu-icon value="add_box"></mu-icon>
           </mu-list-item-action>
           <mu-list-item-title>我的关注</mu-list-item-title>
         </mu-list-item>

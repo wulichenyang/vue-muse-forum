@@ -26,6 +26,12 @@ a {
   cursor: pointer;
 }
 
+// 选择时颜色
+::selection {
+  background-color: $primary;
+  color: #fff;
+}
+
 .mu-icon-button {
   width: $iconSize;
   height: $iconSize;
@@ -173,7 +179,9 @@ blockquote {
 }
 
 // 点赞按钮活跃
-.like-btn.active {
+.like-btn.active,
+.follow-btn.active
+{
   background: $mainWrapperBlurPink !important;
   color: $primary !important;
 }

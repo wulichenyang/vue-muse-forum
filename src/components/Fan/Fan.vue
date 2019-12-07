@@ -33,9 +33,13 @@
       </section>
 
       <!-- 右边关注按钮部分 -->
-      <section class="right-wrapper">
+      <!-- 非用户自身时可见 -->
+      <section
+        v-if="userFansBrief && userDetail && getTargetUserId() !== userDetail._id || getTargetUser() && !userDetail"
+        class="right-wrapper"
+      >
         <mu-button
-          v-if="userFansBrief && userDetail && getTargetUserId() !== userDetail._id || getTargetUser() && !userDetail"
+          v-if="userFansBrief.ifFollow"
           small
           color="primary"
           class="follow-btn"
@@ -43,7 +47,23 @@
             getTargetUserId(),
             'user'
           )"
-        >{{userFansBrief.ifFollow ? '已关注':'关注'}}</mu-button>
+        >
+          <mu-icon value="done"></mu-icon>
+          已关注
+        </mu-button>
+        <mu-button
+          v-else
+          small
+          color="primary"
+          class="follow-btn"
+          @click.prevent="onToggleFollowUser(
+            getTargetUserId(),
+            'user'
+          )"
+        >
+          <mu-icon value="add"></mu-icon>
+          关注
+        </mu-button>
       </section>
 
     </article>
@@ -115,7 +135,11 @@ export default class Fan extends Vue {
   }
 
   getTargetUserId() {
-    return this.userFansBrief && this.userFansBrief.user && this.userFansBrief.user._id;
+    return (
+      this.userFansBrief &&
+      this.userFansBrief.user &&
+      this.userFansBrief.user._id
+    );
   }
 
   getTargetUser() {
@@ -167,7 +191,6 @@ export default class Fan extends Vue {
     // Phone
     padding: $postPhonePadding;
     border-radius: $phoneMainWrapperBorderRadius;
-
 
     // 用户信息
     .left-user-brief {

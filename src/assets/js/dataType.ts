@@ -162,6 +162,7 @@ export interface PostDetailCommon extends PostBrief {
   content: string,
   followCount: number,
   state: PostState,
+  ifFollow: boolean,
 }
 
 export interface PostRawDetail extends PostDetailCommon {

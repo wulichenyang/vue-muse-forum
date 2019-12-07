@@ -1,7 +1,5 @@
 <template>
-  <router-link
-    :to="`/categories/${categoryHeaderDetail._id}`"
-  >
+  <router-link :to="`/categories/${categoryHeaderDetail._id}`">
     <header class="category-detail-header larger-item-hover ">
       <!-- 分类图标 -->
       <section class="category-avatar">
@@ -24,8 +22,9 @@
       </section>
 
       <section class="category-follow-btn">
-        <!-- 关注/私信 按钮 -->
+        <!-- 关注按钮 -->
         <mu-button
+          v-if="categoryHeaderDetail.ifFollow"
           small
           color="primary"
           class="follow-btn"
@@ -33,7 +32,23 @@
             categoryHeaderDetail._id,
             'category'
           )"
-        >{{categoryHeaderDetail.ifFollow ? '已关注':'关注'}}</mu-button>
+        >
+          <mu-icon value="done"></mu-icon>
+          已关注
+        </mu-button>
+        <mu-button
+          v-else
+          small
+          color="primary"
+          class="follow-btn"
+          @click.prevent="onToggleFollowCategory(
+            categoryHeaderDetail._id,
+            'category'
+          )"
+        >
+          <mu-icon value="add"></mu-icon>
+          关注
+        </mu-button>
       </section>
 
     </header>

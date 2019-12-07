@@ -19,6 +19,8 @@
             <span>{{dateDiff((new Date(postData.createdAt)).getTime())}}</span>
             <!-- 阅读次数 -->
             <span>{{formatNumber(postData.viewCount)}}次阅读</span>
+            <!-- 关注数 -->
+            <span>{{formatNumber(postData.followCount)}}人关注</span>
           </p>
         </div>
 
@@ -53,6 +55,7 @@
         <!-- 点赞/点赞数 -->
         <mu-button
           flat
+          small
           color="gray"
           :class="postData.ifLike ? 'like-btn active' : 'like-btn'"
           @click.prevent="onLike(
@@ -67,9 +70,49 @@
           {{formatNumber(postData.likeCount)}}
         </mu-button>
 
+        <!-- 关注 -->
+
+        <mu-button
+          flat
+          small
+          color="gray"
+          :class="postData.ifFollow ? 'follow-btn active' : 'follow-btn'"
+          @click.prevent="onToggleFollowPost(
+            postData._id,
+            'post')"
+          v-if="postData.ifFollow"
+        >
+
+          <mu-icon value="done"></mu-icon>
+          已关注
+        </mu-button>
+        <mu-button
+          flat
+          small
+          color="gray"
+          :class="postData.ifFollow ? 'follow-btn active' : 'follow-btn'"
+          @click.prevent="onToggleFollowPost(
+            postData._id,
+            'post')"
+          v-else
+        >
+          <mu-icon value="add_box"></mu-icon>关注
+        </mu-button>
+
+        <!-- 收藏 -->
+        <mu-button
+          flat
+          small
+          color="gray"
+        >
+          <mu-icon value="grade"></mu-icon>
+          收藏
+        </mu-button>
+
         <!-- 评论 -->
         <mu-button
           flat
+          small
           color="gray"
           class="comment-btn"
           @click.prevent="toComment()"
@@ -81,23 +124,7 @@
           ></mu-icon>
           评论
         </mu-button>
-        <!-- 关注 -->
-        <mu-button
-          flat
-          color="gray"
-        >
-          <mu-icon value="add_box"></mu-icon>
-          关注
-        </mu-button>
-        <!-- 收藏 -->
-        <mu-button
-          flat
-          color="gray"
-        >
-          <mu-icon value="grade"></mu-icon>
-          收藏
-        </mu-button>
-        <!--  -->
+
       </section>
 
       <!-- 相关分类标签 -->
@@ -162,6 +189,7 @@ import To from "@/utils/to";
 import { CommentRawDetail } from "@/assets/js/dataType";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 import { LikeTargetType } from "@/api/like";
+import { FollowTargetType } from "@/api/follow";
 
 @Component({
   components: {
@@ -218,6 +246,17 @@ export default class PostDetailView extends Vue {
   }
 
   // Methods
+  onToggleFollowPost(targetId: string, type: FollowTargetType) {
+    if (!this.isLogin) {
+      this.openLoginDialog();
+      return;
+    }
+    this.togglePostDetailFollow({
+      targetId,
+      type
+    });
+  }
+
   onToggleCommentLike(payload: CommentLikePayload) {
     const { targetId, type, authorId } = payload;
     this.toggleCommentLike({
@@ -296,6 +335,7 @@ export default class PostDetailView extends Vue {
   @Getter("commentDetail") commentDetail!: any;
   @Getter("isLogin") isLogin!: boolean | null;
 
+  @Action("togglePostDetailFollow") togglePostDetailFollow: any;
   @Action("toggleDetailPostLike") toggleDetailPostLike: any;
   @Action("toggleCommentLike") toggleCommentLike!: (
     payload: LikePayload
@@ -360,6 +400,9 @@ export default class PostDetailView extends Vue {
     border-top: $toolBarTopBorder;
     background-color: $mainContainerBgColor;
     padding: 8px 0;
+    button {
+      margin-right: 6px;
+    }
     .mu-button-wrapper {
       i {
         margin-right: 4px;

@@ -3,13 +3,22 @@ import * as types from "../mutation-types"
 import {
   fetchPostListByCategory,
   fetchPostDetail,
-  fetchPostsOfOtherUser
+  fetchPostsOfOtherUser,
 } from '@/api/post';
+import {
+  fetchFollowPostsOfOtherUser,
+} from "@/api/follow"
+
 import {
   toggleLike,
   LikeTargetType,
-  LikePayload
+  LikePayload,
 } from "@/api/like"
+import {
+  FollowPayload,
+  FollowTargetType,
+  toggleFollow
+} from '@/api/follow'
 import To from '@/utils/to'
 import {
   PostBrief,
@@ -40,8 +49,11 @@ export interface PostDetailMap {
 export interface State {
   // 各个文章分类下对应的文章ids
   categoryToPostMapIds: CategoryToPostIdsMap,
-  // 各个用户所有发布的文章ids
+
+  // 某个用户所有发布的文章ids
   userToPostMapIds: UserToPostIdsMap,
+  // 某个用户所有关注的文章ids
+  userToFollowPostMapIds: UserToPostIdsMap,
 
   // 文章列表项简略内容表
   postBriefMap: PostBriefMap,
@@ -52,8 +64,11 @@ export interface State {
 const initState: State = {
   // 各个文章分类下对应的文章ids
   categoryToPostMapIds: <CategoryToPostIdsMap>{},
-  // 各个用户所有发布的文章ids
+
+  // 某个用户所有发布的文章ids
   userToPostMapIds: <UserToPostIdsMap>{},
+  // 某个用户所有关注的文章ids
+  userToFollowPostMapIds: <UserToPostIdsMap>{},
 
   // 文章列表项简略内容表
   postBriefMap: <PostBriefMap>{},
@@ -87,7 +102,7 @@ const getters = {
     return (state.categoryToPostMapIds[categoryId])
   },
 
-  // 某用户下的文章ids
+  // 某用户发表的文章ids
   userPostIds: (state: State) => (userId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
     // 初始化 userToPostMapIds 里对应id的映射对象
@@ -96,6 +111,18 @@ const getters = {
     }
     return (state.userToPostMapIds[userId])
   },
+  
+
+  // 某用户关注的文章ids
+  userFollowPostIds: (state: State) => (userId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    // 初始化 userToFollowPostMapIds 里对应id的映射对象
+    if (!state.userToFollowPostMapIds[userId]) {
+      Vue.set(state.userToFollowPostMapIds, userId, []);
+    }
+    return (state.userToFollowPostMapIds[userId])
+  },
+
 
   // 文章详细信息map
   postDetailMap: (state: State) => {
@@ -138,7 +165,7 @@ const actions = {
     }
   },
 
-  // 获取某用户的文章列表信息
+  // 获取某用户发表的文章列表信息
   async getUserPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
     const { userId, loginUserId } = payload;
     let err, res: Ajax.AjaxResponse;
@@ -163,6 +190,32 @@ const actions = {
     }
   },
 
+  // 获取某用户关注的文章列表信息
+  async getUserFollowPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
+    const { userId, loginUserId } = payload;
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(fetchFollowPostsOfOtherUser(userId, loginUserId));
+
+    // 获取失败
+    if (err) {
+      return false
+    }
+
+    if (res && res.code === 0) {
+      // 获取成功
+      let postBriefMap: PostBriefMap = {};
+      let postIds: string[] = (res.data as Array<PostBrief>).map((x: PostBrief) => {
+        postBriefMap[x._id] = x;
+        return x._id
+      });
+
+      context.commit(types.SET_USER_FOLLOW_POST_IDS, { userId, postIds })
+      context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
+      return true
+    }
+  },
+
+  // 获取文章详细信息
   async getPostDetail(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { postId: string, userId?: string }) {
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(fetchPostDetail(payload.postId, payload.userId));
@@ -249,6 +302,32 @@ const actions = {
     }
   },
 
+  // 用户对某分类进行关注和取消
+  async togglePostDetailFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
+    // 点赞
+    const {
+      targetId,
+      type,
+    } = payload
+
+    // 对某文章详细信息的关注
+    context.commit(types.TOGGLE_POST_FOLLOW, { targetId })
+
+    let err, res: Ajax.AjaxResponse;
+    [err, res] = await To(toggleFollow({ targetId, type }));
+
+    // 更新失败
+    if (err) {
+      // 取消对某文章详细信息的关注
+      context.commit(types.TOGGLE_POST_FOLLOW, { targetId })
+
+      return false
+    }
+
+    if (res && res.code === 0) {
+      return true
+    }
+  },
 }
 
 // mutations
@@ -266,7 +345,7 @@ const mutations = {
     }
   },
 
-  // 添加某用户下文章列表 ids
+  // 添加某用户发表的文章列表 ids
   [types.SET_USER_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
     // 初始化数组对象
     if (!state.userToPostMapIds[payload.userId]) {
@@ -274,6 +353,18 @@ const mutations = {
     }
 
     state.userToPostMapIds[payload.userId] = [
+      ...payload.postIds
+    ]
+  },
+
+  // 添加某用户关注的文章列表 ids
+  [types.SET_USER_FOLLOW_POST_IDS](state: State, payload: { userId: string, postIds: string[] }) {
+    // 初始化数组对象
+    if (!state.userToFollowPostMapIds[payload.userId]) {
+      state.userToFollowPostMapIds[payload.userId] = []
+    }
+
+    state.userToFollowPostMapIds[payload.userId] = [
       ...payload.postIds
     ]
   },
@@ -359,6 +450,29 @@ const mutations = {
         ...state.postDetailMap[postId],
         commentCount: state.postDetailMap[postId].commentCount + 1
       }
+    }
+  },
+
+  // 修改对某文章是否关注
+  [types.TOGGLE_POST_FOLLOW](state: State, payload: { targetId: string }) {
+    const {
+      targetId,
+    } = payload;
+
+    // 有缓存则修改
+    if (state.postDetailMap[targetId] && state.postDetailMap[targetId]._id) {
+      let ifFollowBefore = state.postDetailMap[targetId].ifFollow;
+      let followCount = state.postDetailMap[targetId].followCount;
+
+      state.postDetailMap = {
+        ...state.postDetailMap,
+        [targetId]: {
+          ...state.postDetailMap[targetId],
+          followCount: ifFollowBefore ? --followCount : ++followCount,
+          ifFollow: !(ifFollowBefore),
+        }
+      }
+
     }
   },
 
