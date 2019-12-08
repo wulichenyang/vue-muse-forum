@@ -111,7 +111,7 @@ const getters = {
     }
     return (state.userToPostMapIds[userId])
   },
-  
+
 
   // 某用户关注的文章ids
   userFollowPostIds: (state: State) => (userId: string) => {
@@ -303,24 +303,29 @@ const actions = {
   },
 
   // 用户对某分类进行关注和取消
-  async togglePostDetailFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType }) {
+  async togglePostDetailFollow(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { targetId: string, type: FollowTargetType, userId: string }) {
     // 点赞
     const {
       targetId,
       type,
+      userId,
     } = payload
 
     // 对某文章详细信息的关注
     context.commit(types.TOGGLE_POST_FOLLOW, { targetId })
+    // 修改某用户关注的文章列表某项是否关注
+    context.commit(types.TOGGLE_USER_FOLLOW_POST_FOLLOW, { userId, targetId })
 
     let err, res: Ajax.AjaxResponse;
     [err, res] = await To(toggleFollow({ targetId, type }));
 
     // 更新失败
     if (err) {
+
       // 取消对某文章详细信息的关注
       context.commit(types.TOGGLE_POST_FOLLOW, { targetId })
-
+      // 取消某用户关注的文章列表某项是否关注
+      context.commit(types.TOGGLE_USER_FOLLOW_POST_FOLLOW, { userId, targetId })
       return false
     }
 
@@ -453,7 +458,7 @@ const mutations = {
     }
   },
 
-  // 修改对某文章是否关注
+  // 修改对某文章详细信息是否关注
   [types.TOGGLE_POST_FOLLOW](state: State, payload: { targetId: string }) {
     const {
       targetId,
@@ -474,6 +479,37 @@ const mutations = {
       }
 
     }
+  },
+
+  // 修改某用户关注的文章列表某项是否关注
+  [types.TOGGLE_USER_FOLLOW_POST_FOLLOW](state: State, payload: { userId: string, targetId: string }) {
+    const {
+      userId,
+      targetId
+    } = payload;
+
+    // 没有缓存则不用处理
+    if (state.userToFollowPostMapIds[userId] === undefined) {
+      // state.userToFollowPostMapIds[userId] = []
+      return;
+    } else {
+      let index = state.userToFollowPostMapIds[userId].indexOf(targetId);
+      if (index !== -1) {
+        // 删除postId
+        state.userToFollowPostMapIds[userId].splice(index, 1)
+      } else {
+        // 添加postId
+        state.userToFollowPostMapIds[userId] = [
+          targetId,
+          ...state.userToFollowPostMapIds[userId]
+        ]
+      }
+
+    }
+
+
+
+
   },
 
   // // 添加回复到 postdetailMap

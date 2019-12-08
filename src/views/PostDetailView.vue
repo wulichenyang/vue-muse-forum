@@ -79,7 +79,9 @@
           :class="postData.ifFollow ? 'follow-btn active' : 'follow-btn'"
           @click.prevent="onToggleFollowPost(
             postData._id,
-            'post')"
+            'post',
+            userDetail._id
+            )"
           v-if="postData.ifFollow"
         >
 
@@ -93,7 +95,9 @@
           :class="postData.ifFollow ? 'follow-btn active' : 'follow-btn'"
           @click.prevent="onToggleFollowPost(
             postData._id,
-            'post')"
+            'post',
+            userDetail._id
+            )"
           v-else
         >
           <mu-icon value="add_box"></mu-icon>关注
@@ -246,14 +250,15 @@ export default class PostDetailView extends Vue {
   }
 
   // Methods
-  onToggleFollowPost(targetId: string, type: FollowTargetType) {
+  onToggleFollowPost(targetId: string, type: FollowTargetType, userId?: string) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
     }
     this.togglePostDetailFollow({
       targetId,
-      type
+      type,
+      userId
     });
   }
 
