@@ -59,6 +59,16 @@ export const categoryBriefRules: any = [
   }
 ];
 
+// 个性签名
+export const userBriefRules: any = [
+  {
+    validate: (val: string) => {
+      return val.trim().length < 71;
+    },
+    message: "个性签名长度不超过70个字符"
+  }
+];
+
 // 文章
 export const postTitleRules: any = [
   { validate: (val: string) => !!val, message: "请填写标题" },

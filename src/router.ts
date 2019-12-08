@@ -51,7 +51,7 @@ const router = new Router({
       path: '/search',
       name: 'search',
       // route level code-splitting
-      // this generates a separate chunk (posts.[hash].js) for this route
+      // this generates a separate chunk (search.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "searchResultView" */ './views/SearchResultView.vue'),
     },
@@ -112,6 +112,36 @@ const router = new Router({
       ]
     },
 
+    // 用户设置界面
+    {
+      path: '/user/settings',
+      name: 'user',
+      // route level code-splitting
+      // this generates a separate chunk (users.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "UserSettingView" */ './views/UserSettingView/UserSettingView.vue'),
+      redirect: '/user/settings/profile',
+      children: [
+        {
+          path: 'profile',
+          name: 'userSettingProfile',
+          // route level code-splitting
+          // this generates a separate chunk (UserSettingView.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "UserSettingProfile" */ './views/UserSettingView/UserSettingProfile.vue'),
+        },
+        {
+          path: 'password',
+          name: 'userSettingPassword',
+          // route level code-splitting
+          // this generates a separate chunk (categoryAdd.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import(/* webpackChunkName: "UserSettingPassword" */ './views/UserSettingView/UserSettingPassword.vue'),
+        },
+
+      ]
+    },
+
     // 文章分类详细页面
     {
       path: '/categories/:id',
@@ -122,7 +152,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "categoryView" */ './views/CategoryView.vue'),
     },
 
-    
+
     /***********************************************************
      * 管理员可访问页面
      * ********************************************************/
@@ -211,7 +241,8 @@ router.beforeEach(async (to, from, next) => {
     (router.app.$options.store as any).dispatch('clearUser')
     // 需要登录权限
     // 这些页面不可访问，提示登录，跳转主页面
-    if (to.name === 'setting'
+    if (to.name === 'userSettingProfile'
+      || to.name === 'userSettingPassword'
       || to.name === 'newPost'
       || to.name === 'notice'
       || to.name === 'message'

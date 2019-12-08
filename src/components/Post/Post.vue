@@ -338,10 +338,13 @@ export default class Post extends Vue {
         justify-content: space-between;
         align-items: center;
         .bottom-left {
-          // Phone
-          max-width: 210px;
+          // // Phone
+          // max-width: 210px;
         }
         .bottom-right {
+          // Phone
+          display: none;
+
           .mu-button {
             height: 27px;
           }
@@ -397,9 +400,10 @@ export default class Post extends Vue {
         }
         .bottom-wrapper {
           .bottom-left {
-            max-width: initial;
+            // max-width: initial;
           }
           .bottom-right {
+            display: block;
             .like-btn,
             .comment-btn {
               min-width: 64px;

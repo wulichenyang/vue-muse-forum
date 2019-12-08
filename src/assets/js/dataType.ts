@@ -100,6 +100,15 @@ export interface UserDetail extends OtherUserDetail {
   createAt?: Date,
 }
 
+export interface UserSettingInfo extends UserBrief{
+  // 用户性别
+  gender: Gender,
+  // 用户简介
+  brief: string,
+  // 用户出生日期
+  birth: Date,
+}
+
 export enum SignType {
   SIGNUP = 'signup',
   SIGNIN = 'signin',

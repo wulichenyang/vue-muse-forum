@@ -7,7 +7,7 @@
           class="avatar-btn"
           fab
         >
-          <mu-avatar :size="size">
+          <mu-avatar>
             <img :src="categoryHeaderDetail.avatar">
           </mu-avatar>
         </mu-button>
@@ -90,7 +90,7 @@ export default class CategoryDetailHeader extends Vue {
   // Data
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
-  size: number = 80;
+  // size: number = 80;
   // Computed
   // get computedData() {
   //   return ' cc' + this.searchValue;
@@ -138,6 +138,11 @@ export default class CategoryDetailHeader extends Vue {
     display: flex;
     align-items: center;
     margin-right: 20px;
+    .mu-avatar {
+      // Phone
+      width: 48px !important;
+      height: 48px !important;
+    }
   }
   .category-brief {
     flex: 1;
@@ -162,6 +167,12 @@ export default class CategoryDetailHeader extends Vue {
 @media screen and (min-width: 576px) {
   .category-detail-header {
     padding: 24px 36px;
+    .category-avatar {
+      .mu-avatar {
+        width: 80px !important;
+        height: 80px !important;
+      }
+    }
   }
 }
 // @media screen and (min-width: 768px) {

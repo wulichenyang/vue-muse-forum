@@ -194,6 +194,11 @@ blockquote {
   margin-top: 20px;
 }
 
+// 弹出框背景色修改
+.mu-picker {
+  color: $primary !important;
+}
+
 @media screen and (min-width: 576px) {
   .comment-list-wrapper {
     margin-left: 20px;

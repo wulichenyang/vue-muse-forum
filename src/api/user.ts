@@ -22,6 +22,14 @@ export interface SignInUser {
   password: string,
 }
 
+export interface UpdateUserSettingPayload {
+  // avatar: this.form.avatar,
+  nickname: string,
+  brief: string,
+  birth: string,
+  gender: number,
+}; 
+
 export const fetchUserself = (): Promise<any> => {
   return get('/userself')
 }
@@ -51,6 +59,12 @@ export const signIn = (by: ByType, data: SignInUser): Promise<any> => {
 export const signOut = (): Promise<any> => {
   return get('/signout')
 }
+
+
+export const updateUserSetting = ({ nickname, brief, birth, gender }: UpdateUserSettingPayload): Promise<any> => {
+  return put(`/setting`, { nickname, brief, birth, gender })
+}
+
 // export const loginByPhone = (phone: string, password: string): Promise<any> => {
 //   return get(`/login/cellphone?phone=${phone}&password=${password}`)
 // }

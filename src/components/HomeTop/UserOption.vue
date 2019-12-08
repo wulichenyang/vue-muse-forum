@@ -77,7 +77,10 @@
 
         <mu-divider></mu-divider>
 
-        <mu-list-item button>
+        <mu-list-item
+          :to="`/user/settings`"
+          button
+        >
           <mu-list-item-action>
             <mu-icon value="settings"></mu-icon>
           </mu-list-item-action>
