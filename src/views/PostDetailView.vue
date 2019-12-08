@@ -250,7 +250,11 @@ export default class PostDetailView extends Vue {
   }
 
   // Methods
-  onToggleFollowPost(targetId: string, type: FollowTargetType, userId?: string) {
+  onToggleFollowPost(
+    targetId: string,
+    type: FollowTargetType,
+    userId?: string
+  ) {
     if (!this.isLogin) {
       this.openLoginDialog();
       return;
