@@ -1,3 +1,6 @@
+// bind polyfill 兼容IE8
+// import '@/assets/js/bind-polyfill.js'
+// import "@babel/polyfill"; // 会自动引用
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';

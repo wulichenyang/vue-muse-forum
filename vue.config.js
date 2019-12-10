@@ -55,5 +55,7 @@ module.exports = {
     if (process.env.NODE_ENV === 'production') {
       config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
     }
-  }
+  },
+  // 默认情况下 babel-loader 会忽略所有 node_modules 中的文件。如果你想要通过 Babel 显式转译一个依赖，可以在这个选项中列出来。
+  transpileDependencies: ['muse-ui', 'node-rsa', 'safer-buffer'] // 增加babel编译配置选项，编译ES6，添加新API在IE9等低版本环境下
 }
