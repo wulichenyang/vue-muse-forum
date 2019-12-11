@@ -2,6 +2,7 @@
 @import "./assets/css/var.scss";
 // 掘金文章样式
 @import "./assets/css/article-content.css";
+@import "./assets/css/html5-polyfill.css";
 
 html {
   height: 100%;
@@ -10,6 +11,10 @@ html {
 body,
 html {
   background: $mainBodyBgColor !important;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;               
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: "kern", "liga", "clig", "calt";
 }
 
 h1,
@@ -35,6 +40,10 @@ a {
 .mu-icon-button {
   width: $iconSize;
   height: $iconSize;
+}
+
+.material-icons {
+  font-feature-settings: 'liga';
 }
 
 // 修复muse-ui hover时背景颜色有变化

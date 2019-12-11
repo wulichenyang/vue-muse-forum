@@ -6,7 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <!-- <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css"/> -->
+
+  <!-- <link rel="stylesheet" href="public/fonts/material-icons/material-icons.css"> -->
+  <!-- material-design-icons css，支持IE10 -->
+  <link rel="stylesheet" type="text/css"
+    href="http://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css" />
   <title>缪斯</title>
 </head>
 
@@ -17,54 +21,15 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
-  <script>
-    // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
-    if (!Array.prototype.findIndex) {
-      Object.defineProperty(Array.prototype, 'findIndex', {
-        value: function (predicate) {
-          // 1. Let O be ? ToObject(this value).
-          if (this == null) {
-            throw new TypeError('"this" is null or not defined');
-          }
 
-          var o = Object(this);
+  <!-- Polyfill for findIndex -->
+  <script type='text/javascript' src="<%= BASE_URL %>static/js/findIndex-polyfill.js"></script>
 
-          // 2. Let len be ? ToLength(? Get(O, "length")).
-          var len = o.length >>> 0;
-
-          // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-          if (typeof predicate !== 'function') {
-            throw new TypeError('predicate must be a function');
-          }
-
-          // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-          var thisArg = arguments[1];
-
-          // 5. Let k be 0.
-          var k = 0;
-
-          // 6. Repeat, while k < len
-          while (k < len) {
-            // a. Let Pk be ! ToString(k).
-            // b. Let kValue be ? Get(O, Pk).
-            // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-            // d. If testResult is true, return k.
-            var kValue = o[k];
-            if (predicate.call(thisArg, kValue, k, o)) {
-              return k;
-            }
-            // e. Increase k by 1.
-            k++;
-          }
-
-          // 7. Return -1.
-          return -1;
-        },
-        configurable: true,
-        writable: true
-      });
-    }
-  </script>
+  <!-- 解决IE9以下不支持的HTML5标签和CSS3媒体查询 -->
+  <!--[if lt IE 9]>
+　　<script src="//cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+ 　 <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<![endif]-->
 
 </body>
 

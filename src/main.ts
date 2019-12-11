@@ -1,6 +1,8 @@
 // bind polyfill 兼容IE8
-// import '@/assets/js/bind-polyfill.js'
 // import "@babel/polyfill"; // 会自动引用
+
+// 解决IE9不能支持flex
+// import "@/assets/js/flexibility.js"
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
