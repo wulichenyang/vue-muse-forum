@@ -115,7 +115,7 @@ const router = new Router({
     // 用户设置界面
     {
       path: '/user/settings',
-      name: 'user',
+      name: 'userSettings',
       // route level code-splitting
       // this generates a separate chunk (users.[hash].js) for this route
       // which is lazy-loaded when the route is visited.

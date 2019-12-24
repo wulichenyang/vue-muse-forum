@@ -11,6 +11,21 @@
           :size="120"
         />
 
+        <!-- 编辑资料按钮 -->
+        <router-link
+          v-if="userDetail && userDetail._id && otherUser && otherUser._id === userDetail._id"
+          to="/user/settings"
+        >
+          <mu-button
+            flat
+            small
+            class="edit-setting-btn empty-btn"
+            color="pink400"
+          >
+            编辑资料
+          </mu-button>
+        </router-link>
+
         <!-- 昵称 -->
         <h3>
           {{otherUser && otherUser.nickname}}
@@ -290,6 +305,7 @@ export default class UserView extends Vue {
 
   text-align: center;
   .user-header {
+    position: relative;
     // Phone
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -302,10 +318,16 @@ export default class UserView extends Vue {
       margin-top: -20px;
       border: 2px solid #fff;
     }
+    .edit-setting-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
     h3 {
     }
     p {
     }
+
     .follow-btn {
       margin-right: 12px;
     }

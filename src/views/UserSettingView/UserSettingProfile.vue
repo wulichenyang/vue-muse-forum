@@ -1,6 +1,8 @@
 <template>
   <section class="user-setting-profile">
     <h2>个人资料</h2>
+
+    <!-- 个人资料表单 -->
     <mu-form
       ref="form"
       :model="form"
@@ -8,6 +10,16 @@
       label-position="top"
       label-width="100"
     >
+
+      <!-- 头像上传 -->
+      <mu-form-item :label="form.avatar === '' ? '上传头像' : '更新头像'">
+        <UploadPhoto
+          v-model="form.avatar"
+          :ifSubmit="ifSubmit"
+          prefix="avatar"
+        />
+      </mu-form-item>
+
       <!-- 昵称 -->
       <mu-form-item
         prop="nickname"
@@ -89,9 +101,12 @@ import { UpdateUserSettingPayload } from "@/api/user";
 import Toast from "muse-ui-toast";
 import { updateUserSetting } from "@/api/user";
 import To from "@/utils/to";
+import UploadPhoto from "@/components/Upload/UploadPhoto.vue";
 
 @Component({
-  components: {}
+  components: {
+    UploadPhoto
+  }
 })
 export default class UserSettingProfile extends Vue {
   // Props
@@ -112,11 +127,15 @@ export default class UserSettingProfile extends Vue {
   // 验证表单正则
   nicknameRules: any = nicknameRules;
   userBriefRules: any = userBriefRules;
+
+  // 是否已提交过表单
+  ifSubmit: boolean = false;
   // 提交状态标志
   submitting: boolean = false;
 
   // 表单数据
   form: any = {
+    avatar: "",
     nickname: "",
     brief: "",
     birth: undefined,
@@ -139,6 +158,7 @@ export default class UserSettingProfile extends Vue {
   setForm(userSettingInfo: UserSettingInfo) {
     console.log(userSettingInfo);
     this.form = {
+      avatar: userSettingInfo.avatar,
       nickname: userSettingInfo.nickname,
       brief: userSettingInfo.brief,
       birth: userSettingInfo.birth,
@@ -156,18 +176,18 @@ export default class UserSettingProfile extends Vue {
     if (isCheckOk) {
       // 开启提交中标志，设置暂时已提交状态
       this.submitting = true;
-      // this.ifSubmit = true;
+      this.ifSubmit = true;
 
       let userSettingPayload: UpdateUserSettingPayload;
       userSettingPayload = {
-        // avatar: this.form.avatar,
+        avatar: this.form.avatar,
         nickname: this.form.nickname,
         brief: this.form.brief,
         birth: this.form.birth,
         gender: this.form.gender
       };
 
-      // 修改分类
+      // 修改用户信息
       let err, res;
       [err, res] = await To(updateUserSetting(userSettingPayload));
 
@@ -175,14 +195,14 @@ export default class UserSettingProfile extends Vue {
       if (err) {
         // 关闭提交中标志，设置未提交标志
         this.submitting = false;
-        // this.ifSubmit = false;
+        this.ifSubmit = false;
         return;
       }
 
       // 修改成功，设置已提交显示成功信息，关闭提交中标志
       if (res && res.code === 0) {
         this.submitting = false;
-        // this.ifSubmit = true;
+        this.ifSubmit = true;
         Toast.message("修改成功");
 
         // 更新 user 信息
