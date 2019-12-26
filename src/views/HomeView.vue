@@ -119,17 +119,21 @@ export default class HomeView extends Vue {
 .home-wrapper {
   .category-tab-wrapper {
     margin-bottom: 20px;
+    // Phone
+    display: none;
   }
   .post-main-content {
     padding: 0 !important;
   }
 }
 
-// @media screen and (min-width: 576px) {
-//   .home-wrapper {
-//     max-width: 540px;
-//   }
-// }
+@media screen and (min-width: 576px) {
+  .home-wrapper {
+    .category-tab-wrapper {
+      display: block;
+    }
+  }
+}
 // @media screen and (min-width: 768px) {
 //   .home-wrapper {
 //     max-width: 720px;

@@ -27,6 +27,7 @@ import {
   CommentRawDetail,
   CommentDetail,
   ReplyDetail,
+  PageRequestPayload,
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
@@ -141,10 +142,10 @@ const getters = {
 // actions
 const actions = {
   // 获取某分类下的文章列表信息
-  async getPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string, userId?: string }) {
-    const { categoryId, userId } = payload;
+  async getPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string, userId?: string, pageRequestPayload: PageRequestPayload }) {
+    const { categoryId, userId, pageRequestPayload } = payload;
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchPostListByCategory(categoryId, userId));
+    [err, res] = await To(fetchPostListByCategory(categoryId, pageRequestPayload, userId));
 
     // 获取失败
     if (err) {
@@ -153,16 +154,29 @@ const actions = {
 
     if (res && res.code === 0) {
       // 获取成功
-      let postBriefMap: PostBriefMap = {};
-      let postIds: string[] = (res.data as Array<PostBrief>).map((x: PostBrief) => {
-        postBriefMap[x._id] = x;
-        return x._id
-      });
-
-      context.commit(types.SET_POST_IDS, { categoryId, postIds })
-      context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
-      return true
+      if(res.data.noMore) {
+        return 'noMore'
+      } else {
+        let postBriefMap: PostBriefMap = {};
+        let postIds: string[] = (res.data.postBriefList as Array<PostBrief>).map((x: PostBrief) => {
+          postBriefMap[x._id] = x;
+          return x._id
+        });
+        
+        context.commit(types.SET_POST_IDS, { categoryId, postIds })
+        context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
+        return true
+      }
     }
+  },
+
+  // 刷新某分类下的文章列表信息
+  async refreshPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string, userId?: string, pageRequestPayload: PageRequestPayload }) {
+    const {
+      categoryId
+    } = payload;
+    context.commit(types.RESET_POST_LIST_IDS, { categoryId })
+    context.dispatch('getPostList', payload)
   },
 
   // 获取某用户发表的文章列表信息
@@ -435,8 +449,15 @@ const mutations = {
     }
 
     state.categoryToPostMapIds[payload.categoryId] = [
+      ...state.categoryToPostMapIds[payload.categoryId],
       ...payload.postIds
     ]
+  },
+
+  // 添加某分类下文章列表 ids
+  [types.RESET_POST_LIST_IDS](state: State, payload: { categoryId: string }) {
+    // 初始化数组对象
+    state.categoryToPostMapIds[payload.categoryId] = []
   },
 
   // 添加评论 id 到 postdetailMap

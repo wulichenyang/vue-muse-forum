@@ -62,8 +62,9 @@ export default class SignPortal extends Vue {
 .sign-portal {
   display: flex;
   align-items: center;
-  margin-left: 36px;
   margin-right: 24px;
+  // phone
+  margin-left: 10px;
   .mu-flat-button {
     min-width: 45px;
   }
@@ -79,10 +80,13 @@ export default class SignPortal extends Vue {
   .sign-up {
     color: $linkFontColor;
   }
-  
+
   @media screen and (min-width: 576px) {
     .mu-button {
       border-radius: $mainWrapperBorderRadius;
+    }
+    .sign-portal {
+      margin-left: 36px;
     }
   }
 }

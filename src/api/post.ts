@@ -4,6 +4,8 @@ import {
   put,
 } from "./http"
 
+import { PageRequestPayload } from '@/assets/js/dataType'
+
 export type PostState = 'published' | 'draft'
 
 export interface PostPayload {
@@ -24,11 +26,11 @@ export const addPost = ({ categoryId, title, content, state }: PostPayload): Pro
   return post(`/categories/${categoryId}/posts`, { title, content, state })
 }
 
-export const fetchPostListByCategory = (categoryId: string, userId?: string): Promise<any> => {
+export const fetchPostListByCategory = (categoryId: string, pageRequestPayload: PageRequestPayload, userId?: string): Promise<any> => {
   if (userId) {
-    return get(`/categories/${categoryId}/posts?userId=${userId}`)
+    return get(`/categories/${categoryId}/posts?userId=${userId}&page=${pageRequestPayload.page}`)
   } else {
-    return get(`/categories/${categoryId}/posts`)
+    return get(`/categories/${categoryId}/posts?page=${pageRequestPayload.page}`)
   }
 }
 
@@ -45,7 +47,7 @@ export const fetchAllPostList = (): Promise<any> => {
 }
 
 export const fetchPostsOfOtherUser = (userId: string, loginUserId?: string): Promise<any> => {
-  if(loginUserId) {
+  if (loginUserId) {
     return get(`/users/${userId}/posts?userId=${loginUserId}`)
   } else {
     return get(`/users/${userId}/posts`)

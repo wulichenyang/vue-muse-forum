@@ -123,14 +123,8 @@ export default class UserCommentsView extends Vue {
       background: $mainContainerBgColor;
 
       margin-bottom: 0;
-      transition: 0.3s all;
       // Phone
       padding: $postPhonePadding;
-      &:hover {
-        transform: scale(1.01);
-        box-shadow: $postBoxShadowColor;
-        transition: 0.3s all;
-      }
       strong {
         display: inline-block;
         margin-top: 5px;
@@ -143,7 +137,12 @@ export default class UserCommentsView extends Vue {
   .user-comments {
     .user-comment-list-wrapper {
       .comment-wrapper {
-        
+        transition: 0.3s all;
+        &:hover {
+          transform: scale(1.01);
+          box-shadow: $postBoxShadowColor;
+          transition: 0.3s all;
+        }
       }
     }
   }

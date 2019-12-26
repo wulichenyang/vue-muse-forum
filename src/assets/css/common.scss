@@ -12,7 +12,7 @@ body,
 html {
   background: $mainBodyBgColor !important;
   text-rendering: optimizeLegibility;
-  font-kerning: normal;               
+  font-kerning: normal;
   font-variant-ligatures: common-ligatures contextual;
   font-feature-settings: "kern", "liga", "clig", "calt";
 }
@@ -52,22 +52,31 @@ a {
   background-color: transparent !important;
 }
 
-.larger-on-hover {
-  transition: 0.3s all;
-  &:hover {
-    transform: scale(1.05);
-    transition: .2s all;
+// 非手机
+@media screen and (min-width: 576px) {
+  .larger-on-hover {
+    transition: 0.3s all;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: .2s all;
+    }
   }
 }
 
-.larger-item-hover {
-  transition: 0.3s all;
-  &:hover {
-    transform: scale(1.01);
+// 非手机
+@media screen and (min-width: 576px) {
+  .larger-item-hover {
     transition: 0.3s all;
-    box-shadow: $postBoxShadowColor;
+
+    &:hover {
+      transform: scale(1.01);
+      transition: 0.3s all;
+      box-shadow: $postBoxShadowColor;
+    }
   }
 }
+
 
 // 默认按钮格式
 .mu-button,
@@ -82,6 +91,7 @@ a {
     transition: .2s all;
   }
 }
+
 // 默认icon大小
 .material-icons {
   font-size: 18px !important;
@@ -103,6 +113,10 @@ a {
   min-width: 56px;
 }
 
+.mu-load-more {
+  overflow: initial !important;
+}
+
 // 提交表单按钮靠右
 .submit-button-wrapper {
   .mu-form-item-content {
@@ -115,6 +129,11 @@ a {
 }
 
 // 修复表单全局颜色
+.mu-circle-spinner {
+  border-color: $primary !important;
+}
+
+.mu-refresh-control,
 .mu-form-item__error,
 .mu-form-item__focus {
   color: $primary !important;
@@ -189,8 +208,7 @@ blockquote {
 
 // 点赞按钮活跃
 .like-btn.active,
-.follow-btn.active
-{
+.follow-btn.active {
   background: $mainWrapperBlurPink !important;
   color: $primary !important;
 }

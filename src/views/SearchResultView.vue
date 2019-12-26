@@ -18,7 +18,8 @@
           v-else
           class="no-search"
         >
-          <p>没有找到啊 T.T</p>
+          <TipBar text="没有找到啊">
+          </TipBar>
         </section>
       </ContainerInner>
     </mu-container>
@@ -43,11 +44,13 @@ import { CategoryDetail } from "../assets/js/dataType";
 import Post from "@/components/Post/Post.vue";
 import { UserBrief, PostBrief } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
   components: {
     ContainerInner,
-    Post
+    Post,
+    TipBar
   }
 })
 export default class SearchResultView extends Vue {
@@ -97,7 +100,7 @@ export default class SearchResultView extends Vue {
   //   this.select(song, index);
   // }
   onTogglePostLike(payload: PostLikePayload) {
-    console.log(payload)
+    console.log(payload);
     const { targetId, type, authorId } = payload;
     this.toggleBriefPostLike({
       targetId,

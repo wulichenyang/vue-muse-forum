@@ -1,11 +1,27 @@
 <template>
-  <section class="post-view-wrapper">
-    <Post
-      v-for="postId in categoryPostIds(categoryIdNow)"
-      :key="postId"
-      :postBrief="postBriefMap(categoryIdNow)[postId]"
-      @emitTogglePostLike="onTogglePostLike"
-    />
+  <section
+    :class="this.loading ? 'post-view-wrapper' : 'post-view-wrapper hid-scroll'"
+    ref="container"
+  >
+    <!-- 无限滚动动态请求 -->
+    <mu-load-more
+      color="primary"
+      @refresh="refresh"
+      :refreshing="refreshing"
+      :loading="loading"
+      @load="load"
+    >
+      <Post
+        v-for="postId in categoryPostIds(categoryIdNow)"
+        :key="postId"
+        :postBrief="postBriefMap(categoryIdNow)[postId]"
+        @emitTogglePostLike="onTogglePostLike"
+      />
+    </mu-load-more>
+    <TipBar
+      :ifShow="this.categorytoPageRequestPayloadMap[this.categoryIdNow] && this.categorytoPageRequestPayloadMap[this.categoryIdNow].noMore"
+      text="已经到底啦"
+    ></TipBar>
   </section>
 </template>
 
@@ -20,12 +36,18 @@ import {
 } from "vue-property-decorator";
 import Post from "@/components/Post/Post.vue";
 import { Getter, Action } from "vuex-class";
-import { UserBrief, PostBrief } from "@/assets/js/dataType";
+import { UserBrief, PostBrief, PageRequestPayload } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
+import TipBar from "@/components/TipBar.vue";
+
+interface CategorytoPageRequestPayloadMap {
+  [categoryId: string]: PageRequestPayload;
+}
 
 @Component({
   components: {
-    Post
+    Post,
+    TipBar
   }
 })
 export default class PostListView extends Vue {
@@ -43,7 +65,19 @@ export default class PostListView extends Vue {
   // searchKey!: string;
 
   // Data
-  // searchValue: string = "";
+  // 对应分类下每次请求的页数
+
+  categorytoPageRequestPayloadMap: CategorytoPageRequestPayloadMap = <   CategorytoPageRequestPayloadMap
+  >{};
+  // PageRequestPayload = {
+  //   page: 0,
+  //   noMore: false
+  // };
+
+  // 请求时的标志
+  refreshing: boolean = false;
+  loading: boolean = false;
+
   // ifFocusSearch: boolean = false;
 
   // Computed
@@ -53,10 +87,95 @@ export default class PostListView extends Vue {
 
   // Lifecycle
   private mounted() {
+    this.initPagePayloadIfNot();
     this.getPostsIfNoCache();
   }
 
   // Methods
+
+  private async refresh() {
+    this.refreshing = true;
+    (this.$refs.container as Element).scrollTop = 0;
+    this.resetPage();
+    await this.refreshPostList({
+      categoryId: this.categoryIdNow,
+      userId: this.userDetail && this.userDetail._id,
+      pageRequestPayload: this.categorytoPageRequestPayloadMap[
+        this.categoryIdNow
+      ]
+    });
+
+    this.refreshing = false;
+  }
+
+  private addPage() {
+    this.categorytoPageRequestPayloadMap = {
+      ...this.categorytoPageRequestPayloadMap,
+      [this.categoryIdNow]: {
+        page: this.categorytoPageRequestPayloadMap[this.categoryIdNow].page + 1,
+        noMore: false
+      }
+    };
+  }
+
+  private initPagePayloadIfNot() {
+    if (!this.categorytoPageRequestPayloadMap[this.categoryIdNow]) {
+      this.categorytoPageRequestPayloadMap = {
+        ...this.categorytoPageRequestPayloadMap,
+        [this.categoryIdNow]: {
+          page: 0,
+          noMore: false
+        }
+      };
+    }
+  }
+
+  private noMoreData() {
+    this.categorytoPageRequestPayloadMap = {
+      ...this.categorytoPageRequestPayloadMap,
+      [this.categoryIdNow]: {
+        page: this.categorytoPageRequestPayloadMap[this.categoryIdNow].page,
+        noMore: true
+      }
+    };
+  }
+
+  private async load() {
+    // 还有更多的数据，可以请求
+    if (
+      !this.categorytoPageRequestPayloadMap[this.categoryIdNow].noMore &&
+      !this.refreshing
+    ) {
+      this.loading = true;
+
+      this.addPage();
+      let res = await this.getPostList({
+        categoryId: this.categoryIdNow,
+        userId: this.userDetail && this.userDetail._id,
+        pageRequestPayload: this.categorytoPageRequestPayloadMap[
+          this.categoryIdNow
+        ]
+      });
+
+      this.loading = false;
+
+      // 没有更多数据
+      if (res === "noMore") {
+        this.noMoreData();
+      }
+    }
+  }
+
+  private resetPage() {
+    this.categorytoPageRequestPayloadMap = {
+      ...this.categorytoPageRequestPayloadMap,
+      [this.categoryIdNow]: {
+        page: 0,
+        noMore: false
+      }
+    };
+  }
+
   get categoryIdNow(): string {
     return this.$route.params.id;
   }
@@ -64,7 +183,10 @@ export default class PostListView extends Vue {
   async getPostListData() {
     await this.getPostList({
       categoryId: this.categoryIdNow,
-      userId: this.userDetail && this.userDetail._id
+      userId: this.userDetail && this.userDetail._id,
+      pageRequestPayload: this.categorytoPageRequestPayloadMap[
+        this.categoryIdNow
+      ]
     });
   }
   // selectSong(song: Song, index: number): void {
@@ -94,16 +216,22 @@ export default class PostListView extends Vue {
   @Getter("categoryPostIds") categoryPostIds!: any;
 
   @Action("getPostList") getPostList: any;
+  @Action("refreshPostList") refreshPostList: any;
   // @Emit("select")
   // select(listItem: Song, index: number) {}
   @Action("toggleBriefPostLike") toggleBriefPostLike: any;
 
-  // 监听路由变化，请求文章列表
+  // 监听categoryId的路由变化，请求文章列表
   @Watch("$route", { immediate: true, deep: true })
   onRouterChanged(to: any, from: any) {
     if (to) {
+      if (!from) {
+        // 首次不用加载，防止首次和mounted同时请求
+        return;
+      }
       let toPath = to.fullPath;
       if (toPath.includes("/categories")) {
+        this.initPagePayloadIfNot();
         this.getPostsIfNoCache();
       }
     }
@@ -114,6 +242,13 @@ export default class PostListView extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .post-view-wrapper {
+  &.hid-scroll {
+    .mu-load-more {
+      .mu-infinite-scroll {
+        height: 0px;
+      }
+    }
+  }
 }
 
 // @media screen and (min-width: 576px) {

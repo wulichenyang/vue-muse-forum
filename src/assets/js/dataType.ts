@@ -100,7 +100,7 @@ export interface UserDetail extends OtherUserDetail {
   createAt?: Date,
 }
 
-export interface UserSettingInfo extends UserBrief{
+export interface UserSettingInfo extends UserBrief {
   // 用户性别
   gender: Gender,
   // 用户简介
@@ -139,7 +139,7 @@ export interface CategoryHeaderDetail {
   avatar: string;
   followCount: number;
   postCount: number;
-  ifFollow?: boolean; 
+  ifFollow?: boolean;
 }
 
 export type PostState = 'published' | 'draft'
@@ -214,4 +214,11 @@ export interface ReplyDetail extends DateType {
   likeCount: number,
   state: ReplyState,
   ifLike?: boolean,
+}
+
+// 换页请求接口
+export interface PageRequestPayload {
+  page: number,
+  // limit: number, // 每页显示数量由后端决定
+  noMore: boolean
 }
