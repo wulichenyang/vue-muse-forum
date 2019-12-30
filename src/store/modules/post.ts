@@ -28,7 +28,8 @@ import {
   CommentDetail,
   ReplyDetail,
   PageRequestPayload,
-  CategorytoPageRequestPayloadMap,
+  CategoryToPageRequestPayloadMap,
+  UserToPostListPageRequestPayloadMap
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
@@ -53,12 +54,15 @@ export interface State {
   categoryToPostMapIds: CategoryToPostIdsMap,
 
   // 各个文章分类下对应的请求页数
-  categorytoPageRequestPayloadMap: CategorytoPageRequestPayloadMap,
+  categoryToPageRequestPayloadMap: CategoryToPageRequestPayloadMap,
 
   // 某个用户所有发布的文章ids
   userToPostMapIds: UserToPostIdsMap,
   // 某个用户所有关注的文章ids
   userToFollowPostMapIds: UserToPostIdsMap,
+
+  // 某个用户所有发布的文章的请求页数
+  userToPostListPageRequestPayloadMap: UserToPostListPageRequestPayloadMap,
 
   // 文章列表项简略内容表
   postBriefMap: PostBriefMap,
@@ -71,12 +75,15 @@ const initState: State = {
   categoryToPostMapIds: <CategoryToPostIdsMap>{},
 
   // 各个文章分类下对应的请求页数
-  categorytoPageRequestPayloadMap: <CategorytoPageRequestPayloadMap>{},
+  categoryToPageRequestPayloadMap: <CategoryToPageRequestPayloadMap>{},
 
   // 某个用户所有发布的文章ids
   userToPostMapIds: <UserToPostIdsMap>{},
   // 某个用户所有关注的文章ids
   userToFollowPostMapIds: <UserToPostIdsMap>{},
+
+  // 某个用户所有发布的文章的请求页数
+  userToPostListPageRequestPayloadMap: <UserToPostListPageRequestPayloadMap>{},
 
   // 文章列表项简略内容表
   postBriefMap: <PostBriefMap>{},
@@ -101,17 +108,31 @@ const getters = {
   },
 
   // 各个文章分类下对应的请求页数
-  categorytoPageRequestPayloadMap: (state: State) => (categoryId: string) => {
+  categoryToPageRequestPayloadMap: (state: State) => (categoryId: string) => {
     // 动态属性需要手动初始化，防止第一次渲染不更新数据
-    // 初始化 categorytoPageRequestPayloadMap 里对应id的映射分页对象
-    if (!state.categorytoPageRequestPayloadMap[categoryId]) {
-      Vue.set(state.categorytoPageRequestPayloadMap, categoryId, {
+    // 初始化 categoryToPageRequestPayloadMap 里对应id的映射分页对象
+    if (!state.categoryToPageRequestPayloadMap[categoryId]) {
+      Vue.set(state.categoryToPageRequestPayloadMap, categoryId, {
         page: 0,
         noMore: false
       });
     }
 
-    return state.categorytoPageRequestPayloadMap[categoryId];
+    return state.categoryToPageRequestPayloadMap[categoryId];
+  },
+
+  // 某个用户所有发布的文章的请求页数
+  userToPostListPageRequestPayloadMap: (state: State) => (userId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    // 初始化 userToPostListPageRequestPayloadMap 里对应id的映射分页对象
+    if (!state.userToPostListPageRequestPayloadMap[userId]) {
+      Vue.set(state.userToPostListPageRequestPayloadMap, userId, {
+        page: 0,
+        noMore: false
+      });
+    }
+
+    return state.userToPostListPageRequestPayloadMap[userId];
   },
 
   // 某分类下的文章ids
@@ -223,10 +244,10 @@ const actions = {
   },
 
   // 获取某用户发表的文章列表信息
-  async getUserPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
-    const { userId, loginUserId } = payload;
+  async getUserPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string, pageRequestPayload: PageRequestPayload }) {
+    const { userId, loginUserId, pageRequestPayload } = payload;
     let err, res: Ajax.AjaxResponse;
-    [err, res] = await To(fetchPostsOfOtherUser(userId, loginUserId));
+    [err, res] = await To(fetchPostsOfOtherUser(userId, pageRequestPayload, loginUserId));
 
     // 获取失败
     if (err) {
@@ -235,17 +256,54 @@ const actions = {
 
     if (res && res.code === 0) {
       // 获取成功
-      let postBriefMap: PostBriefMap = {};
-      let postIds: string[] = (res.data as Array<PostBrief>).map((x: PostBrief) => {
-        postBriefMap[x._id] = x;
-        return x._id
-      });
+      if (res.data.noMore) {
+        context.commit(types.NO_MORE_DATA_USER_TO_POST_LIST_PAGE, { userId })
+        return 'noMore'
+      } else {
+        let postBriefMap: PostBriefMap = {};
+        let postIds: string[] = (res.data.postBriefList as Array<PostBrief>).map((x: PostBrief) => {
+          postBriefMap[x._id] = x;
+          return x._id
+        });
 
-      context.commit(types.SET_USER_POST_IDS, { userId, postIds })
-      context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
-      return true
+        context.commit(types.SET_USER_POST_IDS, { userId, postIds })
+        context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
+        return true
+      }
     }
   },
+
+
+  // 翻页 更新对应User下的 postlist 分页信息
+  async addUserToPostListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string }) {
+    const { userId } = payload;
+
+    context.commit(types.ADD_USER_TO_POST_LIST_PAGE, { userId })
+  },
+
+  // 最后一页 更新对应User下的 postlist 分页信息
+  async noMoreDataUserToPostListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string }) {
+    const { userId } = payload;
+
+    context.commit(types.NO_MORE_DATA_USER_TO_POST_LIST_PAGE, { userId })
+  },
+
+  // 重置翻页信息 更新对应User下的 postlist 分页信息
+  async resetUserToPostListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string }) {
+    const { userId } = payload;
+
+    context.commit(types.RESET_USER_TO_POST_LIST_PAGE, { userId })
+  },
+
+  // 刷新某用户下的文章列表信息
+  async refreshUserToPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string, pageRequestPayload: PageRequestPayload }) {
+    const {
+      userId
+    } = payload;
+    context.commit(types.RESET_USER_TO_POST_LIST_IDS, { userId })
+    context.dispatch('getUserPostList', payload)
+  },
+
 
   // 获取某用户关注的文章列表信息
   async getUserFollowPostList(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { userId: string, loginUserId?: string }) {
@@ -415,6 +473,7 @@ const mutations = {
     }
 
     state.userToPostMapIds[payload.userId] = [
+      ...state.userToPostMapIds[payload.userId],
       ...payload.postIds
     ]
   },
@@ -427,6 +486,7 @@ const mutations = {
     }
 
     state.userToFollowPostMapIds[payload.userId] = [
+      ...state.userToFollowPostMapIds[payload.userId],
       ...payload.postIds
     ]
   },
@@ -438,13 +498,13 @@ const mutations = {
     } = payload;
 
     // 有缓存则修改
-    if (state.categorytoPageRequestPayloadMap[categoryId]
+    if (state.categoryToPageRequestPayloadMap[categoryId]
     ) {
 
-      let newPage = state.categorytoPageRequestPayloadMap[categoryId].page + 1;
+      let newPage = state.categoryToPageRequestPayloadMap[categoryId].page + 1;
 
-      state.categorytoPageRequestPayloadMap[categoryId] = {
-        ...state.categorytoPageRequestPayloadMap[categoryId],
+      state.categoryToPageRequestPayloadMap[categoryId] = {
+        ...state.categoryToPageRequestPayloadMap[categoryId],
         page: newPage,
         // noMore: false
       }
@@ -457,8 +517,8 @@ const mutations = {
       categoryId
     } = payload;
 
-    state.categorytoPageRequestPayloadMap[categoryId] = {
-      ...state.categorytoPageRequestPayloadMap[categoryId],
+    state.categoryToPageRequestPayloadMap[categoryId] = {
+      ...state.categoryToPageRequestPayloadMap[categoryId],
       noMore: true
     }
   },
@@ -469,7 +529,51 @@ const mutations = {
       categoryId
     } = payload;
 
-    state.categorytoPageRequestPayloadMap[categoryId] = {
+    state.categoryToPageRequestPayloadMap[categoryId] = {
+      page: 0,
+      noMore: false
+    }
+  },
+
+  // 翻页 更新对应User下的 postlist 分页信息
+  [types.ADD_USER_TO_POST_LIST_PAGE](state: State, payload: { userId: string }) {
+    const {
+      userId
+    } = payload;
+
+    // 有缓存则修改
+    if (state.userToPostListPageRequestPayloadMap[userId]
+    ) {
+
+      let newPage = state.userToPostListPageRequestPayloadMap[userId].page + 1;
+
+      state.userToPostListPageRequestPayloadMap[userId] = {
+        ...state.userToPostListPageRequestPayloadMap[userId],
+        page: newPage,
+        // noMore: false
+      }
+    }
+  },
+
+  // 最后一页 更新对应User下的 postlist 分页信息
+  [types.NO_MORE_DATA_USER_TO_POST_LIST_PAGE](state: State, payload: { userId: string }) {
+    const {
+      userId
+    } = payload;
+
+    state.userToPostListPageRequestPayloadMap[userId] = {
+      ...state.userToPostListPageRequestPayloadMap[userId],
+      noMore: true
+    }
+  },
+
+  // 重置翻页数据 更新对应User下的 postlist 分页信息
+  [types.RESET_USER_TO_POST_LIST_PAGE](state: State, payload: { userId: string }) {
+    const {
+      userId
+    } = payload;
+
+    state.userToPostListPageRequestPayloadMap[userId] = {
       page: 0,
       noMore: false
     }
@@ -541,10 +645,16 @@ const mutations = {
     ]
   },
 
-  // 添加某分类下文章列表 ids
+  // 重置某分类下文章列表 ids
   [types.RESET_POST_LIST_IDS](state: State, payload: { categoryId: string }) {
     // 初始化数组对象
     state.categoryToPostMapIds[payload.categoryId] = []
+  },
+
+  // 重置某User下文章列表 ids
+  [types.RESET_USER_TO_POST_LIST_IDS](state: State, payload: { userId: string }) {
+    // 初始化数组对象
+    state.userToPostMapIds[payload.userId] = []
   },
 
   // 添加评论 id 到 postdetailMap

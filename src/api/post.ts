@@ -46,11 +46,11 @@ export const fetchAllPostList = (): Promise<any> => {
   return get('/posts')
 }
 
-export const fetchPostsOfOtherUser = (userId: string, loginUserId?: string): Promise<any> => {
+export const fetchPostsOfOtherUser = (userId: string, pageRequestPayload: PageRequestPayload, loginUserId?: string): Promise<any> => {
   if (loginUserId) {
-    return get(`/users/${userId}/posts?userId=${loginUserId}`)
+    return get(`/users/${userId}/posts?userId=${loginUserId}&page=${pageRequestPayload.page}`)
   } else {
-    return get(`/users/${userId}/posts`)
+    return get(`/users/${userId}/posts?page=${pageRequestPayload.page}`)
   }
 }
 

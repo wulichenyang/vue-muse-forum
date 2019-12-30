@@ -99,7 +99,9 @@
       </mu-tabs>
 
       <!-- 用户关注、文章等信息 -->
-      <router-view></router-view>
+      <!-- <keep-alive> -->
+        <router-view></router-view>
+      <!-- </keep-alive> -->
 
     </ContainerInner>
   </mu-container>

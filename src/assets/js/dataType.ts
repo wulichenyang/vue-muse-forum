@@ -223,6 +223,10 @@ export interface PageRequestPayload {
   noMore: boolean
 }
 
-export interface CategorytoPageRequestPayloadMap {
-  [categoryId: string]: PageRequestPayload;
+export interface IdToPageRequestPayloadMap {
+  [id: string]: PageRequestPayload
 }
+
+export interface CategoryToPageRequestPayloadMap extends IdToPageRequestPayloadMap { }
+
+export interface UserToPostListPageRequestPayloadMap extends IdToPageRequestPayloadMap { }
