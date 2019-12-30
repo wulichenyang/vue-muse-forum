@@ -91,6 +91,12 @@ export default class PostListView extends Vue {
     this.getPostsIfNoCache();
   }
 
+  // private activated() {
+  //   console.log('activated')
+  //   this.initPagePayloadIfNot();
+  //   this.getPostsIfNoCache();
+  // }
+
   // Methods
 
   private async refresh() {

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <HomeTop />
+    <keep-alive>
+      <HomeTop />
+    </keep-alive>
     <main class="main-wrapper">
       <router-view />
     </main>
@@ -57,7 +59,7 @@ $--font-path: "~element-ui/lib/theme-chalk/fonts";
 
   @media screen and (min-width: 576px) {
     .main-wrapper {
-    background: $mainBodyBgColor;
+      background: $mainBodyBgColor;
 
       padding: 18px 10px;
     }

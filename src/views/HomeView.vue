@@ -13,7 +13,9 @@
         >{{categoryDetail(chipId).name}}</mu-button>
       </section>
       <ContainerInner class="post-main-content">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </ContainerInner>
     </mu-container>
   </section>
