@@ -389,7 +389,7 @@ export default class PostDetailView extends Vue {
       p {
         color: $linkFontColor;
         margin-top: 0;
-        span:not(:last-child) {
+        span:not(:last-of-type) {
           &:after {
             content: "·";
             margin: 0 0.4em;

@@ -232,6 +232,12 @@ blockquote {
   color: $primary !important;
 }
 
+.fan-link {
+  &:not(:last-of-type) {
+    border-bottom: $postBottomBorder;
+  }
+}
+
 @media screen and (min-width: 576px) {
   .comment-list-wrapper {
     margin-left: 20px;

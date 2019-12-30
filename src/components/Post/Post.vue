@@ -253,7 +253,7 @@ export default class Post extends Vue {
 .post-link {
   text-align: left;
   display: block;
-  &:not(:last-child) {
+  &:not(:last-of-type) {
     border-bottom: $postBottomBorder;
   }
 

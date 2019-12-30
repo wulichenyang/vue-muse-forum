@@ -117,9 +117,7 @@ export default class UserFansView extends Vue {
 
 .user-fans {
   .user-fans-wrapper {
-    &:not(:last-child) {
-      border-bottom: $postBottomBorder;
-    }
+
   }
 }
 

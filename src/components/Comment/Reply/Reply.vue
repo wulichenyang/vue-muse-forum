@@ -211,7 +211,7 @@ export default class Reply extends Vue {
   display: flex;
   padding: 10px 10px 0 10px;
   background: $mainBodyBgColor;
-  &:not(:last-child) {
+  &:not(:last-of-type) {
     .right-reply-content {
       border-bottom: $postBottomBorder;
     }

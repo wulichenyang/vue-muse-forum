@@ -125,7 +125,7 @@ export default class UserCommentsView extends Vue {
 .user-comments {
   .user-comment-list-wrapper {
     .comment-wrapper {
-      &:not(:last-child) {
+      &:not(:last-of-type) {
         border-bottom: $postBottomBorder;
       }
       background: $mainContainerBgColor;
