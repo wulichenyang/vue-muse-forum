@@ -3,6 +3,11 @@
     class="user-posts"
     ref="container"
   >
+  <!-- 空白内容提示条 -->
+    <TipBar
+      :ifShow="userPostIds(otherUserId) && userPostIds(otherUserId).length === 0"
+      text="还没有发帖哟"
+    ></TipBar>
     <!-- 无限滚动动态请求 -->
     <mu-load-more
       :class="this.loading ? '' : 'hid-scroll'"
@@ -21,7 +26,7 @@
     </mu-load-more>
     <!-- 加载完毕提示栏 -->
     <TipBar
-      :ifShow="this.userToPostListPageRequestPayloadMap(this.otherUserId) && this.userToPostListPageRequestPayloadMap(this.otherUserId).noMore"
+      :ifShow="this.userToPostListPageRequestPayloadMap(this.otherUserId) && this.userToPostListPageRequestPayloadMap(this.otherUserId).noMore && userPostIds(otherUserId) && userPostIds(otherUserId).length !== 0"
       text="已经到底啦"
     ></TipBar>
 
@@ -71,7 +76,7 @@ export default class UserPostsView extends Vue {
   // searchKey!: string;
 
   // Data
-  userPostList: Array<PostBrief> = [];
+  // userPostList: Array<PostBrief> = [];
   // 请求时的标志
   refreshing: boolean = false;
   loading: boolean = false;
@@ -115,7 +120,7 @@ export default class UserPostsView extends Vue {
       this.loading = true;
 
       this.addUserToPostListPage({
-        userId: this.otherUserId,
+        userId: this.otherUserId
       });
 
       let res = await this.getUserPostList({

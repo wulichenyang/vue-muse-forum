@@ -1,5 +1,11 @@
 <template>
+  <!-- 用户关注文章 -->
   <section class="user-follows-posts">
+    <!-- 空白内容提示条 -->
+    <TipBar
+      :ifShow="userFollowPostIds(otherUserId) && userFollowPostIds(otherUserId).length === 0"
+      text="还没有关注文章哟"
+    ></TipBar>
     <Post
       v-for="postId in userFollowPostIds(otherUserId)"
       :key="postId"
@@ -26,10 +32,12 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import Post from "@/components/Post/Post.vue";
 import { PostLikePayload } from "@/components/Post/Post.vue";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
   components: {
-    Post
+    Post,
+    TipBar
   }
 })
 export default class UserFollowsPostsView extends Vue {

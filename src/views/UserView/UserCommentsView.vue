@@ -3,6 +3,12 @@
 
     <!-- 评论列表 -->
     <section class="user-comment-list-wrapper">
+      <!-- 空白内容提示条 -->
+      <TipBar
+        :ifShow="userCommentIds(otherUserId) && userCommentIds(otherUserId).length === 0"
+        text="还没有发布评论哟"
+      ></TipBar>
+
       <Comment
         :key="commentId"
         v-for="commentId in userCommentIds(otherUserId)"
@@ -36,10 +42,12 @@ import { CommentDetail } from "@/assets/js/dataType";
 import { fetchCommentsOfOtherUser } from "@/api/comment";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 import { LikePayload } from "@/api/like";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
   components: {
-    Comment
+    Comment,
+    TipBar
   }
 })
 export default class UserCommentsView extends Vue {

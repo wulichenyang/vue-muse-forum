@@ -1,6 +1,10 @@
 <template>
   <section class="user-collections">
-    UserCollectionsView
+    <!-- 空白内容提示条 -->
+    <TipBar
+      :ifShow="true"
+      text="该功能还在加急开发中"
+    ></TipBar>
   </section>
 </template>
 
@@ -19,9 +23,11 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
   components: {
+    TipBar
   }
 })
 export default class UserCollectionsView extends Vue {
@@ -39,7 +45,6 @@ export default class UserCollectionsView extends Vue {
   // searchKey!: string;
 
   // Data
-
 
   // Computed
   // get computedData() {
@@ -70,7 +75,6 @@ export default class UserCollectionsView extends Vue {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .user-collections {
-
 }
 
 // @media screen and (min-width: 576px) {

@@ -1,5 +1,11 @@
 <template>
+  <!-- 用户关注分类 -->
   <section class="user-follows-categories">
+    <!-- 空白内容提示条 -->
+    <TipBar
+      :ifShow="userFollowCategoryIds(otherUserId) && userFollowCategoryIds(otherUserId).length === 0"
+      text="还没有关注分类哟"
+    ></TipBar>
     <CategoryDetailHeader
       v-for="categoryId in userFollowCategoryIds(otherUserId)"
       :key="categoryId"
@@ -26,9 +32,10 @@ import To from "@/utils/to";
 import { UserDetail } from "@/assets/js/dataType";
 import { CategoryHeaderDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
-  components: { CategoryDetailHeader }
+  components: { CategoryDetailHeader, TipBar }
 })
 export default class UserFollowsCategoriesView extends Vue {
   // Props

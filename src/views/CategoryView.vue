@@ -4,8 +4,14 @@
 
       <!-- 分类简介头部 -->
       <CategoryDetailHeader :categoryHeaderDetail="categoryHeaderDetail(this.categoryIdNow)" />
-      <!-- 无限滚动动态请求 -->
+      <!-- 分类下的所有文章列表 -->
       <section ref="container">
+        <!-- 空白内容提示条 -->
+        <TipBar
+          :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0"
+          text="还没有文章哟"
+        ></TipBar>
+        <!-- 无限滚动动态请求 -->
         <mu-load-more
           color="primary"
           :class="this.loading ? '' : 'hid-scroll'"
@@ -14,7 +20,6 @@
           :loading="loading"
           @load="load"
         >
-          <!-- 分类下的所有文章列表 -->
           <Post
             v-for="postId in categoryPostIds(categoryIdNow)"
             :key="postId"

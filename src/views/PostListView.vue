@@ -1,8 +1,14 @@
 <template>
+  <!-- 分类下的文章列表 -->
   <section
     class="post-view-wrapper"
     ref="container"
   >
+    <!-- 空白内容提示条 -->
+    <TipBar
+      :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0"
+      text="还没有文章哟"
+    ></TipBar>
     <!-- 无限滚动动态请求 -->
     <mu-load-more
       :class="this.loading ? '' : 'hid-scroll'"

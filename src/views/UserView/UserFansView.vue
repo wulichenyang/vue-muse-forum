@@ -3,6 +3,12 @@
 
     <!-- 粉丝列表 -->
     <section class="user-fans-wrapper">
+      <!-- 空白内容提示条 -->
+      <TipBar
+        :ifShow="userFanIds(otherUserId) && userFanIds(otherUserId).length === 0"
+        text="还没有粉丝哟"
+      ></TipBar>
+
       <Fan
         :isFan="true"
         :key="fanId"
@@ -37,10 +43,12 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { FollowPayload } from "@/api/follow";
 import { UserFansBriefMap } from "@/store/modules/fans";
+import TipBar from "@/components/TipBar.vue";
 
 @Component({
   components: {
-    Fan
+    Fan,
+    TipBar
   }
 })
 export default class UserFansView extends Vue {
@@ -82,10 +90,10 @@ export default class UserFansView extends Vue {
 
   onToggleFollowUser(payload: FollowPayload) {
     const { targetId, type } = payload;
-    // 
+    //
     this.toggleUserFansFollow({
       targetId,
-      type,
+      type
     });
   }
 
