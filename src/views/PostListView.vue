@@ -1,10 +1,11 @@
 <template>
   <section
-    :class="this.loading ? 'post-view-wrapper' : 'post-view-wrapper hid-scroll'"
+    class="post-view-wrapper"
     ref="container"
   >
     <!-- 无限滚动动态请求 -->
     <mu-load-more
+      :class="this.loading ? '' : 'hid-scroll'"
       color="primary"
       @refresh="refresh"
       :refreshing="refreshing"
@@ -18,6 +19,7 @@
         @emitTogglePostLike="onTogglePostLike"
       />
     </mu-load-more>
+    <!-- 加载完毕提示栏 -->
     <TipBar
       :ifShow="this.categorytoPageRequestPayloadMap(this.categoryIdNow) && this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore"
       text="已经到底啦"
@@ -114,16 +116,6 @@ export default class PostListView extends Vue {
     this.refreshing = false;
   }
 
-  // private noMoreDataCategoryToListPage() {
-  //   this.categorytoPageRequestPayloadMap = {
-  //     ...this.categorytoPageRequestPayloadMap,
-  //     [this.categoryIdNow]: {
-  //       page: this.categorytoPageRequestPayloadMap(this.categoryIdNow).page,
-  //       noMore: true
-  //     }
-  //   };
-  // }
-
   private async load() {
     // 还有更多的数据，可以请求
     if (
@@ -147,7 +139,6 @@ export default class PostListView extends Vue {
       // if (res === "noMore") {
       //   this.noMoreDataCategoryToListPage({ categoryId: this.categoryIdNow });
       // }
-
     }
   }
 
@@ -221,13 +212,6 @@ export default class PostListView extends Vue {
 <style lang="scss">
 @import "../assets/css/var.scss";
 .post-view-wrapper {
-  &.hid-scroll {
-    .mu-load-more {
-      .mu-infinite-scroll {
-        height: 0px;
-      }
-    }
-  }
 }
 
 // @media screen and (min-width: 576px) {

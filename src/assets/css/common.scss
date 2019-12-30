@@ -46,6 +46,12 @@ a {
   font-feature-settings: 'liga';
 }
 
+.hid-scroll {
+  .mu-infinite-scroll {
+    height: 0px;
+  }
+}
+
 // 修复muse-ui hover时背景颜色有变化
 .mu-button.hover:before {
   opacity: 0 !important;

@@ -4,13 +4,31 @@
 
       <!-- 分类简介头部 -->
       <CategoryDetailHeader :categoryHeaderDetail="categoryHeaderDetail(this.categoryIdNow)" />
-      <!-- 分类下的所有文章列表 -->
-      <Post
-        v-for="postId in categoryPostIds(categoryIdNow)"
-        :key="postId"
-        :postBrief="postBriefMap(categoryIdNow)[postId]"
-        @emitTogglePostLike="onTogglePostLike"
-      />
+      <!-- 无限滚动动态请求 -->
+      <section ref="container">
+        <mu-load-more
+          color="primary"
+          :class="this.loading ? '' : 'hid-scroll'"
+          @refresh="refresh"
+          :refreshing="refreshing"
+          :loading="loading"
+          @load="load"
+        >
+          <!-- 分类下的所有文章列表 -->
+          <Post
+            v-for="postId in categoryPostIds(categoryIdNow)"
+            :key="postId"
+            :postBrief="postBriefMap(categoryIdNow)[postId]"
+            @emitTogglePostLike="onTogglePostLike"
+          />
+        </mu-load-more>
+        <!-- 加载完毕提示栏 -->
+        <TipBar
+          :ifShow="this.categorytoPageRequestPayloadMap(this.categoryIdNow) && this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore"
+          text="已经到底啦"
+        ></TipBar>
+      </section>
+
     </ContainerInner>
   </mu-container>
 </template>
@@ -25,16 +43,23 @@ import {
   Watch
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { UserDetail } from "@/assets/js/dataType";
+import {
+  UserDetail,
+  PageRequestPayload,
+  CategorytoPageRequestPayloadMap
+} from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import Post from "@/components/Post/Post.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import { PostLikePayload } from "@/components/Post/Post.vue";
+import TipBar from "@/components/TipBar.vue";
+
 @Component({
   components: {
     CategoryDetailHeader,
     Post,
-    ContainerInner
+    ContainerInner,
+    TipBar
   }
 })
 export default class CategoryView extends Vue {
@@ -54,6 +79,11 @@ export default class CategoryView extends Vue {
   // Data
   // searchValue: string = "";
   // ifFocusSearch: boolean = false;
+  // 对应分类下每次请求的页数
+
+  // 请求时的标志
+  refreshing: boolean = false;
+  loading: boolean = false;
 
   // Computed
   get categoryIdNow(): string {
@@ -61,12 +91,60 @@ export default class CategoryView extends Vue {
   }
 
   // Lifecycle
-  private mounted() {
+  // private created() {
+  //   this.getCategoryHeaderDetailIfNoCache();
+  //   this.getPostsIfNoCache();
+  // }
+
+  private activated() {
     this.getCategoryHeaderDetailIfNoCache();
     this.getPostsIfNoCache();
   }
 
   // Methods
+  private async refresh() {
+    this.refreshing = true;
+    (this.$refs.container as Element).scrollTop = 0;
+    this.resetCategoryToListPage({
+      categoryId: this.categoryIdNow
+    });
+    await this.refreshPostList({
+      categoryId: this.categoryIdNow,
+      userId: this.userDetail && this.userDetail._id,
+      pageRequestPayload: this.categorytoPageRequestPayloadMap(
+        this.categoryIdNow
+      )
+    });
+
+    this.refreshing = false;
+  }
+
+  private async load() {
+    // 还有更多的数据，可以请求
+    if (
+      !this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore &&
+      !this.refreshing
+    ) {
+      this.loading = true;
+
+      this.addCategoryToListPage({ categoryId: this.categoryIdNow });
+      let res = await this.getPostList({
+        categoryId: this.categoryIdNow,
+        userId: this.userDetail && this.userDetail._id,
+        pageRequestPayload: this.categorytoPageRequestPayloadMap(
+          this.categoryIdNow
+        )
+      });
+
+      this.loading = false;
+
+      // 没有更多数据
+      // if (res === "noMore") {
+      //   this.noMoreDataCategoryToListPage({ categoryId: this.categoryIdNow });
+      // }
+    }
+  }
+
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
@@ -84,7 +162,10 @@ export default class CategoryView extends Vue {
   async getPostListData() {
     await this.getPostList({
       categoryId: this.categoryIdNow,
-      userId: this.userDetail && this.userDetail._id
+      userId: this.userDetail && this.userDetail._id,
+      pageRequestPayload: this.categorytoPageRequestPayloadMap(
+        this.categoryIdNow
+      )
     });
   }
 
@@ -118,10 +199,16 @@ export default class CategoryView extends Vue {
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("categoryPostIds") categoryPostIds!: any;
-
+  @Getter("categorytoPageRequestPayloadMap")
+  categorytoPageRequestPayloadMap!: any;
+  @Action("addCategoryToListPage")
+  addCategoryToListPage: any;
+  @Action("noMoreDataCategoryToListPage") noMoreDataCategoryToListPage: any;
+  @Action("resetCategoryToListPage") resetCategoryToListPage: any;
   @Action("getPostList") getPostList: any;
   @Action("toggleBriefPostLike") toggleBriefPostLike: any;
   @Action("getCategoryHeaderDetail") getCategoryHeaderDetail!: any;
+  @Action("refreshPostList") refreshPostList: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}
