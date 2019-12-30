@@ -24,7 +24,7 @@
         </mu-load-more>
         <!-- 加载完毕提示栏 -->
         <TipBar
-          :ifShow="this.categorytoPageRequestPayloadMap(this.categoryIdNow) && this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore"
+          :ifShow="this.categoryToPageRequestPayloadMap(this.categoryIdNow) && this.categoryToPageRequestPayloadMap(this.categoryIdNow).noMore"
           text="已经到底啦"
         ></TipBar>
       </section>
@@ -46,7 +46,7 @@ import { Getter, Action } from "vuex-class";
 import {
   UserDetail,
   PageRequestPayload,
-  CategorytoPageRequestPayloadMap
+  CategoryToPageRequestPayloadMap
 } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import Post from "@/components/Post/Post.vue";
@@ -111,7 +111,7 @@ export default class CategoryView extends Vue {
     await this.refreshPostList({
       categoryId: this.categoryIdNow,
       userId: this.userDetail && this.userDetail._id,
-      pageRequestPayload: this.categorytoPageRequestPayloadMap(
+      pageRequestPayload: this.categoryToPageRequestPayloadMap(
         this.categoryIdNow
       )
     });
@@ -122,7 +122,7 @@ export default class CategoryView extends Vue {
   private async load() {
     // 还有更多的数据，可以请求
     if (
-      !this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore &&
+      !this.categoryToPageRequestPayloadMap(this.categoryIdNow).noMore &&
       !this.refreshing
     ) {
       this.loading = true;
@@ -131,7 +131,7 @@ export default class CategoryView extends Vue {
       let res = await this.getPostList({
         categoryId: this.categoryIdNow,
         userId: this.userDetail && this.userDetail._id,
-        pageRequestPayload: this.categorytoPageRequestPayloadMap(
+        pageRequestPayload: this.categoryToPageRequestPayloadMap(
           this.categoryIdNow
         )
       });
@@ -163,7 +163,7 @@ export default class CategoryView extends Vue {
     await this.getPostList({
       categoryId: this.categoryIdNow,
       userId: this.userDetail && this.userDetail._id,
-      pageRequestPayload: this.categorytoPageRequestPayloadMap(
+      pageRequestPayload: this.categoryToPageRequestPayloadMap(
         this.categoryIdNow
       )
     });
@@ -199,8 +199,8 @@ export default class CategoryView extends Vue {
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("categoryPostIds") categoryPostIds!: any;
-  @Getter("categorytoPageRequestPayloadMap")
-  categorytoPageRequestPayloadMap!: any;
+  @Getter("categoryToPageRequestPayloadMap")
+  categoryToPageRequestPayloadMap!: any;
   @Action("addCategoryToListPage")
   addCategoryToListPage: any;
   @Action("noMoreDataCategoryToListPage") noMoreDataCategoryToListPage: any;
