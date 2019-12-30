@@ -4,7 +4,9 @@
       <HomeTop />
     </keep-alive>
     <main class="main-wrapper">
-      <router-view />
+      <keep-alive include="PostDetailView">
+        <router-view />
+      </keep-alive>
     </main>
   </div>
 </template>
