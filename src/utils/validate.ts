@@ -13,7 +13,7 @@ export const phoneRules: any = [
   { validate: (val: string) => !!val, message: "必须填写手机号" },
   {
     validate: (val: string) => {
-      const phoneTest = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+      const phoneTest = /^[1]([3-9])[0-9]{9}$/;
       return phoneTest.test(val.trim());
     },
     message: "手机号格式不正确"
