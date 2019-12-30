@@ -99,9 +99,9 @@
       </mu-tabs>
 
       <!-- 用户关注、文章等信息 -->
-      <!-- <keep-alive> -->
+      <keep-alive include="UserPostsView">
         <router-view></router-view>
-      <!-- </keep-alive> -->
+      </keep-alive>
 
     </ContainerInner>
   </mu-container>

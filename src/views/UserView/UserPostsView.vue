@@ -82,7 +82,10 @@ export default class UserPostsView extends Vue {
   }
 
   // Lifecycle
-  private mounted() {
+  // private mounted() {
+  //   this.getPostsIfNoCache();
+  // }
+  private activated() {
     this.getPostsIfNoCache();
   }
 
