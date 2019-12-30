@@ -19,7 +19,7 @@
       />
     </mu-load-more>
     <TipBar
-      :ifShow="this.categorytoPageRequestPayloadMap[this.categoryIdNow] && this.categorytoPageRequestPayloadMap[this.categoryIdNow].noMore"
+      :ifShow="this.categorytoPageRequestPayloadMap(this.categoryIdNow) && this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore"
       text="已经到底啦"
     ></TipBar>
   </section>
@@ -36,13 +36,14 @@ import {
 } from "vue-property-decorator";
 import Post from "@/components/Post/Post.vue";
 import { Getter, Action } from "vuex-class";
-import { UserBrief, PostBrief, PageRequestPayload } from "@/assets/js/dataType";
+import {
+  UserBrief,
+  PostBrief,
+  PageRequestPayload,
+  CategorytoPageRequestPayloadMap
+} from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
-
-interface CategorytoPageRequestPayloadMap {
-  [categoryId: string]: PageRequestPayload;
-}
 
 @Component({
   components: {
@@ -67,8 +68,8 @@ export default class PostListView extends Vue {
   // Data
   // 对应分类下每次请求的页数
 
-  categorytoPageRequestPayloadMap: CategorytoPageRequestPayloadMap = <   CategorytoPageRequestPayloadMap
-  >{};
+  // categorytoPageRequestPayloadMap: CategorytoPageRequestPayloadMap = <    CategorytoPageRequestPayloadMap
+  // >{};
   // PageRequestPayload = {
   //   page: 0,
   //   noMore: false
@@ -87,99 +88,67 @@ export default class PostListView extends Vue {
 
   // Lifecycle
   private mounted() {
-    this.initPagePayloadIfNot();
     this.getPostsIfNoCache();
   }
 
   // private activated() {
   //   console.log('activated')
-  //   this.initPagePayloadIfNot();
   //   this.getPostsIfNoCache();
   // }
 
   // Methods
-
   private async refresh() {
     this.refreshing = true;
     (this.$refs.container as Element).scrollTop = 0;
-    this.resetPage();
+    this.resetCategoryToListPage({
+      categoryId: this.categoryIdNow
+    });
     await this.refreshPostList({
       categoryId: this.categoryIdNow,
       userId: this.userDetail && this.userDetail._id,
-      pageRequestPayload: this.categorytoPageRequestPayloadMap[
+      pageRequestPayload: this.categorytoPageRequestPayloadMap(
         this.categoryIdNow
-      ]
+      )
     });
 
     this.refreshing = false;
   }
 
-  private addPage() {
-    this.categorytoPageRequestPayloadMap = {
-      ...this.categorytoPageRequestPayloadMap,
-      [this.categoryIdNow]: {
-        page: this.categorytoPageRequestPayloadMap[this.categoryIdNow].page + 1,
-        noMore: false
-      }
-    };
-  }
-
-  private initPagePayloadIfNot() {
-    if (!this.categorytoPageRequestPayloadMap[this.categoryIdNow]) {
-      this.categorytoPageRequestPayloadMap = {
-        ...this.categorytoPageRequestPayloadMap,
-        [this.categoryIdNow]: {
-          page: 0,
-          noMore: false
-        }
-      };
-    }
-  }
-
-  private noMoreData() {
-    this.categorytoPageRequestPayloadMap = {
-      ...this.categorytoPageRequestPayloadMap,
-      [this.categoryIdNow]: {
-        page: this.categorytoPageRequestPayloadMap[this.categoryIdNow].page,
-        noMore: true
-      }
-    };
-  }
+  // private noMoreDataCategoryToListPage() {
+  //   this.categorytoPageRequestPayloadMap = {
+  //     ...this.categorytoPageRequestPayloadMap,
+  //     [this.categoryIdNow]: {
+  //       page: this.categorytoPageRequestPayloadMap(this.categoryIdNow).page,
+  //       noMore: true
+  //     }
+  //   };
+  // }
 
   private async load() {
     // 还有更多的数据，可以请求
     if (
-      !this.categorytoPageRequestPayloadMap[this.categoryIdNow].noMore &&
+      !this.categorytoPageRequestPayloadMap(this.categoryIdNow).noMore &&
       !this.refreshing
     ) {
       this.loading = true;
 
-      this.addPage();
+      this.addCategoryToListPage({ categoryId: this.categoryIdNow });
       let res = await this.getPostList({
         categoryId: this.categoryIdNow,
         userId: this.userDetail && this.userDetail._id,
-        pageRequestPayload: this.categorytoPageRequestPayloadMap[
+        pageRequestPayload: this.categorytoPageRequestPayloadMap(
           this.categoryIdNow
-        ]
+        )
       });
 
       this.loading = false;
 
       // 没有更多数据
-      if (res === "noMore") {
-        this.noMoreData();
-      }
-    }
-  }
+      // if (res === "noMore") {
+      //   this.noMoreDataCategoryToListPage({ categoryId: this.categoryIdNow });
+      // }
 
-  private resetPage() {
-    this.categorytoPageRequestPayloadMap = {
-      ...this.categorytoPageRequestPayloadMap,
-      [this.categoryIdNow]: {
-        page: 0,
-        noMore: false
-      }
-    };
+    }
   }
 
   get categoryIdNow(): string {
@@ -190,9 +159,9 @@ export default class PostListView extends Vue {
     await this.getPostList({
       categoryId: this.categoryIdNow,
       userId: this.userDetail && this.userDetail._id,
-      pageRequestPayload: this.categorytoPageRequestPayloadMap[
+      pageRequestPayload: this.categorytoPageRequestPayloadMap(
         this.categoryIdNow
-      ]
+      )
     });
   }
   // selectSong(song: Song, index: number): void {
@@ -219,8 +188,13 @@ export default class PostListView extends Vue {
 
   @Getter("userDetail") userDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
+  @Getter("categorytoPageRequestPayloadMap")
+  categorytoPageRequestPayloadMap!: any;
   @Getter("categoryPostIds") categoryPostIds!: any;
 
+  @Action("addCategoryToListPage") addCategoryToListPage: any;
+  @Action("noMoreDataCategoryToListPage") noMoreDataCategoryToListPage: any;
+  @Action("resetCategoryToListPage") resetCategoryToListPage: any;
   @Action("getPostList") getPostList: any;
   @Action("refreshPostList") refreshPostList: any;
   // @Emit("select")
@@ -237,7 +211,6 @@ export default class PostListView extends Vue {
       }
       let toPath = to.fullPath;
       if (toPath.includes("/categories")) {
-        this.initPagePayloadIfNot();
         this.getPostsIfNoCache();
       }
     }

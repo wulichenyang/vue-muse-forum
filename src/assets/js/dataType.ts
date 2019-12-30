@@ -222,3 +222,7 @@ export interface PageRequestPayload {
   // limit: number, // 每页显示数量由后端决定
   noMore: boolean
 }
+
+export interface CategorytoPageRequestPayloadMap {
+  [categoryId: string]: PageRequestPayload;
+}

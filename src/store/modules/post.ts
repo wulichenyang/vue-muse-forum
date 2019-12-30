@@ -28,6 +28,7 @@ import {
   CommentDetail,
   ReplyDetail,
   PageRequestPayload,
+  CategorytoPageRequestPayloadMap,
 } from '@/assets/js/dataType'
 import Vue from 'vue'
 
@@ -51,6 +52,9 @@ export interface State {
   // 各个文章分类下对应的文章ids
   categoryToPostMapIds: CategoryToPostIdsMap,
 
+  // 各个文章分类下对应的请求页数
+  categorytoPageRequestPayloadMap: CategorytoPageRequestPayloadMap,
+
   // 某个用户所有发布的文章ids
   userToPostMapIds: UserToPostIdsMap,
   // 某个用户所有关注的文章ids
@@ -65,6 +69,9 @@ export interface State {
 const initState: State = {
   // 各个文章分类下对应的文章ids
   categoryToPostMapIds: <CategoryToPostIdsMap>{},
+
+  // 各个文章分类下对应的请求页数
+  categorytoPageRequestPayloadMap: <CategorytoPageRequestPayloadMap>{},
 
   // 某个用户所有发布的文章ids
   userToPostMapIds: <UserToPostIdsMap>{},
@@ -91,6 +98,20 @@ const getters = {
   // 文章简略列表map
   postBriefMap: (state: State) => (categoryId: string) => {
     return state.postBriefMap
+  },
+
+  // 各个文章分类下对应的请求页数
+  categorytoPageRequestPayloadMap: (state: State) => (categoryId: string) => {
+    // 动态属性需要手动初始化，防止第一次渲染不更新数据
+    // 初始化 categorytoPageRequestPayloadMap 里对应id的映射分页对象
+    if (!state.categorytoPageRequestPayloadMap[categoryId]) {
+      Vue.set(state.categorytoPageRequestPayloadMap, categoryId, {
+        page: 0,
+        noMore: false
+      });
+    }
+
+    return state.categorytoPageRequestPayloadMap[categoryId];
   },
 
   // 某分类下的文章ids
@@ -154,7 +175,8 @@ const actions = {
 
     if (res && res.code === 0) {
       // 获取成功
-      if(res.data.noMore) {
+      if (res.data.noMore) {
+        context.commit(types.NO_MORE_DATA_CATEGORY_TO_LIST_PAGE, { categoryId })
         return 'noMore'
       } else {
         let postBriefMap: PostBriefMap = {};
@@ -162,12 +184,33 @@ const actions = {
           postBriefMap[x._id] = x;
           return x._id
         });
-        
+
         context.commit(types.SET_POST_IDS, { categoryId, postIds })
         context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
         return true
       }
     }
+  },
+
+  // 翻页 更新对应category下的分页信息
+  async addCategoryToListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string }) {
+    const { categoryId } = payload;
+
+    context.commit(types.ADD_CATEGORY_TO_LIST_PAGE, { categoryId })
+  },
+
+  // 最后一页 更新对应category下的分页信息
+  async noMoreDataCategoryToListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string }) {
+    const { categoryId } = payload;
+
+    context.commit(types.NO_MORE_DATA_CATEGORY_TO_LIST_PAGE, { categoryId })
+  },
+
+  // 重置翻页信息 更新对应category下的分页信息
+  async resetCategoryToListPage(context: { dispatch: Dispatch, commit: Commit; state: State }, payload: { categoryId: string }) {
+    const { categoryId } = payload;
+
+    context.commit(types.RESET_CATEGORY_TO_LIST_PAGE, { categoryId })
   },
 
   // 刷新某分类下的文章列表信息
@@ -386,6 +429,50 @@ const mutations = {
     state.userToFollowPostMapIds[payload.userId] = [
       ...payload.postIds
     ]
+  },
+
+  // 翻页 更新对应category下的分页信息
+  [types.ADD_CATEGORY_TO_LIST_PAGE](state: State, payload: { categoryId: string }) {
+    const {
+      categoryId
+    } = payload;
+
+    // 有缓存则修改
+    if (state.categorytoPageRequestPayloadMap[categoryId]
+    ) {
+
+      let newPage = state.categorytoPageRequestPayloadMap[categoryId].page + 1;
+
+      state.categorytoPageRequestPayloadMap[categoryId] = {
+        ...state.categorytoPageRequestPayloadMap[categoryId],
+        page: newPage,
+        // noMore: false
+      }
+    }
+  },
+
+  // 最后一页 更新对应category下的分页信息
+  [types.NO_MORE_DATA_CATEGORY_TO_LIST_PAGE](state: State, payload: { categoryId: string }) {
+    const {
+      categoryId
+    } = payload;
+
+    state.categorytoPageRequestPayloadMap[categoryId] = {
+      ...state.categorytoPageRequestPayloadMap[categoryId],
+      noMore: true
+    }
+  },
+
+  // 重置翻页数据 更新对应category下的分页信息
+  [types.RESET_CATEGORY_TO_LIST_PAGE](state: State, payload: { categoryId: string }) {
+    const {
+      categoryId
+    } = payload;
+
+    state.categorytoPageRequestPayloadMap[categoryId] = {
+      page: 0,
+      noMore: false
+    }
   },
 
   // 修改某分类下文章列表某文章是否点赞
