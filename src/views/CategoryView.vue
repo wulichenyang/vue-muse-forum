@@ -8,7 +8,7 @@
       <section ref="container">
         <!-- 空白内容提示条 -->
         <TipBar
-          :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0"
+          :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0 && !this.ifLoading"
           text="还没有文章哟"
         ></TipBar>
         <!-- 无限滚动动态请求 -->
@@ -200,6 +200,7 @@ export default class CategoryView extends Vue {
     });
   }
 
+  @Getter("ifLoading") ifLoading!: any;
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;

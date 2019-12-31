@@ -3,7 +3,7 @@
   <section class="user-follows-categories">
     <!-- 空白内容提示条 -->
     <TipBar
-      :ifShow="userFollowCategoryIds(otherUserId) && userFollowCategoryIds(otherUserId).length === 0"
+      :ifShow="userFollowCategoryIds(otherUserId) && userFollowCategoryIds(otherUserId).length === 0 && !this.ifLoading"
       text="还没有关注分类哟"
     ></TipBar>
     <CategoryDetailHeader
@@ -89,6 +89,8 @@ export default class UserFollowsCategoriesView extends Vue {
   @Getter("userFollowCategoryIds") userFollowCategoryIds!: (
     userId: string
   ) => Promise<string[]>;
+  @Getter("ifLoading") ifLoading!: any;
+
   @Action("getFollowCategoryList") getFollowCategoryList: any;
 
   // @Emit("select")

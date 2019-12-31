@@ -66,3 +66,7 @@ export const TOGGLE_OTHER_USER_FANS_FOLLOW = 'TOGGLE_OTHER_USER_FANS_FOLLOW';
 /* 关注 */
 // 关注用户
 export const SET_FOLLOW_USERS_IDS = 'SET_FOLLOW_USERS_IDS';
+
+// loading加载状态
+export const OPEN_LOADING = 'OPEN_LOADING'
+export const CLOSE_LOADING = 'CLOSE_LOADING'

@@ -3,7 +3,7 @@
   <section class="user-follows-posts">
     <!-- 空白内容提示条 -->
     <TipBar
-      :ifShow="userFollowPostIds(otherUserId) && userFollowPostIds(otherUserId).length === 0"
+      :ifShow="userFollowPostIds(otherUserId) && userFollowPostIds(otherUserId).length === 0 && !this.ifLoading"
       text="还没有关注文章哟"
     ></TipBar>
     <Post
@@ -92,6 +92,7 @@ export default class UserFollowsPostsView extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("userFollowPostIds") userFollowPostIds!: any;
+  @Getter("ifLoading") ifLoading!: any;
 
   @Action("getUserFollowPostList") getUserFollowPostList: any;
 

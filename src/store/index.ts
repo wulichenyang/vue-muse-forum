@@ -6,6 +6,7 @@ import post from '@/store/modules/post'
 import comment from '@/store/modules/comment'
 import reply from '@/store/modules/reply'
 import fans from '@/store/modules/fans'
+import loading from '@/store/modules/loading'
 
 Vue.use(Vuex);
 
@@ -26,5 +27,6 @@ export default new Vuex.Store({
     comment,
     reply,
     fans,
+    loading,
   }
 });

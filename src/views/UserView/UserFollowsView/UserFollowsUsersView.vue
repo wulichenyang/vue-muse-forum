@@ -3,7 +3,7 @@
   <section class="user-follows-users">
     <!-- 空白内容提示条 -->
     <TipBar
-      :ifShow="userFollowUserIds(otherUserId) && userFollowUserIds(otherUserId).length === 0"
+      :ifShow="userFollowUserIds(otherUserId) && userFollowUserIds(otherUserId).length === 0 && !this.ifLoading"
       text="还没有关注用户哟"
     ></TipBar>
     <Fan
@@ -97,6 +97,8 @@ export default class UserFollowsUsersView extends Vue {
   @Getter("userFollowUserIds") userFollowUserIds!: (
     userId: string
   ) => Promise<string[]>;
+  @Getter("ifLoading") ifLoading!: any;
+
   @Action("toggleUserFansFollow") toggleUserFansFollow!: (
     payload: FollowPayload
   ) => Promise<boolean>;

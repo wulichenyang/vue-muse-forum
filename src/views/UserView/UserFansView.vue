@@ -5,7 +5,7 @@
     <section class="user-fans-wrapper">
       <!-- 空白内容提示条 -->
       <TipBar
-        :ifShow="userFanIds(otherUserId) && userFanIds(otherUserId).length === 0"
+        :ifShow="userFanIds(otherUserId) && userFanIds(otherUserId).length === 0 && !this.ifLoading"
         text="还没有粉丝哟"
       ></TipBar>
 
@@ -97,6 +97,7 @@ export default class UserFansView extends Vue {
     });
   }
 
+  @Getter("ifLoading") ifLoading!: any;
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("userFanMap") userFanMap!: Promise<UserFansBriefMap>;
   @Getter("userFanIds") userFanIds!: (userId: string) => Promise<string[]>;

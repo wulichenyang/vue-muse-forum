@@ -231,8 +231,13 @@ const router = new Router({
   ],
 });
 
+const openLoading = (router: Router) => {
+  (router.app.$options.store as any).dispatch('openLoading');
+}
+
 // 导航守卫，非登录状态先登录
 router.beforeEach(async (to, from, next) => {
+  openLoading(router);
   let token = cookie.getCookie(access_token)
   // 登录验证 路由改变时刷新cookie中的token过期时间 30天
   let role = (router.app.$options.store as any).getters.userDetail && (router.app.$options.store as any).getters.userDetail.role;

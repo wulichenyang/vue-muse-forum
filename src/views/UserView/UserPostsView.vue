@@ -5,7 +5,7 @@
   >
   <!-- 空白内容提示条 -->
     <TipBar
-      :ifShow="userPostIds(otherUserId) && userPostIds(otherUserId).length === 0"
+      :ifShow="userPostIds(otherUserId) && userPostIds(otherUserId).length === 0 && !this.ifLoading"
       text="还没有发帖哟"
     ></TipBar>
     <!-- 无限滚动动态请求 -->
@@ -171,6 +171,7 @@ export default class UserPostsView extends Vue {
   @Getter("userPostIds") userPostIds!: any;
   @Getter("userToPostListPageRequestPayloadMap")
   userToPostListPageRequestPayloadMap!: any;
+  @Getter("ifLoading") ifLoading!: any;
 
   @Action("addUserToPostListPage") addUserToPostListPage: any;
   @Action("noMoreDataUserToPostListPage") noMoreDataUserToPostListPage: any;

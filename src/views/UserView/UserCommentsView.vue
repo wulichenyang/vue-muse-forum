@@ -5,7 +5,7 @@
     <section class="user-comment-list-wrapper">
       <!-- 空白内容提示条 -->
       <TipBar
-        :ifShow="userCommentIds(otherUserId) && userCommentIds(otherUserId).length === 0"
+        :ifShow="userCommentIds(otherUserId) && userCommentIds(otherUserId).length === 0 && !this.ifLoading"
         text="还没有发布评论哟"
       ></TipBar>
 
@@ -102,6 +102,7 @@ export default class UserCommentsView extends Vue {
   @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("userCommentMap") userCommentMap!: any;
   @Getter("userCommentIds") userCommentIds!: any;
+  @Getter("ifLoading") ifLoading!: any;
 
   // @Getter("userDetail") userDetail!: UserDetail | null;
 
