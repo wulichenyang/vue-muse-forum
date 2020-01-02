@@ -1,7 +1,20 @@
 <template>
   <section class="home-wrapper">
+
+    <!-- 文章分类列表 Phone -->
+    <section class="mb-category-tab-wrapper">
+      <mu-bottom-nav value.sync="movies">
+        <mu-bottom-nav-item 
+          v-for="(chipId) in categoryIds"
+          :key="categoryDetail(chipId)._id"
+          @click.native="onSelectCategory(categoryDetail(chipId))"
+          :title="categoryDetail(chipId).name"
+        ></mu-bottom-nav-item>
+      </mu-bottom-nav>
+    </section>
+
     <mu-container>
-      <!-- 文章分类列表 -->
+      <!-- 文章分类列表 PC -->
       <section class="category-tab-wrapper">
         <mu-button
           round
@@ -12,6 +25,7 @@
           @click="onSelectCategory(categoryDetail(chipId))"
         >{{categoryDetail(chipId).name}}</mu-button>
       </section>
+
       <ContainerInner class="post-main-content">
         <keep-alive>
           <router-view></router-view>
@@ -120,10 +134,39 @@ export default class HomeView extends Vue {
 @import "../assets/css/var.scss";
 .home-wrapper {
   .category-tab-wrapper {
-    margin-bottom: 20px;
     // Phone
     display: none;
   }
+
+  // Phone
+  .mb-category-tab-wrapper {
+    ::-webkit-scrollbar {
+      /*隐藏滚轮*/
+      display: none;
+    }
+    margin-bottom: 10px;
+    .mu-bottom-nav {
+      display: block;
+      .mu-bottom-nav-shift-wrapper {
+        display: block;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+        .mu-bottom-item {
+          display: inline-block;
+        }
+        .mu-bottom-item-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .mu-bottom-item-active {
+          color: $primary;
+        }
+      }
+    }
+  }
+
   .post-main-content {
     padding: 0 !important;
   }
@@ -131,8 +174,15 @@ export default class HomeView extends Vue {
 
 @media screen and (min-width: 576px) {
   .home-wrapper {
+    // PC
     .category-tab-wrapper {
+      margin-bottom: 20px;
       display: block;
+    }
+
+    .mb-category-tab-wrapper {
+      // PC
+      display: none;
     }
   }
 }
