@@ -1,6 +1,9 @@
 <template>
   <section class="user-comments">
 
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userCommentIds(otherUserId) && userCommentIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 评论列表 -->
     <section class="user-comment-list-wrapper">
       <!-- 空白内容提示条 -->
@@ -43,11 +46,13 @@ import { fetchCommentsOfOtherUser } from "@/api/comment";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 import { LikePayload } from "@/api/like";
 import TipBar from "@/components/TipBar.vue";
+import Skeleton from '@/components/Skeleton.vue'
 
 @Component({
   components: {
     Comment,
-    TipBar
+    TipBar,
+    Skeleton
   }
 })
 export default class UserCommentsView extends Vue {
@@ -76,6 +81,9 @@ export default class UserCommentsView extends Vue {
   private mounted() {
     if (!this.userCommentMap(this.otherUserId)) {
       this.getCommentsOfOtherUser();
+    } else {
+      // 已经有数据了
+      this.closeLoading()
     }
   }
 
@@ -110,6 +118,7 @@ export default class UserCommentsView extends Vue {
     payload: LikePayload
   ) => Promise<boolean>;
   @Action("getUserCommentList") getUserCommentList: any;
+  @Action("closeLoading") closeLoading: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")

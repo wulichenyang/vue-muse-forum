@@ -3,7 +3,10 @@
     class="user-posts"
     ref="container"
   >
-  <!-- 空白内容提示条 -->
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userPostIds(otherUserId) && userPostIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
+    <!-- 空白内容提示条 -->
     <TipBar
       :ifShow="userPostIds(otherUserId) && userPostIds(otherUserId).length === 0 && !this.ifLoading"
       text="还没有发帖哟"
@@ -53,11 +56,13 @@ import { PostBrief } from "@/assets/js/dataType";
 import { UserDetail } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
+import Skeleton from '@/components/Skeleton.vue'
 
 @Component({
   components: {
     Post,
-    TipBar
+    TipBar,
+    Skeleton
   }
 })
 export default class UserPostsView extends Vue {

@@ -82,6 +82,7 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
 
@@ -95,6 +96,7 @@ const actions = {
 
       context.commit(types.SET_USER_FANS_IDS, { userId, fansIds })
       context.commit(types.ADD_USER_FANS_TO_BRIEF_MAP, { userFansBriefMap })
+      context.dispatch('closeLoading')
       return true
     }
   },
@@ -107,6 +109,7 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
 
@@ -120,6 +123,7 @@ const actions = {
 
       context.commit(types.SET_FOLLOW_USERS_IDS, { userId, fansIds })
       context.commit(types.ADD_USER_FANS_TO_BRIEF_MAP, { userFansBriefMap })
+      context.dispatch('closeLoading')
       return true
     }
   },

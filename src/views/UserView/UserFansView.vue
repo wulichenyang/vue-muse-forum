@@ -1,6 +1,9 @@
 <template>
   <section class="user-fans">
 
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userFanIds(otherUserId) && userFanIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 粉丝列表 -->
     <section class="user-fans-wrapper">
       <!-- 空白内容提示条 -->
@@ -44,11 +47,13 @@ import To from "@/utils/to";
 import { FollowPayload } from "@/api/follow";
 import { UserFansBriefMap } from "@/store/modules/fans";
 import TipBar from "@/components/TipBar.vue";
+import Skeleton from '@/components/Skeleton.vue'
 
 @Component({
   components: {
     Fan,
-    TipBar
+    TipBar,
+    Skeleton
   }
 })
 export default class UserFansView extends Vue {

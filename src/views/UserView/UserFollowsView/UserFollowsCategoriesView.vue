@@ -1,6 +1,9 @@
 <template>
   <!-- 用户关注分类 -->
   <section class="user-follows-categories">
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userFollowCategoryIds(otherUserId) && userFollowCategoryIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 空白内容提示条 -->
     <TipBar
       :ifShow="userFollowCategoryIds(otherUserId) && userFollowCategoryIds(otherUserId).length === 0 && !this.ifLoading"
@@ -33,9 +36,10 @@ import { UserDetail } from "@/assets/js/dataType";
 import { CategoryHeaderDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import TipBar from "@/components/TipBar.vue";
+import Skeleton from "@/components/Skeleton.vue";
 
 @Component({
-  components: { CategoryDetailHeader, TipBar }
+  components: { CategoryDetailHeader, TipBar, Skeleton }
 })
 export default class UserFollowsCategoriesView extends Vue {
   // Props

@@ -197,6 +197,7 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
 
@@ -210,6 +211,7 @@ const actions = {
 
       context.commit(types.SET_USER_COMMENT_IDS, { userId, commentIds })
       context.commit(types.ADD_USER_COMMENT_TO_BRIEF_MAP, { userId, commentDetailMap })
+      context.dispatch('closeLoading')
       return true
     }
   },

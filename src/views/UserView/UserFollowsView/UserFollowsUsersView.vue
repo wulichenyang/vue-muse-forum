@@ -1,6 +1,10 @@
 <template>
   <!-- 关注用户列表 -->
   <section class="user-follows-users">
+
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userFollowUserIds(otherUserId) && userFollowUserIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 空白内容提示条 -->
     <TipBar
       :ifShow="userFollowUserIds(otherUserId) && userFollowUserIds(otherUserId).length === 0 && !this.ifLoading"
@@ -38,12 +42,14 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { FollowPayload } from "@/api/follow";
 import { UserFansBriefMap } from "@/store/modules/fans";
+import Skeleton from '@/components/Skeleton.vue'
 
 @Component({
   components: {
     Fan,
     ContainerInner,
-    TipBar
+    TipBar,
+    Skeleton
   }
 })
 export default class UserFollowsUsersView extends Vue {

@@ -1,6 +1,9 @@
 <template>
   <!-- 用户关注文章 -->
   <section class="user-follows-posts">
+    <!-- 骨架屏 -->
+    <Skeleton :ifShow="userFollowPostIds(otherUserId) && userFollowPostIds(otherUserId).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 空白内容提示条 -->
     <TipBar
       :ifShow="userFollowPostIds(otherUserId) && userFollowPostIds(otherUserId).length === 0 && !this.ifLoading"
@@ -33,11 +36,13 @@ import To from "@/utils/to";
 import Post from "@/components/Post/Post.vue";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
+import Skeleton from '@/components/Skeleton.vue'
 
 @Component({
   components: {
     Post,
-    TipBar
+    TipBar,
+    Skeleton
   }
 })
 export default class UserFollowsPostsView extends Vue {

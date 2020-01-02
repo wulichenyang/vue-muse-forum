@@ -5,18 +5,8 @@
     ref="container"
   >
     <!-- 骨架屏 -->
-    <section v-if="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0 && this.ifLoading">
-      <ContentLoader
-        :height="88"
-        :key="i"
-        v-for="i in [1,2,3,4,5,6,7,8]"
-      >
-        <circle cx="44" cy="40" r="20" />
-        <rect x="80" y="20" rx="4" ry="4" width="220" height="13" />
-        <rect x="80" y="44" rx="3" ry="3" width="260" height="10" />
-        <rect x="80" y="68" rx="3" ry="3" width="180" height="10" />
-      </ContentLoader>
-    </section>
+    <Skeleton :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0 && this.ifLoading"></Skeleton>
+
     <!-- 空白内容提示条 -->
     <TipBar
       :ifShow="categoryPostIds(categoryIdNow) && categoryPostIds(categoryIdNow).length === 0 && !this.ifLoading"
@@ -65,12 +55,13 @@ import {
 } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
-import { ContentLoader } from "vue-content-loader";
+import Skeleton from "@/components/Skeleton.vue";
+
 @Component({
   components: {
     Post,
     TipBar,
-    ContentLoader
+    Skeleton
   }
 })
 export default class PostListView extends Vue {

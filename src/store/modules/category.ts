@@ -172,6 +172,7 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
 
@@ -185,6 +186,7 @@ const actions = {
 
       context.commit(types.SET_FOLLOW_CATEGORY_LIST_IDS, { userId, categoryIds })
       context.commit(types.ADD_USER_CATEGORY_LIST_TO_CATEGORY_HEADER_DETAIL_MAP, { categoryHeaderDetailMap })
+      context.dispatch('closeLoading')
       return true
     }
   },

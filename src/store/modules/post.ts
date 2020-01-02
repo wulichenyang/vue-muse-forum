@@ -251,13 +251,15 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
-
+    
     if (res && res.code === 0) {
       // 获取成功
       if (res.data.noMore) {
         context.commit(types.NO_MORE_DATA_USER_TO_POST_LIST_PAGE, { userId })
+        context.dispatch('closeLoading')
         return 'noMore'
       } else {
         let postBriefMap: PostBriefMap = {};
@@ -265,9 +267,10 @@ const actions = {
           postBriefMap[x._id] = x;
           return x._id
         });
-
+        
         context.commit(types.SET_USER_POST_IDS, { userId, postIds })
         context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
+        context.dispatch('closeLoading')
         return true
       }
     }
@@ -313,6 +316,7 @@ const actions = {
 
     // 获取失败
     if (err) {
+      context.dispatch('closeLoading')
       return false
     }
 
@@ -326,6 +330,7 @@ const actions = {
 
       context.commit(types.SET_USER_FOLLOW_POST_IDS, { userId, postIds })
       context.commit(types.ADD_POST_TO_BRIEF_MAP, { postBriefMap })
+      context.dispatch('closeLoading')
       return true
     }
   },
