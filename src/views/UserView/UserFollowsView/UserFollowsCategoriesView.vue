@@ -24,7 +24,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
@@ -37,11 +38,12 @@ import { CategoryHeaderDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from "@/components/Skeleton.vue";
+import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
 
 @Component({
   components: { CategoryDetailHeader, TipBar, Skeleton }
 })
-export default class UserFollowsCategoriesView extends Vue {
+export default class UserFollowsCategoriesView extends Mixins(OtherUserMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -58,9 +60,6 @@ export default class UserFollowsCategoriesView extends Vue {
   // Data
 
   // Computed
-  get otherUserId() {
-    return this.$route.params.id;
-  }
 
   // Lifecycle
   private mounted() {

@@ -114,7 +114,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { UserDetail, OtherUserDetail } from "@/assets/js/dataType";
@@ -123,6 +124,7 @@ import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { FollowTargetType } from "@/api/follow";
+import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
 
 @Component({
   components: {
@@ -130,7 +132,7 @@ import { FollowTargetType } from "@/api/follow";
     UserAvatar
   }
 })
-export default class UserView extends Vue {
+export default class UserView extends Mixins(OtherUserMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -181,10 +183,6 @@ export default class UserView extends Vue {
   };
 
   // Computed
-  get otherUserId() {
-    return this.$route.params.id;
-  }
-
   get otherUser() {
     return this.otherUserDetail(this.otherUserId);
   }

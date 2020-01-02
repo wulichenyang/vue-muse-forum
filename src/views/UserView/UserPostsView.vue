@@ -43,7 +43,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import UserAvatar from "@/components/UserAvatar.vue";
@@ -57,6 +58,7 @@ import { UserDetail } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from '@/components/Skeleton.vue'
+import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
 
 @Component({
   components: {
@@ -65,7 +67,7 @@ import Skeleton from '@/components/Skeleton.vue'
     Skeleton
   }
 })
-export default class UserPostsView extends Vue {
+export default class UserPostsView extends Mixins(OtherUserMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -87,9 +89,6 @@ export default class UserPostsView extends Vue {
   loading: boolean = false;
 
   // Computed
-  get otherUserId() {
-    return this.$route.params.id;
-  }
 
   // Lifecycle
   // private mounted() {

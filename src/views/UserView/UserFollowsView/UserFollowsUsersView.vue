@@ -28,7 +28,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
@@ -43,6 +44,7 @@ import To from "@/utils/to";
 import { FollowPayload } from "@/api/follow";
 import { UserFansBriefMap } from "@/store/modules/fans";
 import Skeleton from '@/components/Skeleton.vue'
+import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
 
 @Component({
   components: {
@@ -52,7 +54,7 @@ import Skeleton from '@/components/Skeleton.vue'
     Skeleton
   }
 })
-export default class UserFollowsUsersView extends Vue {
+export default class UserFollowsUsersView extends Mixins(OtherUserMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -70,9 +72,6 @@ export default class UserFollowsUsersView extends Vue {
   userFansList: Array<UserFansBrief> = [];
 
   // Computed
-  get otherUserId() {
-    return this.$route.params.id;
-  }
 
   // Lifecycle
   private mounted() {
