@@ -83,8 +83,6 @@ import {
   Watch,
   Mixins
 } from "vue-property-decorator";
-import { formatNumber } from "@/utils/format";
-import { dateDiff } from "@/utils/time";
 import { Getter, Action } from "vuex-class";
 import UserAvatar from "@/components/UserAvatar.vue";
 import TextEditor from "@/components/TextEditor.vue";
@@ -96,6 +94,7 @@ import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
 import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
+import FormatMixin from '@/mixins/FormatMixin.vue';
 
 export interface ReplyLikePayload {
   targetId: string;
@@ -110,7 +109,7 @@ export interface ReplyLikePayload {
     TextEditor
   }
 })
-export default class Reply extends Mixins(CheckLoginMixin) {
+export default class Reply extends Mixins(CheckLoginMixin, FormatMixin) {
   // Props
   @Prop({
     type: Object,
@@ -125,12 +124,6 @@ export default class Reply extends Mixins(CheckLoginMixin) {
   // searchKey!: string;
 
   // Data
-
-  // 时间差函数
-  dateDiff: any = dateDiff;
-
-  // 数字格式化单位函数 单位k
-  formatNumber: any = formatNumber;
 
   // 是否展示回复框
   ifShowThis: boolean = false;

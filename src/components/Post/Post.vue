@@ -137,6 +137,7 @@ import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
 import { escape2Html } from "@/utils/articleHtml.ts";
 import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
+import FormatMixin from '@/mixins/FormatMixin.vue';
 
 export interface PostLikePayload {
   targetId: string;
@@ -147,7 +148,7 @@ export interface PostLikePayload {
 @Component({
   components: { UserAvatar }
 })
-export default class Post extends Mixins(CheckLoginMixin) {
+export default class Post extends Mixins(CheckLoginMixin, FormatMixin) {
   // Props
   @Prop({
     type: Object,
@@ -170,13 +171,7 @@ export default class Post extends Mixins(CheckLoginMixin) {
   // searchKey!: string;
 
   // Data
-  // 时间转换函数
-  // localDate: any = localDate;
 
-  // 时间差函数
-  dateDiff: any = dateDiff;
-  // 数字格式化单位函数 单位k
-  formatNumber: any = formatNumber;
   // 将图片url的html转码反转义
   escape2Html: (rawString: string) => string = escape2Html;
 

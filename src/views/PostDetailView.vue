@@ -197,6 +197,7 @@ import { LikeTargetType } from "@/api/like";
 import { FollowTargetType } from "@/api/follow";
 import UserDetailMixin from "@/mixins/UserDetailMixin.vue";
 import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
+import FormatMixin from "@/mixins/FormatMixin.vue";
 
 @Component({
   components: {
@@ -209,7 +210,8 @@ import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 })
 export default class PostDetailView extends Mixins(
   UserDetailMixin,
-  CheckLoginMixin
+  CheckLoginMixin,
+  FormatMixin
 ) {
   // Props
   // @Prop({
@@ -227,10 +229,6 @@ export default class PostDetailView extends Mixins(
   // Data
   // 是否关注该用户
   ifFollowUser: boolean = false;
-  // 时间差函数
-  dateDiff: any = dateDiff;
-  // 数字格式化单位函数 单位k
-  formatNumber: any = formatNumber;
   // Computed
   get postIdNow() {
     return this.$route.params.id;
