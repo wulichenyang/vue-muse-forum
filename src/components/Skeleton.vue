@@ -19,9 +19,6 @@ import {
   Component,
   Vue,
   Prop,
-  // Emit,
-  // Model,
-  // Watch
 } from "vue-property-decorator";
 import {} from "@/assets/js/dataType";
 import { ContentLoader } from "vue-content-loader";
