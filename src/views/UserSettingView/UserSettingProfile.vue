@@ -92,23 +92,25 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { UserSettingInfo, UserDetail } from "@/assets/js/dataType";
+import { UserSettingInfo } from "@/assets/js/dataType";
 import { nicknameRules, userBriefRules } from "@/utils/validate";
 import { UpdateUserSettingPayload } from "@/api/user";
 import Toast from "muse-ui-toast";
 import { updateUserSetting } from "@/api/user";
 import To from "@/utils/to";
 import UploadPhoto from "@/components/Upload/UploadPhoto.vue";
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
     UploadPhoto
   }
 })
-export default class UserSettingProfile extends Vue {
+export default class UserSettingProfile extends Mixins(UserDetailMixin) {
   // Props
   // Props
   // @Prop({
@@ -214,7 +216,6 @@ export default class UserSettingProfile extends Vue {
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
-  @Getter("userDetail") userDetail!: UserDetail | null;
 
   // @Action("getUser") getUser: any;
   @Action("getUser") getUser: any;

@@ -124,7 +124,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import UserAvatar from "@/components/UserAvatar.vue";
 import { dateDiff } from "@/utils/time";
@@ -135,6 +136,7 @@ import { PostBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
 import { escape2Html } from "@/utils/articleHtml.ts";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 export interface PostLikePayload {
   targetId: string;
@@ -145,7 +147,7 @@ export interface PostLikePayload {
 @Component({
   components: { UserAvatar }
 })
-export default class Post extends Vue {
+export default class Post extends Mixins(CheckLoginMixin) {
   // Props
   @Prop({
     type: Object,
@@ -194,36 +196,30 @@ export default class Post extends Vue {
 
   // Methods
   onLike(targetId: string, type: LikeTargetType, authorId: string) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.emitTogglePostLike({
+        targetId,
+        type,
+        authorId
+      });
+
+      console.log("like");
       return;
     }
-
-    this.emitTogglePostLike({
-      targetId,
-      type,
-      authorId
-    });
-
-    console.log("like");
-    return;
   }
 
   onComment() {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.$router.push({
+        name: "post",
+        params: {
+          id: this.postBrief._id
+        },
+        hash: "#comment-editor"
+      });
+
       return;
     }
-
-    this.$router.push({
-      name: "post",
-      params: {
-        id: this.postBrief._id
-      },
-      hash: '#comment-editor'
-    });
-
-    return;
   }
 
   // 搜索返回高亮关键字
@@ -236,9 +232,6 @@ export default class Post extends Vue {
 
   @Emit("emitTogglePostLike")
   emitTogglePostLike(payload: PostLikePayload) {}
-
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

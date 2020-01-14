@@ -54,11 +54,12 @@ import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { fetchPostsOfOtherUser } from "@/api/post";
 import { PostBrief } from "@/assets/js/dataType";
-import { UserDetail } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from '@/components/Skeleton.vue'
 import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -67,7 +68,7 @@ import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
     Skeleton
   }
 })
-export default class UserPostsView extends Mixins(OtherUserMixin) {
+export default class UserPostsView extends Mixins(OtherUserMixin, LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -75,7 +76,6 @@ export default class UserPostsView extends Mixins(OtherUserMixin) {
   //   required: true,
   // })
   // list!: string;
-  @Getter("userDetail") userDetail!: UserDetail | null;
 
   // @Model("onChange", {
   //   type: String
@@ -175,7 +175,6 @@ export default class UserPostsView extends Mixins(OtherUserMixin) {
   @Getter("userPostIds") userPostIds!: any;
   @Getter("userToPostListPageRequestPayloadMap")
   userToPostListPageRequestPayloadMap!: any;
-  @Getter("ifLoading") ifLoading!: any;
 
   @Action("addUserToPostListPage") addUserToPostListPage: any;
   @Action("noMoreDataUserToPostListPage") noMoreDataUserToPostListPage: any;

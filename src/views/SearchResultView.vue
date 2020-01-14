@@ -34,7 +34,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { searchPostListOrUserOrCategory } from "@/api/search";
 import ContainerInner from "@/components/ContainerInner.vue";
@@ -45,6 +46,7 @@ import Post from "@/components/Post/Post.vue";
 import { UserBrief, PostBrief } from "@/assets/js/dataType";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -53,7 +55,7 @@ import TipBar from "@/components/TipBar.vue";
     TipBar
   }
 })
-export default class SearchResultView extends Vue {
+export default class SearchResultView extends Mixins(UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -127,7 +129,6 @@ export default class SearchResultView extends Vue {
     });
   }
 
-  @Getter("userDetail") userDetail!: any;
   @Action("toggleBriefPostLike") toggleBriefPostLike: any;
   @Watch("$route", { immediate: true, deep: true })
   onRouterChanged(to: any, from: any) {

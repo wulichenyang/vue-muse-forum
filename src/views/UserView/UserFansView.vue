@@ -41,7 +41,6 @@ import Fan from "@/components/Fan/Fan.vue";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import { UserFansBrief } from "@/assets/js/dataType";
-import { UserDetail } from "@/assets/js/dataType";
 
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
@@ -50,6 +49,8 @@ import { UserFansBriefMap } from "@/store/modules/fans";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from '@/components/Skeleton.vue'
 import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -58,7 +59,7 @@ import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
     Skeleton
   }
 })
-export default class UserFansView extends Mixins(OtherUserMixin) {
+export default class UserFansView extends Mixins(OtherUserMixin, LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -101,8 +102,6 @@ export default class UserFansView extends Mixins(OtherUserMixin) {
     });
   }
 
-  @Getter("ifLoading") ifLoading!: any;
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("userFanMap") userFanMap!: Promise<UserFansBriefMap>;
   @Getter("userFanIds") userFanIds!: (userId: string) => Promise<string[]>;
   @Action("toggleUserFansFollow") toggleUserFansFollow!: (

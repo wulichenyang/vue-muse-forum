@@ -40,14 +40,13 @@
 
 
 <script lang="ts">
-import { Component, Vue, Model, Watch } from "vue-property-decorator";
+import { Component, Vue, Model, Watch, Mixins } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import Logo from "@/components/HomeTop/Logo.vue";
 import SearchBar from "@/components/HomeTop/SearchBar.vue";
 import SignPortal from "@/components/HomeTop/SignPortal.vue";
 import SignModal from "@/components/HomeTop/SignModal.vue";
 import UserOption from "@/components/HomeTop/UserOption.vue";
-import { UserDetail } from "@/assets/js/dataType";
 import { getScrollTop } from "@/utils/scroll";
 import {
   signUp,
@@ -63,6 +62,7 @@ import Toast from "muse-ui-toast";
 import { ByType } from "@/api/user";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -73,12 +73,10 @@ import { access_token } from "@/config";
     UserOption
   }
 })
-export default class HomeTop extends Vue {
-  @Getter("userDetail") userDetail!: UserDetail | null;
+export default class HomeTop extends Mixins(UserDetailMixin) {
   @Getter("isLogin") isLogin!: boolean;
   @Getter("openLoginDialog") openLoginDialog!: boolean;
 
-  @Action("getUser") getUser: any;
   @Action("closeLoginDialog") closeLoginDialog: any;
 
   // 监听全局Vuex提示登录框

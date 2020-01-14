@@ -77,7 +77,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import UserAvatar from "@/components/UserAvatar.vue";
 import { dateDiff } from "@/utils/time";
@@ -87,9 +88,10 @@ import { Getter, Action } from "vuex-class";
 import { UserFansBrief } from "@/assets/js/dataType";
 import { LikeTargetType } from "@/api/like";
 import { hashId2DetaultAvatar } from "@/utils/hash";
-import { UserDetail } from "@/assets/js/dataType";
 import { FollowPayload } from "@/api/follow";
 import { FollowTargetType } from "@/api/follow";
+import UserDetailMixin from "@/mixins/UserDetailMixin.vue";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 export interface FanLikePayload {
   targetId: string;
@@ -101,7 +103,7 @@ export interface FanLikePayload {
 @Component({
   components: { UserAvatar }
 })
-export default class Fan extends Vue {
+export default class Fan extends Mixins(UserDetailMixin, CheckLoginMixin) {
   // Props
   @Prop({
     type: Object,
@@ -151,25 +153,19 @@ export default class Fan extends Vue {
 
   // Methods
   onToggleFollowUser(targetId: string, type: FollowTargetType) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.emitToggleFollowUser({
+        targetId,
+        type
+      });
+
+      console.log("follow user");
       return;
     }
-
-    this.emitToggleFollowUser({
-      targetId,
-      type
-    });
-
-    console.log("follow user");
-    return;
   }
 
   @Emit("emitToggleFollowUser")
   emitToggleFollowUser(payload: FollowPayload) {}
-  @Getter("userDetail") userDetail!: UserDetail | null;
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
 
   // @Emit("select")
   // select(listItem: Song, index: number) {}

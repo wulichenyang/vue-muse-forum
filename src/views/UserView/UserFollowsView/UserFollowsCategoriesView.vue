@@ -33,17 +33,18 @@ import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
-import { UserDetail } from "@/assets/js/dataType";
 import { CategoryHeaderDetail } from "@/assets/js/dataType";
 import CategoryDetailHeader from "@/components/CategoryDetail/CategoryDetailHeader.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from "@/components/Skeleton.vue";
 import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: { CategoryDetailHeader, TipBar, Skeleton }
 })
-export default class UserFollowsCategoriesView extends Mixins(OtherUserMixin) {
+export default class UserFollowsCategoriesView extends Mixins(OtherUserMixin, LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -85,14 +86,12 @@ export default class UserFollowsCategoriesView extends Mixins(OtherUserMixin) {
   //   this.select(song, index);
   // }
 
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: Promise<
     CategoryHeaderDetail
   >;
   @Getter("userFollowCategoryIds") userFollowCategoryIds!: (
     userId: string
   ) => Promise<string[]>;
-  @Getter("ifLoading") ifLoading!: any;
 
   @Action("getFollowCategoryList") getFollowCategoryList: any;
 

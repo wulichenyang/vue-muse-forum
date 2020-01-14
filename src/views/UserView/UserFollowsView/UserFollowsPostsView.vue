@@ -29,7 +29,6 @@ import {
   Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { UserDetail } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
@@ -39,6 +38,8 @@ import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from '@/components/Skeleton.vue'
 import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -47,7 +48,7 @@ import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
     Skeleton
   }
 })
-export default class UserFollowsPostsView extends Mixins(OtherUserMixin) {
+export default class UserFollowsPostsView extends Mixins(OtherUserMixin, LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -93,10 +94,8 @@ export default class UserFollowsPostsView extends Mixins(OtherUserMixin) {
     });
   }
 
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("userFollowPostIds") userFollowPostIds!: any;
-  @Getter("ifLoading") ifLoading!: any;
 
   @Action("getUserFollowPostList") getUserFollowPostList: any;
 

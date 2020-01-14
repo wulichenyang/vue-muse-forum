@@ -45,11 +45,11 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {
-  UserDetail,
   PageRequestPayload,
   CategoryToPageRequestPayloadMap
 } from "@/assets/js/dataType";
@@ -58,6 +58,9 @@ import Post from "@/components/Post/Post.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
+
 
 @Component({
   components: {
@@ -67,7 +70,7 @@ import TipBar from "@/components/TipBar.vue";
     TipBar
   }
 })
-export default class CategoryView extends Vue {
+export default class CategoryView extends Mixins(LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -200,8 +203,6 @@ export default class CategoryView extends Vue {
     });
   }
 
-  @Getter("ifLoading") ifLoading!: any;
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("categoryHeaderDetail") categoryHeaderDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("categoryPostIds") categoryPostIds!: any;

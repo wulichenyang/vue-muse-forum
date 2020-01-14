@@ -100,12 +100,11 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { quillEditor } from "vue-quill-editor";
 import { Getter, Action } from "vuex-class";
-import { UserDetail } from "@/assets/js/dataType";
-import To from "@/utils/to";
 import { commentRules } from "@/utils/validate";
 import { UserBrief } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
@@ -114,6 +113,7 @@ import { emoji2Html } from "@/utils/emoji";
 // import data from "emoji-mart-vue-fast/data/messenger.json";
 import "emoji-mart-vue-fast/css/emoji-mart.css";
 import { emojiIndex } from "../utils/emoji";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 @Component({
   components: {
@@ -122,7 +122,7 @@ import { emojiIndex } from "../utils/emoji";
     Emoji
   }
 })
-export default class TextEditor extends Vue {
+export default class TextEditor extends Mixins(CheckLoginMixin) {
   // Props
   // 标题
   @Prop({
@@ -240,11 +240,9 @@ export default class TextEditor extends Vue {
 
   onFocusTextEditor() {
     // 显示提交组件
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
+      this.ifShowTips = true;
     }
-    this.ifShowTips = true;
   }
 
   removeHiddenThisHandler() {
@@ -294,45 +292,39 @@ export default class TextEditor extends Vue {
   // 提交
   async onSubmit() {
     // 如果未登录则弹出登录框
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
-    }
-
-    // 已经提交了请求就不继续发送
-    if (this.submitting) {
-      return;
-    }
-
-    let isCheckOk = await (this.$refs.form as any).validate();
-    if (isCheckOk) {
-      console.log("ok");
-      this.submitting = true;
-      // 调用父组件回调，传入编辑框内容
-      let isOk = await this.submitCallback(this.form.content);
-      // 执行成功
-      if (isOk) {
-        // 关闭提交中标志
-        this.submitting = false;
-        // 清除表单
-        this.clearForm();
-        // 隐藏该editor
-        this.hiddenThis();
+    if (this.ifLogin()) {
+      // 已经提交了请求就不继续发送
+      if (this.submitting) {
         return;
-      } else {
-        // 执行失败
-        // 关闭提交中标志
-        this.submitting = false;
-        return;
+      }
+
+      let isCheckOk = await (this.$refs.form as any).validate();
+      if (isCheckOk) {
+        console.log("ok");
+        this.submitting = true;
+        // 调用父组件回调，传入编辑框内容
+        let isOk = await this.submitCallback(this.form.content);
+        // 执行成功
+        if (isOk) {
+          // 关闭提交中标志
+          this.submitting = false;
+          // 清除表单
+          this.clearForm();
+          // 隐藏该editor
+          this.hiddenThis();
+          return;
+        } else {
+          // 执行失败
+          // 关闭提交中标志
+          this.submitting = false;
+          return;
+        }
       }
     }
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
-
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
 
   @Emit("onShowThisChange")
   onShowThisChange(ifShowThis: boolean) {}

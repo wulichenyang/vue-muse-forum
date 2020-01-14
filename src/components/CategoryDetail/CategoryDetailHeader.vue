@@ -63,17 +63,19 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import { CategoryHeaderDetail } from "@/assets/js/dataType";
-import { UserDetail } from "@/assets/js/dataType";
 import { FollowTargetType } from "@/api/follow";
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
+import CheckLoginMixin from '@/mixins/CheckLoginMixin.vue'
 
 @Component({
   components: {}
 })
-export default class CategoryDetailHeader extends Vue {
+export default class CategoryDetailHeader extends Mixins(UserDetailMixin, CheckLoginMixin) {
   // Props
   @Prop({
     type: Object,
@@ -101,18 +103,14 @@ export default class CategoryDetailHeader extends Vue {
 
   // Methods
   onToggleFollowCategory(targetId: string, type: FollowTargetType) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if(this.ifLogin()) {
+      this.toggleCategoryFollow({
+        targetId,
+        type
+      });
     }
-    this.toggleCategoryFollow({
-      targetId,
-      type
-    });
   }
-  @Getter("userDetail") userDetail!: UserDetail | null;
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
+
   @Action("toggleCategoryFollow") toggleCategoryFollow: any;
 
   // @Emit("select")

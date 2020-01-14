@@ -78,7 +78,6 @@ import {
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
 import { passwordRules } from "@/utils/validate";
-import { UserDetail } from "@/assets/js/dataType";
 import Toast from "muse-ui-toast";
 import { UpdateUserPwdPayload, updateUserPassword } from "@/api/user";
 import To from "@/utils/to";
@@ -198,7 +197,7 @@ export default class UserSettingPassword extends Vue {
     }
   }
 
-  @Getter("userDetail") userDetail!: UserDetail | null;
+  // // // @Getter("userDetail") userDetail!: UserDetail | null;
 
   // @Action("getUser") getUser: any;
 

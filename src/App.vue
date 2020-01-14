@@ -13,19 +13,17 @@
 
 <script lang="ts">
 import HomeTop from "@/components/HomeTop/HomeTop.vue";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Mixins } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { UserDetail } from "@/assets/js/dataType";
 import cookie from "@/utils/cookie";
 import { access_token } from "@/config";
 import { museThemeConfig } from "@/config/index";
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: { HomeTop }
 })
-export default class App extends Vue {
-  @Getter("userDetail") userDetail!: UserDetail | null;
-  @Action("getUser") getUser: any;
+export default class App extends Mixins(UserDetailMixin) {
   private mounted() {
     // 已登录，请求用户数据
     if (!this.userDetail && cookie.getCookie(access_token)) {

@@ -80,7 +80,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { formatNumber } from "@/utils/format";
 import { dateDiff } from "@/utils/time";
@@ -94,6 +95,7 @@ import To from "@/utils/to";
 import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 export interface ReplyLikePayload {
   targetId: string;
@@ -108,7 +110,7 @@ export interface ReplyLikePayload {
     TextEditor
   }
 })
-export default class Reply extends Vue {
+export default class Reply extends Mixins(CheckLoginMixin) {
   // Props
   @Prop({
     type: Object,
@@ -141,19 +143,16 @@ export default class Reply extends Vue {
 
   // Methods
   onLike(targetId: string, type: LikeTargetType, authorId: string) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.emitToggleReplyLike({
+        targetId,
+        type,
+        authorId
+      });
+
+      console.log("like");
       return;
     }
-
-    this.emitToggleReplyLike({
-      targetId,
-      type,
-      authorId
-    });
-    
-    console.log("like");
-    return;
   }
 
   showReplyInput() {
@@ -161,12 +160,9 @@ export default class Reply extends Vue {
   }
 
   onReply() {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
+      this.showReplyInput();
     }
-
-    this.showReplyInput();
   }
 
   async onSubmitReply(content: string): Promise<boolean> {
@@ -199,8 +195,6 @@ export default class Reply extends Vue {
   @Emit("emitToggleReplyLike")
   emitToggleReplyLike(payload: ReplyLikePayload) {}
 
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
 }
 </script>

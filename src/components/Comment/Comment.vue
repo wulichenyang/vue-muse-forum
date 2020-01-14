@@ -100,7 +100,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { ReplyLikePayload } from "@/components/Comment/Reply/Reply.vue";
 import { formatNumber } from "@/utils/format";
@@ -120,11 +121,14 @@ import To from "@/utils/to";
 import Toast from "muse-ui-toast";
 import { showEmoji } from "@/utils/emoji";
 import { LikeTargetType } from "@/api/like";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
+
 export interface CommentLikePayload {
   targetId: string;
   type: LikeTargetType;
   authorId: string;
 }
+
 @Component({
   components: {
     UserAvatar,
@@ -133,7 +137,7 @@ export interface CommentLikePayload {
     Reply
   }
 })
-export default class Comment extends Vue {
+export default class Comment extends Mixins(CheckLoginMixin) {
   // Props
   @Prop({
     type: Object,
@@ -165,16 +169,14 @@ export default class Comment extends Vue {
 
   // Methods
   onLike(targetId: string, type: LikeTargetType, authorId: string) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.emitToggleCommentLike({
+        targetId,
+        type,
+        authorId
+      });
       return;
     }
-    this.emitToggleCommentLike({
-      targetId,
-      type,
-      authorId
-    });
-    return;
   }
 
   onToggleReplyLike(payload: ReplyLikePayload) {
@@ -191,12 +193,9 @@ export default class Comment extends Vue {
   }
 
   onReply() {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
+      this.showReplyInput();
     }
-
-    this.showReplyInput();
   }
 
   async onSubmitReply(content: string): Promise<boolean> {
@@ -229,8 +228,6 @@ export default class Comment extends Vue {
   @Emit("emitToggleCommentLike")
   emitToggleCommentLike(payload: CommentLikePayload) {}
 
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
   @Action("toggleReplyLike") toggleReplyLike: any;
   @Action("addReplyToCommentMap") addReplyToCommentMap: any;
   @Getter("replyDetail") replyDetail!: any;

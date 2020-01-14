@@ -176,7 +176,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import { localDate, dateDiff } from "@/utils/time";
 import { formatNumber } from "@/utils/format";
@@ -194,6 +195,8 @@ import { CommentRawDetail } from "@/assets/js/dataType";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
 import { LikeTargetType } from "@/api/like";
 import { FollowTargetType } from "@/api/follow";
+import UserDetailMixin from "@/mixins/UserDetailMixin.vue";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 @Component({
   components: {
@@ -204,7 +207,10 @@ import { FollowTargetType } from "@/api/follow";
     UserName
   }
 })
-export default class PostDetailView extends Vue {
+export default class PostDetailView extends Mixins(
+  UserDetailMixin,
+  CheckLoginMixin
+) {
   // Props
   // @Prop({
   //   type: String,
@@ -269,15 +275,13 @@ export default class PostDetailView extends Vue {
     type: FollowTargetType,
     userId?: string
   ) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
+      this.togglePostDetailFollow({
+        targetId,
+        type,
+        userId
+      });
     }
-    this.togglePostDetailFollow({
-      targetId,
-      type,
-      userId
-    });
   }
 
   onToggleCommentLike(payload: CommentLikePayload) {
@@ -326,26 +330,21 @@ export default class PostDetailView extends Vue {
 
   // 关注该用户
   followUser() {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
     }
   }
 
   onLike(targetId: string, type: LikeTargetType, authorId: string) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
+    if (this.ifLogin()) {
+      this.toggleDetailPostLike({
+        targetId,
+        type,
+        authorId
+      });
+
+      console.log("like");
       return;
     }
-
-    this.toggleDetailPostLike({
-      targetId,
-      type,
-      authorId
-    });
-
-    console.log("like");
-    return;
   }
   toComment() {
     (document.getElementById("comment-editor") as any).scrollIntoView({
@@ -354,16 +353,13 @@ export default class PostDetailView extends Vue {
   }
 
   @Getter("postDetail") postDetail!: any;
-  @Getter("userDetail") userDetail!: any;
   @Getter("commentDetail") commentDetail!: any;
-  @Getter("isLogin") isLogin!: boolean | null;
 
   @Action("togglePostDetailFollow") togglePostDetailFollow: any;
   @Action("toggleDetailPostLike") toggleDetailPostLike: any;
   @Action("toggleCommentLike") toggleCommentLike!: (
     payload: LikePayload
   ) => Promise<boolean>;
-  @Action("openLoginDialog") openLoginDialog: any;
   @Action("getPostDetail") getPostDetail: any;
   @Action("addCommentToPostDetail") addCommentToPostDetail: any;
 

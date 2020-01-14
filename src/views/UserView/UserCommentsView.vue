@@ -41,7 +41,6 @@ import Comment from "@/components/Comment/Comment.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
-import { UserDetail } from "@/assets/js/dataType";
 import { CommentDetail } from "@/assets/js/dataType";
 import { fetchCommentsOfOtherUser } from "@/api/comment";
 import { CommentLikePayload } from "@/components/Comment/Comment.vue";
@@ -49,6 +48,8 @@ import { LikePayload } from "@/api/like";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from '@/components/Skeleton.vue'
 import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -57,7 +58,7 @@ import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
     Skeleton
   }
 })
-export default class UserCommentsView extends Mixins(OtherUserMixin) {
+export default class UserCommentsView extends Mixins(OtherUserMixin, LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -106,18 +107,14 @@ export default class UserCommentsView extends Mixins(OtherUserMixin) {
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("userCommentMap") userCommentMap!: any;
   @Getter("userCommentIds") userCommentIds!: any;
-  @Getter("ifLoading") ifLoading!: any;
 
-  // @Getter("userDetail") userDetail!: UserDetail | null;
 
   @Action("toggleUserCommentLike") toggleUserCommentLike!: (
     payload: LikePayload
   ) => Promise<boolean>;
   @Action("getUserCommentList") getUserCommentList: any;
-  @Action("closeLoading") closeLoading: any;
   // @Action("getUser") getUser: any;
 
   // @Emit("select")

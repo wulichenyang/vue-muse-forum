@@ -118,13 +118,15 @@ import {
   Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
-import { UserDetail, OtherUserDetail } from "@/assets/js/dataType";
+import { OtherUserDetail } from "@/assets/js/dataType";
 import UserAvatar from "@/components/UserAvatar.vue";
 import ContainerInner from "@/components/ContainerInner.vue";
 import Toast from "muse-ui-toast";
 import To from "@/utils/to";
 import { FollowTargetType } from "@/api/follow";
-import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
+import OtherUserMixin from "@/mixins/OtherUserMixin.vue";
+import UserDetailMixin from "@/mixins/UserDetailMixin.vue";
+import CheckLoginMixin from "@/mixins/CheckLoginMixin.vue";
 
 @Component({
   components: {
@@ -132,7 +134,11 @@ import OtherUserMixin from '@/mixins/OtherUserMixin.vue'
     UserAvatar
   }
 })
-export default class UserView extends Mixins(OtherUserMixin) {
+export default class UserView extends Mixins(
+  OtherUserMixin,
+  UserDetailMixin,
+  CheckLoginMixin
+) {
   // Props
   // @Prop({
   //   type: String,
@@ -237,14 +243,12 @@ export default class UserView extends Mixins(OtherUserMixin) {
   }
 
   onToggleFollowUser(targetId: string, type: FollowTargetType) {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
+      this.toggleUserFollow({
+        targetId,
+        type
+      });
     }
-    this.toggleUserFollow({
-      targetId,
-      type
-    });
   }
 
   getUserInfoWhenNotSaved() {
@@ -257,19 +261,14 @@ export default class UserView extends Mixins(OtherUserMixin) {
   }
 
   onMessageTo() {
-    if (!this.isLogin) {
-      this.openLoginDialog();
-      return;
+    if (this.ifLogin()) {
     }
   }
   // selectSong(song: Song, index: number): void {
   //   this.select(song, index);
   // }
 
-  @Getter("userDetail") userDetail!: UserDetail | null;
   @Getter("otherUserDetail") otherUserDetail!: any;
-  @Getter("isLogin") isLogin!: boolean | null;
-  @Action("openLoginDialog") openLoginDialog: any;
   @Action("getOtherUserDetail") getOtherUserDetail: any;
   @Action("toggleUserFollow") toggleUserFollow: any;
   // @Action("getUser") getUser: any;

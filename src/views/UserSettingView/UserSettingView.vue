@@ -37,7 +37,6 @@ import {
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
-import { UserDetail } from "@/assets/js/dataType";
 import ContainerInner from "@/components/ContainerInner.vue";
 import To from "@/utils/to";
 

@@ -43,7 +43,8 @@ import {
   Prop,
   Emit,
   Model,
-  Watch
+  Watch,
+  Mixins
 } from "vue-property-decorator";
 import Post from "@/components/Post/Post.vue";
 import { Getter, Action } from "vuex-class";
@@ -56,6 +57,8 @@ import {
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from "@/components/Skeleton.vue";
+import LoadingMixin from '@/mixins/LoadingMixin.vue'
+import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
 
 @Component({
   components: {
@@ -64,7 +67,7 @@ import Skeleton from "@/components/Skeleton.vue";
     Skeleton
   }
 })
-export default class PostListView extends Vue {
+export default class PostListView extends Mixins(LoadingMixin, UserDetailMixin) {
   // Props
   // @Prop({
   //   type: String,
@@ -188,12 +191,10 @@ export default class PostListView extends Vue {
     }
   }
 
-  @Getter("userDetail") userDetail!: any;
   @Getter("postBriefMap") postBriefMap!: any;
   @Getter("categoryToPageRequestPayloadMap")
   categoryToPageRequestPayloadMap!: any;
   @Getter("categoryPostIds") categoryPostIds!: any;
-  @Getter("ifLoading") ifLoading!: any;
 
   @Action("addCategoryToListPage") addCategoryToListPage: any;
   @Action("noMoreDataCategoryToListPage") noMoreDataCategoryToListPage: any;
