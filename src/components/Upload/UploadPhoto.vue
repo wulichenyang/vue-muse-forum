@@ -24,37 +24,38 @@ import {
   Vue,
   Emit,
   Prop,
-  Model
+  Model,
+  Mixins
 } from "vue-property-decorator";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
-import { qiniuConfig } from "@/config/index";
-import { fetchQiniuToken, uploadPhoto, deletePrePhoto } from "@/api/upload";
+import { deletePrePhoto } from "@/api/upload";
 import To from "@/utils/to";
 import Toast from "muse-ui-toast";
+import UploadQiniuMixin from "@/mixins/UploadQiniuMixin.vue";
 
 @Component({
   components: {}
 })
-export default class UploadPhoto extends Vue {
+export default class UploadPhoto extends Mixins(UploadQiniuMixin) {
   // Props
   @Prop({
     type: Boolean,
     default: false,
-    required: true,
+    required: true
   })
   ifSubmit!: boolean;
   // Props
   @Prop({
     type: String,
     default: "photo",
-    required: false,
+    required: false
   })
   prefix!: string;
 
   @Prop()
-  @Model('onAvatarChange') 
-  avatar!: string
+  @Model("onAvatarChange")
+  avatar!: string;
   // Data
   // 图片url
   // avatar: string = "";
@@ -62,10 +63,6 @@ export default class UploadPhoto extends Vue {
   isUploadAvatarOk: boolean = false;
   // 图片纯key值，用于删除图片
   photoKey: string = "";
-  // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
-  domain: string = qiniuConfig.domain;
-  // 这是七牛云空间的外链默认域名
-  qiniuaddr: string = qiniuConfig.qiniuAddr;
 
   // Lifecycle
   private mounted() {
@@ -96,85 +93,42 @@ export default class UploadPhoto extends Vue {
 
   // 验证文件合法性
   beforeUpload(file: File): boolean {
-    const isJPG = file.type === "image/jpeg" || file.type === "image/png";
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isJPG) {
-      Toast.error("上传头像图片只能是 JPG 格式!");
-    }
-    if (!isLt2M) {
-      Toast.error("上传头像图片大小不能超过 2MB!");
-    }
-    // 检测通过
-    if (isJPG && isLt2M) {
+    if (this.checkPhotoFormat(file)) {
+      // 检测通过
       this.isUploadAvatarOk = false;
       return true;
+    } else {
+      // 检测失败
+      return false;
     }
-    // 检测失败
-    return false;
   }
 
   async uploadQiniu(req: any) {
-    console.log(req);
-    const uploadConfig = {
-      headers: { "Content-Type": "multipart/form-data" }
-    };
+    let uploadRes = await this.uploadPhotoToQiniu(req, this.prefix);
 
-    let filetype = "";
-    if (req.file.type === "image/png") {
-      filetype = "png";
-    } else {
-      filetype = "jpg";
-    }
-    // 重命名要上传的文件
-    const keyname =
-      this.prefix +
-      "-" +
-      new Date().getTime() +
-      "-" +
-      Math.floor(Math.random() * 100) +
-      "." +
-      filetype;
-    // 从后端获取上传凭证token
-    let err, token;
-    [err, token] = await To(fetchQiniuToken());
-    // 获取token错误
-    if (err) {
+    // 上传图片至七牛云错误
+    if (uploadRes === false) {
       return;
     }
-    if (token && token.code === 0) {
-      console.log(token);
-      // 构建FormData图片对象
-      const formdata = new FormData();
-      formdata.append("file", req.file);
-      formdata.append("token", token.data);
-      formdata.append("key", keyname);
-      // 获取到凭证之后再将文件上传到七牛云空间
-      let uploadRes;
-      // Attention！：跨域，需要配置代理
-      [err, uploadRes] = await To(uploadPhoto(formdata, uploadConfig));
-      if (err) {
-        return;
+
+    // 上传七牛云成功，获取图片路径
+    if (uploadRes && uploadRes.key) {
+      console.log(uploadRes);
+      if (this.photoKey) {
+        // 多次上传，清除之前上传的图片
+        deletePrePhoto(this.photoKey);
       }
-      // 上传七牛云成功，获取图片路径
-      if (uploadRes && uploadRes.key) {
-        console.log(uploadRes);
-        if (this.photoKey) {
-          // 多次上传，清除之前上传的图片
-          deletePrePhoto(this.photoKey);
-        }
-        this.photoKey = uploadRes.key;
-        let url = "http://" + this.qiniuaddr + "/" + uploadRes.key;
-        // // 更新到父组件
-        this.onAvatarChange(url)
-        this.isUploadAvatarOk = true;
-        console.log("avatar:    ", this.avatar);
-      }
+      this.photoKey = uploadRes.key;
+      let url = "http://" + this.qiniuaddr + "/" + uploadRes.key;
+      // // 更新到父组件
+      this.onAvatarChange(url);
+      this.isUploadAvatarOk = true;
+      console.log("avatar:    ", this.avatar);
     }
   }
 
   @Emit("onAvatarChange")
   onAvatarChange(avatarUrl: string) {}
-
 }
 </script>
 

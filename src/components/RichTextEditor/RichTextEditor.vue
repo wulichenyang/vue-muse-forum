@@ -24,20 +24,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit, Model } from "vue-property-decorator";
+import {
+  Component,
+  Vue,
+  Prop,
+  Emit,
+  Model,
+  Mixins
+} from "vue-property-decorator";
 import { quillEditor } from "vue-quill-editor";
 import { Getter, Action } from "vuex-class";
 import {} from "@/assets/js/dataType";
 import Quill from "quill";
-import { fetchQiniuToken, uploadPhoto } from "@/api/upload";
-import { qiniuConfig } from "@/config/index";
 import To from "@/utils/to";
+import UploadQiniuMixin from "@/mixins/UploadQiniuMixin.vue";
+
 @Component({
   components: {
     quillEditor
   }
 })
-export default class RichTextEditor extends Vue {
+export default class RichTextEditor extends Mixins(UploadQiniuMixin) {
   @Prop({
     type: String,
     default: "photo",
@@ -50,10 +57,6 @@ export default class RichTextEditor extends Vue {
   htmlContent!: string;
   content: string = "";
   token: string = "";
-  // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
-  domain: string = qiniuConfig.domain;
-  // 这是七牛云空间的外链默认域名
-  qiniuaddr: string = qiniuConfig.qiniuAddr;
 
   // vue-quill-editor 富文本内容变化区域，用于图片上传
   addRange: any;
@@ -89,65 +92,28 @@ export default class RichTextEditor extends Vue {
   }
 
   async uploadQiniu(req: any) {
-    console.log(req);
-    const uploadConfig = {
-      headers: { "Content-Type": "multipart/form-data" }
-    };
+    let uploadRes = await this.uploadPhotoToQiniu(req, this.prefix);
 
-    let filetype = "";
-    if (req.file.type === "image/png") {
-      filetype = "png";
-    } else {
-      filetype = "jpg";
-    }
-
-    // 重命名要上传的文件
-    const keyname =
-      this.prefix +
-      "-" +
-      new Date().getTime() +
-      "-" +
-      Math.floor(Math.random() * 100) +
-      "." +
-      filetype;
-    // 从后端获取上传凭证token
-    let err, token;
-    [err, token] = await To(fetchQiniuToken());
-    // 获取token错误
-    if (err) {
+    // 上传图片至七牛云错误
+    if (uploadRes === false) {
       return;
     }
 
-    if (token && token.code === 0) {
-      console.log(token);
-      // 构建FormData图片对象
-      const formdata = new FormData();
-      formdata.append("file", req.file);
-      formdata.append("token", token.data);
-      formdata.append("key", keyname);
-      // 获取到凭证之后再将文件上传到七牛云空间
-      let uploadRes;
-      // Attention！：跨域，需要配置代理
-      [err, uploadRes] = await To(uploadPhoto(formdata, uploadConfig));
-      if (err) {
-        return;
-      }
-      // 上传七牛云成功，获取图片路径
-      if (uploadRes && uploadRes.key) {
-        console.log(uploadRes);
+    // 上传七牛云成功，获取图片路径
+    if (uploadRes && uploadRes.key) {
+      console.log(uploadRes);
 
-        // 图片的远程路径
-        let photoUrl = "http://" + this.qiniuaddr + "/" + uploadRes.key;
-        // 将图片添加到富文本内容区域
-        this.addRange = (this.$refs.myTextEditor as any).quill.getSelection();
-        // 调用编辑器的 insertEmbed 方法，插入URL
-        (this.$refs.myTextEditor as any).quill.insertEmbed(
-          this.addRange !== null ? this.addRange.index : 0,
-          "image",
-          photoUrl,
-          Quill.sources.USER
-        );
-      }
+      // 图片的远程路径
+      let photoUrl = "http://" + this.qiniuaddr + "/" + uploadRes.key;
+      // 将图片添加到富文本内容区域
+      this.addRange = (this.$refs.myTextEditor as any).quill.getSelection();
+      // 调用编辑器的 insertEmbed 方法，插入URL
+      (this.$refs.myTextEditor as any).quill.insertEmbed(
+        this.addRange !== null ? this.addRange.index : 0,
+        "image",
+        photoUrl,
+        Quill.sources.USER
+      );
     }
   }
 
