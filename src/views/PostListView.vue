@@ -57,8 +57,8 @@ import {
 import { PostLikePayload } from "@/components/Post/Post.vue";
 import TipBar from "@/components/TipBar.vue";
 import Skeleton from "@/components/Skeleton.vue";
-import LoadingMixin from '@/mixins/LoadingMixin.vue'
-import UserDetailMixin from '@/mixins/UserDetailMixin.vue'
+import LoadingMixin from "@/mixins/LoadingMixin.vue";
+import UserDetailMixin from "@/mixins/UserDetailMixin.vue";
 
 @Component({
   components: {

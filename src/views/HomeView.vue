@@ -4,7 +4,7 @@
     <!-- 文章分类列表 Phone -->
     <section class="mb-category-tab-wrapper">
       <mu-bottom-nav value.sync="movies">
-        <mu-bottom-nav-item 
+        <mu-bottom-nav-item
           v-for="(chipId) in categoryIds"
           :key="categoryDetail(chipId)._id"
           @click.native="onSelectCategory(categoryDetail(chipId))"
@@ -140,6 +140,8 @@ export default class HomeView extends Vue {
 
   // Phone
   .mb-category-tab-wrapper {
+    position: relative;
+    z-index: 999;
     ::-webkit-scrollbar {
       /*隐藏滚轮*/
       display: none;

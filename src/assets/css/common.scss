@@ -250,3 +250,15 @@ blockquote {
   width: 64px;
   height: 64px;
 }
+
+// PC上隐藏下拉刷新
+@media screen and (min-width: 576px) {
+  .mu-refresh-control {
+    display: none !important;
+  }
+}
+
+// 重置下拉刷新spinner的上外边距
+.mu-refresh-control {
+  margin-top: 14px !important;
+}
