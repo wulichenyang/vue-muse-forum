@@ -82,6 +82,7 @@
 
       <!-- TABS -->
       <mu-tabs
+        class="user-header-tabs"
         :value.sync="activeTabIndex"
         inverse
         color="secondary"
@@ -305,6 +306,7 @@ export default class UserView extends Mixins(
   text-align: center;
   .user-header {
     position: relative;
+    z-index: 200;
     // Phone
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -333,6 +335,11 @@ export default class UserView extends Mixins(
     .mail-icon {
       margin-right: 2px;
     }
+  }
+  .user-header-tabs {
+    background-color: $mainContainerBgColor !important;
+    position: relative !important;
+    z-index: 200 !important;
   }
 }
 

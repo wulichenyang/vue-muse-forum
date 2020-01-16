@@ -141,7 +141,7 @@ export default class HomeView extends Vue {
   // Phone
   .mb-category-tab-wrapper {
     position: relative;
-    z-index: 999;
+    z-index: 200;
     ::-webkit-scrollbar {
       /*隐藏滚轮*/
       display: none;

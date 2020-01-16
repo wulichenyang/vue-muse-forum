@@ -125,7 +125,7 @@ export default class CategoryDetailHeader extends Mixins(UserDetailMixin, CheckL
 @import "../../assets/css/var.scss";
 .category-detail-header {
   position: relative;
-  z-index: 999;
+  z-index: 200;
   display: flex;
   background-color: $mainContainerBgColor;
 
