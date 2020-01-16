@@ -230,10 +230,12 @@ export default class Comment extends Mixins(CheckLoginMixin, FormatMixin) {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .comment-wrapper {
+  overflow: hidden;
   text-align: left;
   margin-bottom: 14px;
   display: flex;
   .right-comment-content {
+    overflow: hidden;
     strong.title {
       color: $primary;
       &:hover {
@@ -242,6 +244,7 @@ export default class Comment extends Mixins(CheckLoginMixin, FormatMixin) {
     }
     flex: 1;
     p {
+      overflow: hidden;
       margin: 5px 5px 5px 0;
     }
     .bottom-wrapper {

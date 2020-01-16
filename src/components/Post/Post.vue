@@ -246,6 +246,7 @@ export default class Post extends Mixins(CheckLoginMixin, FormatMixin) {
   }
 
   .post-wrapper {
+    overflow: hidden;
     background: $mainContainerBgColor;
     // Phone
     padding: $postPhonePadding;
@@ -299,11 +300,14 @@ export default class Post extends Mixins(CheckLoginMixin, FormatMixin) {
         }
 
         .content-brief {
+          overflow: hidden;
           flex: 1;
         }
       }
 
       h2 {
+        overflow: hidden;
+
         // Phone
         margin: 24px 0 10px 0;
         &:hover {
