@@ -91,12 +91,12 @@ export default class UserPostsView extends Mixins(OtherUserMixin, LoadingMixin, 
   // Computed
 
   // Lifecycle
-  // private mounted() {
-  //   this.getPostsIfNoCache();
-  // }
-  private activated() {
+  private mounted() {
     this.getPostsIfNoCache();
   }
+  // private activated() {
+  //   this.getPostsIfNoCache();
+  // }
 
   // Methods
   private async refresh() {

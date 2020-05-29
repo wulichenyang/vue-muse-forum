@@ -239,21 +239,7 @@ export default class PostDetailView extends Mixins(
   }
 
   // Lifecycle
-  // private async mounted() {
-  //   if (!this.postData || !this.postData._id) {
-  //     await this.initPostDetail();
-  //   }
-
-  //   // 如果是进入评论，滚动至评论
-  //   // !!必须同步等到数据获取完毕后在执行this.$nextTick
-  //   if (this.$route.hash === "#comment-editor") {
-  //     this.$nextTick(() => {
-  //       this.toComment();
-  //     });
-  //   }
-  // }
-
-  private async activated() {
+  private async mounted() {
     if (!this.postData || !this.postData._id) {
       await this.initPostDetail();
     }
@@ -266,6 +252,20 @@ export default class PostDetailView extends Mixins(
       });
     }
   }
+
+  // private async activated() {
+  //   if (!this.postData || !this.postData._id) {
+  //     await this.initPostDetail();
+  //   }
+
+  //   // 如果是进入评论，滚动至评论
+  //   // !!必须同步等到数据获取完毕后在执行this.$nextTick
+  //   if (this.$route.hash === "#comment-editor") {
+  //     this.$nextTick(() => {
+  //       this.toComment();
+  //     });
+  //   }
+  // }
 
   // Methods
   onToggleFollowPost(

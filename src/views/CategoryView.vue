@@ -99,15 +99,15 @@ export default class CategoryView extends Mixins(LoadingMixin, UserDetailMixin) 
   }
 
   // Lifecycle
-  // private created() {
-  //   this.getCategoryHeaderDetailIfNoCache();
-  //   this.getPostsIfNoCache();
-  // }
-
-  private activated() {
+  private created() {
     this.getCategoryHeaderDetailIfNoCache();
     this.getPostsIfNoCache();
   }
+
+  // private activated() {
+  //   this.getCategoryHeaderDetailIfNoCache();
+  //   this.getPostsIfNoCache();
+  // }
 
   // Methods
   private async refresh() {
