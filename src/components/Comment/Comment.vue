@@ -230,7 +230,7 @@ export default class Comment extends Mixins(CheckLoginMixin, FormatMixin) {
 <style lang="scss">
 @import "../../assets/css/var.scss";
 .comment-wrapper {
-  overflow: hidden;
+  overflow: visible;
   text-align: left;
   margin-bottom: 14px;
   display: flex;
