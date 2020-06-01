@@ -36,7 +36,9 @@ export const museLoadingConfig: any = {
 }
 
 export const qiniuConfig: any = {
-  domain: "http://muse-forum.s3-cn-south-1.qiniucs.com",
+  // 七牛云上传地址，根据区域调整地址，这里是华南
+  domain: "http://upload-z2.qiniup.com",
+  // 七牛云外链CDN，自己配置，用作访问上传的资源
   qiniuAddr: "cdn.wulichenyang.com",
 }
 
