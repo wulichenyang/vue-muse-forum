@@ -67,12 +67,15 @@
 
 ## 效果展示
 
-### 首页、文章详情
+### 首页、文章详情、评论
+<img src="https://github.com/wulichenyang/vue-muse-forum/screenshots/post.gif" width="320" height="619"/>
 
 ### 发布文章
+<img src="https://github.com/wulichenyang/vue-muse-forum/screenshots/new-post.gif" width="320" height="619"/>
+
 
 ### 用户信息
-
+<img src="https://github.com/wulichenyang/vue-muse-forum/screenshots/profile.gif" width="320" height="619"/>
 
 
 
