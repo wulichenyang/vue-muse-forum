@@ -22,23 +22,6 @@
 特色：基于七牛云存储图片、全端适配、富文本编辑器、emoji等
 ```
 
-
-
-## 安装项目
-```
-yarn install
-```
-
-### 开发编译
-```
-yarn run serve
-```
-
-### 压缩发布
-```
-yarn run build
-```
-
 ## 功能列表
 
 ### 用户页面
@@ -92,5 +75,22 @@ yarn run build
 
 
 
-### 后端代码
+
+## 安装项目
+```
+yarn install
+```
+
+### 开发编译
+```
+yarn run serve
+```
+
+### 压缩发布
+```
+yarn run build
+```
+
+
+## 后端代码
 点击这里 [vue-blog-server](https://github.com/wulichenyang/vue-blog-server)
