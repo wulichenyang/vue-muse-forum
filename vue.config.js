@@ -17,6 +17,9 @@ module.exports = {
     //   .set('utils', resolve('src/utils'))
     //   .set('style', resolve('src/style'))
     
+    // 关闭 prefetch
+    config.plugins.delete('prefetch')
+
     config.optimization.splitChunks({
       // chunks: 'all', // async表示抽取异步模块，all表示对所有模块生效，initial表示对同步模块生效
       minSize: 30000, // 将引用模块分离成新代码文件的最小体积
