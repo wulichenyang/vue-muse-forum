@@ -21,6 +21,7 @@ export interface UserToCommentMap {
   [userId: string]: UserToComment
 }
 
+// 糟糕的设计，commentDetailMap 应该放在全局共享
 export interface UserToComment {
   commentDetailMap: CommentDetailMap,
   commentIds: string[],

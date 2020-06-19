@@ -19,6 +19,11 @@ export interface UserToFansIdsMap {
 
 export interface UserToFollowUserIdsMap extends UserToFansIdsMap { }
 
+// 应该改为 followId 更合适，同一个人
+// 但是 主 -> 从 ，从 -> 主 ，
+// follow 关系是不同的，需要用followId 作为唯一的索引，
+// 而不是用 粉丝或用户 id作为 索引
+
 // 某用户关注用户或粉丝信息Map
 export interface UserFansBriefMap {
   [fansId: string]: UserFansBrief
